@@ -1,0 +1,21 @@
+<div class="appComponent" [class.isUserSide]="isExcludedElementShow">
+  <p class="reloadStatus" [ngClass]="{'reload': reloadAnimation, 'show': scrollTop < -25}">
+    <mat-icon>refresh</mat-icon>
+  </p>
+
+  <notifier-container></notifier-container>
+
+  <app-header *ngIf="isExcludedElementShow && !isExcludedHeader" class="c-appHeader"></app-header>
+
+  <router-outlet></router-outlet>
+
+  <app-footer *ngIf="isExcludedElementShow && !isPwaApp()"></app-footer>
+
+  <mobile-sidebar *ngIf="isExcludedElementShow && isSmallDevices" [class.sidebar--visible]="sidebarShown$ | async"></mobile-sidebar>
+  <mobile-menu *ngIf="isExcludedElementShow && isSmallDevices"
+               [isPwa]="isPwaApp()"
+               [isEstablishmentPage]="isEstablishmentPage"></mobile-menu>
+
+  <cookie-banner *ngIf="!isPwaApp() && !isEstablishmentPage"></cookie-banner>
+  <pwa-banner *ngIf="!isPwaApp() && isExcludedElementShow && !isEstablishmentPage"></pwa-banner>
+</div>

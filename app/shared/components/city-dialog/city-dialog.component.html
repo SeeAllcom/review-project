@@ -1,0 +1,58 @@
+<form [formGroup]="selectCityForm" class="c-dialog c-dialog--small">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Міста з кав\'ярнями' | translate}}</p>
+    <button class="c-dialog__close" matDialogClose>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--center">
+    <p class="c-cityDialog__title">
+      {{'Виберіть потрібне місто' | translate}}
+    </p>
+    <p class="c-cityDialog__text">
+      {{'Місто потрібне для того, щоб показати вам всі заклади де ви зможете купити абонементи.' | translate}}
+    </p>
+    <mat-form-field appearance="fill" class="c-cityDialog__formField">
+      <mat-label>{{'Виберіть місто' | translate}}</mat-label>
+      <mat-select
+        [compareWith]="compareObjects"
+        disableOptionCentering
+        formControlName="city"
+        role="listbox"
+        [disabled]="!getCitiesSub.closed">
+        <ng-container *ngIf="cities.length; else citiesEmpty">
+          <mat-option>
+            <ngx-mat-select-search
+              [formControl]="areaFilterCtrl"
+              [placeholderLabel]="'Знайти місто' | translate"
+              noEntriesFoundLabel="{{'Ми не знайшли таке місто' | translate}} 😞"
+              ariaLabel="Найти свой город"></ngx-mat-select-search>
+          </mat-option>
+          <mat-optgroup *ngFor="let area of filteredArea | async" [label]="area.name_en | getLocalizationCityKey | translate">
+            <mat-option *ngFor="let region of area.regions" [value]="region" role="listitem">
+              {{region.name_en | getLocalizationCityKey | translate}}
+            </mat-option>
+          </mat-optgroup>
+        </ng-container>
+        <ng-template #citiesEmpty>
+          <p class="c-cityDialog__text c-cityDialog__text--empty">
+            {{'Зараз немає міст із зареєстрованими закладами.' | translate}}😞
+          </p>
+        </ng-template>
+      </mat-select>
+      <mat-error *ngIf="selectCityForm.get('city')?.hasError('required')">
+        {{'Для того щоб зберегти місто, виберіть його' | translate}}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--gray" matDialogClose>
+        <span class="o-buttonText">{{'Закрити' | translate}}</span>
+      </button>
+      <button class="o-button o-button--secondary" (click)="saveCity()" [disabled]="!cities.length">
+        <span class="o-buttonText">{{'Зберегти місто' | translate}}</span>
+      </button>
+    </div>
+  </div>
+</form>

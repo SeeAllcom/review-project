@@ -1,0 +1,261 @@
+<div class="c-ownerSettings">
+  <ng-container *ngIf="getNetworkInfoSub.closed; else loading">
+    <ng-container *ngIf="!networkError; else error">
+      <ng-container *ngIf="networkInfo; else networkNotExist">
+        <div class="c-ownerSettings__section">
+          <p class="c-ownerSettings__title">{{'Мережа (Заклад)' | translate}}</p>
+          <div class="c-ownerSettings__info">
+            <div class="c-ownerSettings__logoBlock">
+              <img [src]="API_URL + (coffeeShopInfo ? coffeeShopInfo.img : networkInfo.avatar)" alt=""
+                   class="c-ownerSettings__logo">
+            </div>
+            <div class="c-ownerSettings__description">
+              <p class="c-ownerSettings__infoTitle">{{networkInfo.name}}
+                <span *ngIf="coffeeShopInfo"> - {{coffeeShopInfo.region.name_en | getLocalizationCityKey | translate}}</span>
+              </p>
+              <p *ngIf="coffeeShopInfo" class="c-ownerSettings__infoAddress">{{coffeeShopInfo.address}}</p>
+              <p class="c-ownerSettings__infoText">{{networkInfo.description}}</p>
+
+<!--              <p class="o-link" (click)="openWorkScheduleDialog()">{{'Встановити графік робочого часу' | translate}}</p>-->
+
+              <button class="o-button" matRipple (click)="openEditingDialog()">
+                <span class="o-buttonText">{{'Редагувати дані' | translate}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="paymentErrors.length && !(isOwnerLoggedIn$ | async)" class="c-ownerSettings__section"
+             [class.flash]="!networkInfo.payment_type || !networkInfo.payment_id || paymentErrors.length">
+          <p class="c-ownerSettings__title">{{'Платіжні дані' | translate}}</p>
+          <notification [title]="'Повідомте власника або адміністратора кав\'ярні про невірно вказаний ID мерчанту Fondy. Це призведе до неможливості отримання коштів на рахунок кав\'ярні.' | translate"
+                        [NotificationType]="NotificationType.Error"></notification>
+        </div>
+
+        <form *ngIf="isOwnerLoggedIn$ | async" class="c-ownerSettings__section"
+              [class.flash]="!networkInfo.payment_type || !networkInfo.payment_id || paymentErrors.length"
+              [formGroup]="paymentForm" (ngSubmit)="sendMerchantSettings()">
+          <p class="c-ownerSettings__title">
+            {{'Налаштування платіжних даних' | translate}}
+            <tooltip
+              [title]="'Для того, щоб ви могли отримувати кошти, вам потрібно зареєструвати свій рахунок в платіжній системі Fondy. Покупець не зможе у вас нічого придбати, якщо ви не зареєстрували свій мерчант.' | translate">
+              <mat-icon>info</mat-icon>
+            </tooltip>
+          </p>
+
+          <notification *ngIf="(!networkInfo.payment_type && !networkInfo.payment_id) || paymentErrors.length"
+                        [title]="
+                        paymentErrors.length
+                        ? ('Невірно вказаний ID мерчанту Fondy. Це призведе до неможливості отримання коштів на ваш рахунок.' | translate)
+                        : ('Увага, реєстрація мерчанту є обов\'яковим етапом для продажу вашого товару в сервісі CoffeePhone, без цього ви не зможете отримувати кошти на свій рахунок.' | translate)"
+                        [NotificationType]="NotificationType.Error"></notification>
+
+          <p class="c-ownerSettings__text">
+            {{'Вкажіть ID мерчанту для отримання коштів, який ви вказали в платіжній системі Fondy' | translate}}
+            <tooltip
+              [title]="'Неправильно вказані дані, приведуть до неможливості отримання коштів на ваш рахунок.' | translate">
+              <mat-icon>warning</mat-icon>
+            </tooltip>
+          </p>
+
+          <mat-error *ngIf="paymentForm.touched && paymentForm.get('payment_type').hasError('required')" class="o-error">
+            {{'Cпосіб отримання коштів є обов\'язковим.' | translate}}
+          </mat-error>
+
+          <div class="c-ownerSettings__formFieldWrapper">
+            <mat-form-field class="c-ownerSettings__formField" appearance="fill">
+              <mat-label>{{'ID мерчанта Fondy'}}</mat-label>
+              <label>
+                <input type="text" matInput formControlName="payment_id">
+              </label>
+            </mat-form-field>
+            <button class="o-button o-button--secondary" type="submit"
+                    [disabled]="!sendPaymentDataSub.closed || !paymentForm.dirty">
+              <ng-container
+                *ngIf="sendPaymentDataSub.closed; else btnLoading">{{'Застосувати' | translate}}</ng-container>
+            </button>
+          </div>
+
+          <p class="c-ownerSettings__text c-ownerSettings__text--small">
+            {{'За детальною інформацією переходьте за посиланням:' | translate}}
+            <a href="https://docs.google.com/document/d/1D04RrVxopobTWp5mOIzyijvJGBKsreaZ/edit" target="_blank"
+               class="o-link" rel="noopener nofollow">{{'Реєстрація мерчанту' | translate}}</a>
+          </p>
+        </form>
+
+        <div *ngIf="isOwnerLoggedIn$ | async" class="c-ownerSettings__section">
+          <p class="c-ownerSettings__title">{{'Відсоток бонусів' | translate}}</p>
+          <p class="c-ownerSettings__text">{{'Ви можете власноруч налаштувати відсоток бонусів, які будуть нараховуватися вашим відвідувачам за кожне замовлення. Це може впливати на ваш рейтинг CoffeePhone, більший відсоток бонусів дорівнює більшій кількості відвідувачів.' | translate}}</p>
+          <div class="c-ownerSettings__formFieldWrapper">
+            <mat-form-field class="c-ownerSettings__formField" appearance="fill">
+              <mat-label>{{'Вкажіть відсоток бонусів'}}</mat-label>
+              <label>
+                <input type="text" numbersOnly matInput [formControl]="bonusesPercentage" [placeholder]="('Мін. ' | translate) + minBonusesPercentage + '%'" required>
+              </label>
+              <span matSuffix>%</span>
+              <mat-error *ngIf="bonusesPercentage.hasError('required')">{{'Відсоток бонусів є обов\'язковим' | translate}}</mat-error>
+              <mat-error *ngIf="bonusesPercentage.hasError('min')">{{'Відсоток бонусів не може бути меншим за ' | translate}}{{minBonusesPercentage}}%</mat-error>
+            </mat-form-field>
+            <button class="o-button o-button--secondary" type="button" (click)="sendBonusesPercentage()"
+                    [disabled]="!sendBonusesPercentageSub.closed || !bonusesPercentage.dirty">
+              <ng-container *ngIf="sendBonusesPercentageSub.closed; else btnLoading">
+                {{'Зберегти' | translate}}
+              </ng-container>
+            </button>
+          </div>
+          <p class="c-ownerSettings__text c-ownerSettings__text--small">{{'Мінімальне налаштування' | translate}} {{minBonusesPercentage}}% {{'бонусів' | translate}}.</p>
+        </div>
+      </ng-container>
+      <ng-template #networkNotExist>
+        <form class="c-ownerSettings__form" [formGroup]="form" (ngSubmit)="sendNetworkInfo()">
+          <div class="flex flex-col lg:flex-row">
+            <div class="mb-5 lg:mb-0 lg:pr-5 w-96 max-w-full">
+              <p class="c-ownerSettings__title">{{'Інформація про заклад' | translate}}</p>
+              <mat-form-field class="c-ownerSettings__formField">
+                <mat-label>{{'Вкажіть аватарку' | translate}}</mat-label>
+                <ngx-mat-file-input formControlName="avatar"></ngx-mat-file-input>
+                <mat-icon matSuffix>folder</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field class="c-ownerSettings__formField">
+                <mat-label>{{'Введіть назву'}}</mat-label>
+                <label>
+                  <input type="text" matInput formControlName="name">
+                </label>
+              </mat-form-field>
+
+              <mat-form-field class="c-ownerSettings__formField">
+                <mat-label>{{'Графік роботи'}}</mat-label>
+                <label>
+                  <input type="text" matInput formControlName="work_schedule">
+                </label>
+              </mat-form-field>
+
+              <mat-form-field class="c-ownerSettings__formField">
+                <mat-label>{{'Посилання на Instagram' | translate}}</mat-label>
+                <label>
+                  <input type="text" matInput formControlName="instagram">
+                </label>
+              </mat-form-field>
+
+              <mat-form-field class="c-ownerSettings__formField">
+                <mat-label>{{'Посилання на Facebook' | translate}}</mat-label>
+                <label>
+                  <input type="text" matInput formControlName="facebook">
+                </label>
+              </mat-form-field>
+
+              <mat-form-field class="c-ownerSettings__formField">
+                <mat-label>{{'Введіть опис' | translate}}</mat-label>
+                <label>
+                  <textarea matInput formControlName="description"></textarea>
+                </label>
+              </mat-form-field>
+            </div>
+
+<!--            <div class="flex-1 max-w-sm">-->
+<!--              <p class="c-ownerSettings__title">{{'Робочий графік' | translate}}</p>-->
+<!--              <work-schedule (formValue)="workSchedule = $event" class="flex-1"></work-schedule>-->
+<!--            </div>-->
+          </div>
+
+          <button class="o-button" matRipple type="submit" [disabled]="!sendNetworkInfoSub.closed">
+            <ng-container *ngIf="sendNetworkInfoSub.closed; else sendNetworkInfoLoading">
+              <span class="o-buttonText">{{'Зберегти' | translate}}</span>
+            </ng-container>
+            <ng-template #sendNetworkInfoLoading>
+              <spinner class="o-buttonSpinner"></spinner>
+            </ng-template>
+          </button>
+        </form>
+      </ng-template>
+
+      <form [formGroup]="localizationForm">
+        <mat-form-field class="c-localization__country" appearance="fill">
+          <svg matPrefix class="c-localization__countryIcon">
+            <use [attr.xlink:href]="'assets/img/icons/sprites/'+flagsSpriteName+'#icon-flag-'+languageIcon"/>
+          </svg>
+          <mat-label>{{'Мова' | translate}}</mat-label>
+          <mat-select disableOptionCentering
+                      formControlName="language"
+                      (valueChange)="setLanguageIcon(languages[$event])">
+            <mat-option *ngFor="let lang of languages | keyvalue: originalOrder"
+                        [value]="lang.key">{{lang.value.title}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+
+      <p class="c-ownerSettings__link" *ngIf="getActiveState(settingsStateType.networkData)"
+         (click)="changeState(settingsStateType.passwordRecovery)">{{'Змінити пароль' | translate}}</p>
+      <ng-container *ngIf="getActiveState(settingsStateType.passwordRecovery)">
+        <div class="c-ownerSettingsPassword">
+          <div class="c-ownerSettingsPassword__header">
+            <button class="c-ownerSettingsPassword__back" (click)="changeState(settingsStateType.networkData)">
+              <mat-icon>arrow_back</mat-icon>
+              <span class="c-ownerSettingsPassword__backText">{{'Назад' | translate}}</span>
+            </button>
+            <p class="c-ownerSettingsPassword__headerTitle">
+              {{'Зміна паролю' | translate}}
+            </p>
+          </div>
+          <form [formGroup]="passwordForm" (ngSubmit)="sendChangingPassword()" class="c-ownerSettingsPassword__form">
+            <div class="c-ownerSettingsPassword__field">
+              <input-password [placeholder]="'Введіть старий пароль' | translate"
+                              [formControl]="passwordForm.get('old_password')"
+                              ngDefaultControl></input-password>
+
+              <mat-error *ngIf="notTrueOldPassword" class="c-ownerSettingsPassword__fieldError">
+                {{'Неправильний пароль. Будь ласка спробуйте ще раз.' | translate}}
+              </mat-error>
+            </div>
+
+            <div class="c-ownerSettingsPassword__field">
+              <input-password [placeholder]="'Введіть новий пароль' | translate"
+                              [formControl]="passwordForm.get('password')"
+                              (paste)="false"
+                              ngDefaultControl></input-password>
+            </div>
+
+            <div class="c-ownerSettingsPassword__field">
+              <input-password [placeholder]="'Повторіть пароль' | translate"
+                              [formControl]="passwordForm.get('password_confirmation')"
+                              (paste)="false"
+                              ngDefaultControl></input-password>
+
+              <mat-error class="c-ownerSettingsPassword__fieldError"
+                         *ngIf="passwordForm.get('password_confirmation').valid && passwordForm.errors?.equivalent">
+                {{'Паролі не збігаються. Будь ласка, повторно введіть свій пароль' | translate}}
+              </mat-error>
+            </div>
+
+            <button class="o-button o-button--secondary" type="submit" [disabled]="!sendChangePasswordSub.closed">
+              <ng-container *ngIf="sendChangePasswordSub.closed; else sendLoading">
+                {{'Змінити пароль' | translate}}
+              </ng-container>
+              <ng-template #sendLoading>
+                <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+              </ng-template>
+            </button>
+
+            <p *ngIf="changePasswordError"
+               class="c-ownerSettingsPassword__error">{{changePasswordError | translate}}</p>
+          </form>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #error>
+      <div class="c-owner__error">
+        <p class="c-owner__errorTitle">{{'Упс' | translate}}.</p>
+        <p class="c-owner__errorText">{{networkError | translate}}</p>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template #loading>
+  <spinner class="c-owner__spinner"></spinner>
+</ng-template>
+
+<ng-template #btnLoading>
+  <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+</ng-template>

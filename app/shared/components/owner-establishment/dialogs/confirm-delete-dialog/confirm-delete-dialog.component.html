@@ -1,0 +1,32 @@
+<div class="c-dialogConfirm__wrapper">
+  <div *ngIf="existAbonementsError" class="c-dialogOverlay" (click)="closeDialog()"></div>
+  <div class="c-dialogConfirm">
+    <div class="c-dialogConfirm__actions">
+
+      <notification *ngIf="data.notification"
+                    [title]="data.notification"
+                    [NotificationType]="NotificationType.Warning"></notification>
+
+      <ng-container *ngIf="existAbonementsError">
+        <p class="c-dialogConfirm__text c-dialogConfirm__text--error">{{existAbonementsError | translate}}</p>
+        <p *ngIf="error" class="c-dialogConfirm__text c-dialogConfirm__text--error">{{error | translate}}</p>
+
+        <button class="o-button o-button--secondary" (click)="confirmDelete()" matRipple>
+          <ng-container *ngIf="deletingSub.closed; else btnLoading">
+            {{'Підтвердити видалення' | translate}}
+          </ng-container>
+        </button>
+      </ng-container>
+
+      <button *ngIf="!existAbonementsError" class="o-button o-button--red" (click)="deleteElement()" matRipple>
+        <ng-container *ngIf="deletingSub.closed; else btnLoading">{{'Видалити' | translate}}</ng-container>
+      </button>
+      <br>
+      <button class="o-button o-button--gray" (click)="closeDialog()" matRipple>{{'Відмінити' | translate}}</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #btnLoading>
+  <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+</ng-template>

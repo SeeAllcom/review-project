@@ -1,0 +1,13 @@
+.c-imagePreview {
+  display: flex;
+  flex-direction: column;
+
+  &__img {
+    width: fit-content;
+    margin: 0 auto 20px;
+    max-width: 100%;
+    object-fit: contain;
+    max-height: 300px;
+    border-radius: var(--borderRadius-primary);
+  }
+}

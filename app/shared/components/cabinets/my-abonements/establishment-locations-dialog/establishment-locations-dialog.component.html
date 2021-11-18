@@ -1,0 +1,73 @@
+<div class="c-dialog" [ngClass]="{'c-dialog--blur': selectedCoffeeShop}">
+  <div class="c-dialog__header">
+    <p *ngIf="network" class="c-dialog__title">{{network.name}}</p>
+    <button class="c-dialog__close" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="network.coffee_shops; else somethingWentWrong">
+    <div class="c-dialog__body">
+    <notification [isCanClose]="true" [title]="'Тисніть на зображення, щоб збільшити масштаб. Тисніть на адресу, щоб відкрити заклад на карті.' | translate"></notification>
+      <table class="c-dialogTable">
+        <tr class="c-dialogTable__row c-dialogTable__row--head">
+          <td class="c-dialogTable__cell">№</td>
+          <td class="c-dialogTable__cell">{{'Зображення - Місто/адреса' | translate}}</td>
+        </tr>
+        <tr  class="c-dialogTable__row" *ngFor="let coffeeShop of getCitiesCoffeeShops(); let i = index">
+          <td class="c-dialogTable__cell c-dialogTable__cell--notPhones">{{i + 1}}</td>
+          <td class="c-dialogTable__cell">
+            <div class="c-establishmentLocation__info">
+              <div class="c-establishmentLocation__imgWrapper previewHover" (click)="openCoffeeShopPreview(coffeeShop, i, true)">
+                <img [src]="API_URL + coffeeShop.img" [alt]="coffeeShop.region + ' ' + coffeeShop.address"
+                     class="c-establishmentLocation__img">
+              </div>
+              <div class="c-establishmentLocation__location" (click)="openGoogleMaps(coffeeShop)">
+                <strong>{{'м.' | translate}} {{coffeeShop.region.name_en | getLocalizationCityKey | translate}}</strong>
+                <br>
+                <span>{{coffeeShop.address}}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="!getCitiesCoffeeShops().length">
+          <td class="c-dialogTable__cell" colspan="2">
+            <p class="c-dialogTable__text c-dialogTable__text--empty">
+              {{'У місті' | translate}}
+              {{currentCityNameEn | getLocalizationCityKey | translate}}
+              {{'ще немає закладів.' | translate}}
+            </p>
+          </td>
+        </tr>
+
+        <ng-container *ngIf="getCitiesCoffeeShops(false).length && currentCityNameEn">
+          <tr class="c-dialogTable__row">
+            <td colspan="2"><p class="c-dialog__title" style="padding: 20px 0 10px;">{{'Більше закладів' | translate}}</p></td>
+          </tr>
+
+          <tr class="c-dialogTable__row" *ngFor="let otherCoffeeShop of getCitiesCoffeeShops(false); let i = index">
+            <td class="c-dialogTable__cell c-dialogTable__cell--notPhones">{{i + getCitiesCoffeeShops().length + 1}}</td>
+            <td class="c-dialogTable__cell">
+              <div class="c-establishmentLocation__info">
+                <div class="c-establishmentLocation__imgWrapper previewHover" (click)="openCoffeeShopPreview(otherCoffeeShop, i, false)">
+                  <img [src]="API_URL + otherCoffeeShop.img" [alt]="otherCoffeeShop.region + ' ' + otherCoffeeShop.address"
+                       class="c-establishmentLocation__img">
+                </div>
+                <div class="c-establishmentLocation__location c-dialogTable__cell--clickable" (click)="openGoogleMaps(otherCoffeeShop)">
+                  <strong>{{'м.' | translate}} {{otherCoffeeShop.region.name_en | getLocalizationCityKey | translate}}</strong>
+                  <br>
+                  <span>{{otherCoffeeShop.address}}</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
+  </ng-container>
+  <ng-template #somethingWentWrong>
+    <div class="c-dialog__body c-dialog__body--padding c-dialog__body--center">
+      <p class="c-dialog__text c-dialog__text--center c-dialog__text--error">{{'Щось пішло не так, спробуйте пізніше або перезавантажте сторінку.' | translate}}</p>
+    </div>
+  </ng-template>
+</div>

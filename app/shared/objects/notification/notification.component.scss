@@ -1,0 +1,100 @@
+@import "/src/assets/styles/helpers/_mixins.scss";
+
+.o-notification {
+  position: relative;
+  border: 2px solid currentColor;
+  border-radius: var(--borderRadius-primary);
+  padding: 20px 20px 20px 60px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__close {
+    --mat-icon-size: 20px;
+
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: var(--ex-color-light-blue);
+    cursor: pointer;
+  }
+
+  @include phones-l {
+    flex-direction: column;
+  }
+
+  &::after {
+    font-family: 'Material Icons', emoji;
+    font-size: 23px;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: currentColor;
+  }
+
+  &__text {
+    color: var(--ex-color-white);
+    margin-bottom: 0 !important;
+    font-size: 13px;
+  }
+
+  &--primary {
+    color: var(--ex-color-light-blue);
+
+    &::after {
+      content: '\e000';
+    }
+
+    .o-button {
+      background: var(--ex-color-light-blue);
+    }
+  }
+
+  &--bonuses {
+    color: var(--ex-color-violet);
+
+    &::after {
+      content: '\e000';
+    }
+
+    .o-button {
+      background: var(--ex-color-violet);
+    }
+  }
+
+  &--warning {
+    color: var(--ex-color-orange);
+
+    &::after {
+      content: '\e002';
+    }
+
+    .o-button {
+      background: var(--ex-color-orange);
+    }
+  }
+
+  &--error {
+    color: var(--ex-color-red);
+
+    &::after {
+      content: '\e000';
+    }
+
+    .o-button {
+      background: var(--ex-color-red);
+    }
+  }
+
+  .o-button {
+    margin-left: 20px;
+
+    @include phones-l {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 20px;
+    }
+  }
+}

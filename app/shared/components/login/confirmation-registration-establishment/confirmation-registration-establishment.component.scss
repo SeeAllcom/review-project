@@ -1,0 +1,17 @@
+.c-confirmedEmail {
+  padding: 60px;
+  border: 1px solid var(--ex-bg--700);
+  max-width: 500px;
+  margin: 100px auto;
+  border-radius: 10px;
+
+  &__success {
+    color: var(--ex-color-white);
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+
+  .o-button {
+    width: 100%;
+  }
+}

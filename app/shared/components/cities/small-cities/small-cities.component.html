@@ -1,0 +1,55 @@
+<div class="c-cities c-cities--after">
+  <img *ngIf="area?.img?.path" defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + area.img.path" [alt]="area?.name" class="c-cities__bg">
+  <div class="container">
+    <div class="c-cities__content">
+      <div class="c-cities__info">
+        <span class="c-cities__contentBack" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </span>
+        <div class="c-cities__description">
+          <h1 class="c-cities__title">
+            <ng-container *ngIf="area">{{area.name_en | getLocalizationCityKey | translate}}</ng-container>
+          </h1>
+          <h2 class="c-cities__subTitle">
+            {{'Виберіть місто, щоб вибрати найкращий заклад та придбати абонемент або подарувати його своїм друзям, переглянути зовнішній вигляд закладів або прокласти до них маршрут на карті.' | translate}}
+          </h2>
+        </div>
+      </div>
+      <search-input [placeholder]="'Знайти місто'"></search-input>
+    </div>
+  </div>
+</div>
+<div class="c-cards">
+  <div class="container">
+    <ng-container *ngIf="regionsLoaded; else loading">
+      <ng-container *ngIf="!error; else errorTemplate">
+        <ng-container *ngIf="area.regions.length && (area.regions | search:(searchCityValue$ | async)).length; else citiesEmpty">
+          <ul class="c-cardsList" *ngIf="area.regions">
+            <li class="c-cardsList__item c-cardsList__item--noImg"
+                *ngFor="let region of area.regions | search:(searchCityValue$ | async)"
+                (click)="openCityEstablishments(region)"
+                addVisitedClass>
+              <h3 class="c-cardsList__title">{{region.name}}</h3>
+            </li>
+          </ul>
+        </ng-container>
+        <ng-template #citiesEmpty>
+          <div class="c-cards__empty">
+            <p class="c-cards__emptyText" *ngIf="!area.regions.length">{{'Зараз немає міст із зареєстрованими закладами.' | translate}} 😞</p>
+            <p class="c-cards__emptyText" *ngIf="area.regions.length && !(area.regions | search:(searchCityValue$ | async)).length">{{'Такого міста не знайдено.' | translate}} 😞</p>
+          </div>
+        </ng-template>
+      </ng-container>
+      <ng-template #errorTemplate>
+        <div class="c-cards__empty">
+          <p class="c-cards__emptyText c-cards__emptyText--error">{{error | translate}} 😞</p>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #loading>
+      <spinner class="c-cards__spinner"></spinner>
+    </ng-template>
+  </div>
+</div>
+
+<scroll-top></scroll-top>

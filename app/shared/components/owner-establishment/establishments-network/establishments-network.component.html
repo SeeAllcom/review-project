@@ -1,0 +1,113 @@
+<div class="c-ownerCards">
+  <div class="c-ownerContent__header">
+    <p class="c-ownerContent__headerTitle">{{'Заклади' | translate}}</p>
+    <button class="o-button" (click)="openAddEstablishmentDialog()" matRipple>
+      <span class="o-buttonText">{{'Додати заклад' | translate}}</span>
+    </button>
+  </div>
+
+  <ul class="c-ownerActions">
+    <li class="c-ownerActions__item">
+      <form [formGroup]="cityForm">
+        <mat-form-field appearance="fill" class="c-cityDialog__formField">
+          <mat-label>{{'Вибрати місто' | translate}}</mat-label>
+          <mat-select
+            [compareWith]="compareObjects"
+            (valueChange)="getEstablishmentsForSomeCity($event)"
+            formControlName="city"
+            disableOptionCentering
+            [attr.disabled]="!getEstablishmentsSub.closed"
+            role="listbox">
+            <mat-option>
+              <ngx-mat-select-search
+                [formControl]="areaFilterCtrl"
+                [placeholderLabel]="'Введіть назву міста' | translate"
+                noEntriesFoundLabel="{{'Такого міста немає' | translate}} 😞"
+                [ariaLabel]="'Вибрати місто' | translate"></ngx-mat-select-search>
+            </mat-option>
+            <ng-container *ngIf="(filteredArea | async)?.length; else citiesEmpty">
+              <mat-optgroup *ngFor="let area of filteredArea | async" [label]="area.name_en | getLocalizationCityKey | translate">
+                <mat-option *ngFor="let region of area.regions" [value]="region" role="listitem">
+                  {{region.name_en | getLocalizationCityKey | translate}}
+                </mat-option>
+              </mat-optgroup>
+            </ng-container>
+            <ng-template #citiesEmpty>
+              <mat-option>{{'Міст не знайдено' | translate}} 😞</mat-option>
+            </ng-template>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </li>
+    <li class="c-ownerActions__item">
+      <button class="c-ownerActions__btn" [ngClass]="{'loading': !getEstablishmentsSub.closed}"
+              (click)="getEstablishments()" matRipple>
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </li>
+  </ul>
+
+  <ng-container *ngIf="getEstablishmentsSub.closed; else establishmentsLoading">
+    <ng-container *ngIf="!getEstablishmentsError; else isGetEstablishmentsError">
+      <ng-container *ngIf="establishments.length; else establishmentsEmpty">
+        <div class="c-ownerCardsList__areas" *ngFor="let areaWithEstablishments of areasWithEstablishments">
+          <p class="c-ownerCardsList__areasTitle">{{areaWithEstablishments.name_en | getLocalizationCityKey | translate}}</p>
+          <div class="c-ownerCardsList__areasList">
+
+            <div class="c-ownerCardsList__regions"
+                 *ngFor="let regionWithEstablishments of areaWithEstablishments.regions">
+              <p class="c-ownerCardsList__regionsTitle">{{regionWithEstablishments.name_en | getLocalizationCityKey | translate}}</p>
+
+              <ul class="c-ownerCardsList">
+                <li class="c-ownerCardsList__item" *ngFor="let coffeeShop of regionWithEstablishments.coffee_shops">
+                  <div class="c-ownerCardsList__preview">
+                    <img defaultImage="/assets/img/img-not-loaded.svg"
+                         [lazyLoad]="API_URL + coffeeShop.img" [alt]="coffeeShop.address"
+                         class="c-ownerCardsList__avatar">
+                  </div>
+                  <div class="c-ownerCardsList__info">
+                    <p class="c-ownerCardsList__text">{{'Дата створення: ' | translate}} <strong> <br> {{coffeeShop.created_at | date: 'd MMM y'}}</strong></p>
+                    <p class="c-ownerCardsList__text">{{'Адреса: ' | translate}} <strong> <br> {{coffeeShop.address}}</strong></p>
+                  </div>
+                  <button *ngIf="isOwnerLoggedIn$ | async"
+                          class="c-ownerCardsList__actions"
+                          [matMenuTriggerFor]="userNav"
+                          #openMenuTrigger="matMenuTrigger"
+                          [class.active]="openMenuTrigger.menuOpen"
+                          mat-icon-button aria-label="establishment actions">
+                    <mat-icon>more_vert</mat-icon>
+
+                    <mat-menu #userNav="matMenu"
+                              yPosition="below"
+                              xPosition="before"
+                              [overlapTrigger]="false"
+                              class="c-dropdownList">
+
+                      <button class="c-dropdownList__link" mat-menu-item (click)="editEstablishment(coffeeShop)">
+                        <mat-icon class="c-dropdownList__icon">edit</mat-icon>
+                        {{'Редагувати' | translate}}
+                      </button>
+                      <button class="c-dropdownList__link" mat-menu-item (click)="deleteEstablishment(coffeeShop)">
+                        <mat-icon class="c-dropdownList__icon c-dropdownList__icon--delete">delete</mat-icon>
+                        {{'Видалити' | translate}}
+                      </button>
+                    </mat-menu>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #establishmentsEmpty>
+        <p class="c-owner__empty">{{'Закладів ще немає' | translate}} 😞</p>
+      </ng-template>
+    </ng-container>
+    <ng-template #isGetEstablishmentsError>
+      <p class="c-owner__error">{{getEstablishmentsError | translate}}</p>
+    </ng-template>
+  </ng-container>
+  <ng-template #establishmentsLoading>
+    <p class="c-owner__empty">{{'Іде завантаження...' | translate}}</p>
+  </ng-template>
+</div>

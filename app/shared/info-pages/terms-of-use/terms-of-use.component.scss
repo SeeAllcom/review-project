@@ -1,0 +1,105 @@
+@import "src/assets/styles/helpers/_mixins.scss";
+
+.c-termsOfUse {
+  font-size: 14px;
+  padding: 60px 0;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    &Text {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 0;
+
+      @include phones-xs {
+        font-size: 18px;
+      }
+    }
+
+    &Back {
+      --mat-icon-size: 35px;
+
+      color: var(--ex-color-white);
+      margin-right: 15px;
+      cursor: pointer;
+
+      .mat-icon {
+        transition: var(--ex-transition-secondary);
+      }
+
+      &:hover {
+        .mat-icon {
+          transform: translateX(-10px);
+        }
+      }
+    }
+  }
+
+  &__lastUpdated {
+    font-size: 15px;
+    color: var(--ex-color-light-blue);
+    margin-bottom: 30px;
+  }
+
+  &__content {
+    @include tablets-more {
+      padding: 30px;
+      background: var(--ex-bg--800);
+      border-radius: 10px;
+    }
+
+    a {
+      display: inline-block;
+      vertical-align: middle;
+      color: var(--ex-color-green);
+    }
+
+    h2 {
+      font-size: 20px;
+      color: var(--ex-color-main);
+      font-weight: 600;
+      margin-bottom: 25px;
+      counter-reset: s-section;
+      counter-increment: article;
+
+      &::before {
+        content: counter(article) ". ";
+      }
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ex-color-white);
+      margin-bottom: 15px;
+      counter-increment: s-section;
+
+      &::before {
+        content: counter(article) "." counter(s-section) ". ";
+      }
+    }
+
+    ul,
+    ol {
+      padding-left: 20px;
+      margin-bottom: 20px;
+      list-style: disc;
+
+      li {
+        margin-bottom: 15px;
+      }
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    p {
+      margin-bottom: 30px;
+      color: var(--ex-color-white);
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<div class="c-cookieBanner" [class.visible]="isShowCookieBanner">
+  <div class="c-cookieBanner__content">
+    <p class="c-cookieBanner__text">
+      {{'Ми використовуємо файли cookie, щоб покращити ваш досвід роботи з CoffeePhone, як описано в нашій ' | translate}}
+      <a routerLink="/privacy-policy" target="_blank" class="c-cookieBanner__link">{{'Політиці конфіденційності' | translate}}</a>.
+      {{'Продовжуючи користуватися цим сайтом, ви надаєте згоду на використання файлів cookie.' | translate}}
+    </p>
+    <button class="c-cookieBanner__btn" (click)="closeCookieBanner()">{{'Погоджуюся' | translate}}</button>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<ng-container *ngIf="writeoff.length; else usedAbonementEmpty">
+  <div class="c-dialogHistoryTable">
+    <div class="c-dialogHistoryTable__row c-dialogHistoryTable__row--head">
+      <div class="c-dialogHistoryTable__cell">{{'Дата/час' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Мережа' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Точка видачі' | translate}}</div>
+    </div>
+    <div class="c-dialogHistoryTable__row" *ngFor="let usedAbonement of writeoff"
+         (click)="openRowInfo(usedAbonement.data)">
+      <div class="c-dialogHistoryTable__cell c-dialogHistoryTable__cell--date"><span
+        class="mob">{{'Дата/час' | translate}}</span> {{usedAbonement.updated_at | date: 'd MMM y H:mm'}}</div>
+      <div class="c-dialogHistoryTable__cell">
+        <span class="mob">{{'Мережа' | translate}}:</span>
+        <div class="c-dialogHistoryTable__cellName">
+          <img [lazyLoad]="API_URL + usedAbonement.network.avatar"
+               defaultImage="/assets/img/img-not-loaded.svg"
+               [alt]="usedAbonement.network.name"
+               class="c-dialogHistoryTable__cellImg">
+          {{usedAbonement.network.name}}
+        </div>
+      </div>
+      <div class="c-dialogHistoryTable__cell">
+        <ng-container *ngIf="usedAbonement.coffee_shop">
+          <span class="mob">{{'Точка видачі' | translate}}:</span>
+          <div class="c-dialogHistoryTable__cellEstablishment">
+            <img [src]="API_URL + usedAbonement.coffee_shop.img" [alt]="usedAbonement.coffee_shop.region.name_en">
+            <span>
+            {{'м.' | translate}} {{getTranslatedCity(usedAbonement.coffee_shop.region.name_en)}}
+              <br>
+              {{usedAbonement.coffee_shop.address}}
+          </span>
+          </div>
+        </ng-container>
+      </div>
+
+      <mat-icon class="c-dialogHistoryTable__rowIconMore">more_vert</mat-icon>
+    </div>
+  </div>
+</ng-container>
+<ng-template #usedAbonementEmpty>
+  <p class="c-dialogHistory__empty">{{'На даний момент у вас немає ніяких списаних абонементів.' | translate}}</p>
+</ng-template>

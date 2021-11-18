@@ -1,0 +1,21 @@
+<mat-form-field appearance="fill" class="c-matSlider mb-6">
+  <div class="flex justify-between items-center text-sm font-normal">
+    <span>{{prefix | translate}}</span>
+    <span class="px-2 flex-1">
+        <mat-slider
+          class="w-full"
+          [max]="max"
+          [min]="min"
+          [value]="max"
+          [thumbLabel]="true"
+          (change)="value.emit(slider.value)"
+          #slider>
+      </mat-slider>
+      </span>
+    <span>{{slider.value}}{{suffix | translate}}</span>
+  </div>
+
+  <input type="text" [formControl]="control" matInput hidden>
+
+  <mat-error>{{prefix | translate}} {{'являється обов\'язковим полем!' | translate}}</mat-error>
+</mat-form-field>

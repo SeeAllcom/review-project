@@ -1,0 +1,36 @@
+<div class="c-dialog c-dialogScanner">
+  <div class="c-dialogScanner__closeBtns">
+    <button class="c-dialog__close" matDialogClose>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--center c-dialog__body--notPadding">
+    <div class="c-dialogScanner__wrapper">
+      <ng-container *ngIf="!error; else scanError">
+        <p class="c-dialogScanner__text">{{'Наведіть камеру на QR-код кав\'ярні' | translate}}</p>
+        <zxing-scanner
+          class="c-dialogScanner__scanner"
+          previewFitMode="cover"
+          [autofocusEnabled]="true"
+          (camerasNotFound)="camerasNotFoundHandler($event)"
+          (scanSuccess)="scanSuccessHandler($event)"
+          (scanError)="scanErrorHandler($event)"
+          (scanFailure)="scanFailureHandler($event)"
+          (scanComplete)="scanCompleteHandler($event)"></zxing-scanner>
+        <div *ngIf="isScanLoaded" class="c-dialogScanner__frame">
+          <span class="c-dialogScanner__frameBorder topLeft"></span>
+          <span class="c-dialogScanner__frameBorder topRight"></span>
+          <span class="c-dialogScanner__frameBorder bottomLeft"></span>
+          <span class="c-dialogScanner__frameBorder bottomRight"></span>
+          <p class="c-dialogScanner__frameText">QrCode</p>
+        </div>
+      </ng-container>
+      <ng-template #scanError>
+        <p class="c-dialogScanner__error">{{error | translate}}</p>
+        <button class="o-button o-button--gray"
+                (click)="result = ''; error = ''; isScanLoaded = false">{{'Сканувати ще раз' | translate}}</button>
+      </ng-template>
+    </div>
+  </div>
+  <spinner *ngIf="!isScanLoaded && !error" class="c-dialogScanner__spinner"></spinner>
+</div>

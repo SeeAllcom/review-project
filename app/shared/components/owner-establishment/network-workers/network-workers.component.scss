@@ -1,0 +1,121 @@
+@import "../../../../../../src/assets/styles/helpers/_mixins.scss";
+
+.c-workers {
+  &List {
+    &__table {
+      display: table;
+      width: 100%;
+
+      &Email {
+        display: flex;
+        align-items: center;
+      }
+
+      &Icon {
+        --mat-icon-size: 18px;
+
+        vertical-align: middle;
+        background: var(--ex-bg--900);
+        width: 20px !important;
+        height: 20px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-left: 5px;
+
+        &.confirmed {
+          color: var(--ex-color-green);
+        }
+
+        &.notConfirmed {
+          color: var(--ex-color-red);
+        }
+      }
+
+      &Cell {
+        display: table-cell;
+        padding: 5px 15px;
+        vertical-align: middle;
+
+        @include tablets {
+          border: none;
+        }
+
+        &--btns {
+          display: flex;
+          align-items: center;
+        }
+
+        &--date {
+          font-size: 12px;
+          opacity: 0.7;
+        }
+
+        &--center {
+          text-align: center;
+
+          @include phones {
+            text-align: left;
+          }
+        }
+      }
+
+      &Row {
+        display: table-row;
+        background: var(--ex-bg--800);
+
+        @include phones {
+          display: flex;
+          flex-direction: column;
+          padding: 10px 0;
+        }
+
+        &:nth-child(even):not(.c-workersList__tableRow--head) {
+          background: var(--ex-bg--700);
+        }
+
+        &--head {
+          @include phones {
+            display: none;
+          }
+
+          .c-workersList__tableCell {
+            font-weight: 600;
+          }
+        }
+      }
+
+      &Btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ex-color-white);
+        cursor: pointer;
+
+        &:not(:last-child) {
+          margin-right: 5px;
+        }
+
+        &--edit {
+          background: var(--ex-bg--gradientMain);
+        }
+
+        &--delete {
+          background: var(--ex-bg--gradientRed);
+        }
+
+        @include phones {
+          margin: unset;
+        }
+
+        &:hover {
+          box-shadow: 0 -70px 0 0 var(--hoverButtoncolor) inset;
+        }
+      }
+    }
+  }
+}

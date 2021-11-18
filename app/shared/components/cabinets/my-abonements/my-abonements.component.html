@@ -1,0 +1,149 @@
+<span *ngIf="network"
+      class="c-productsMobAction c-productsMobAction--right"
+      ngxClipboard [cbContent]="shopLinkForShare()"
+      (cbOnSuccess)="copyEstablishmentLink()">
+  <mat-icon class="o-shareBtn__icon">reply</mat-icon>
+</span>
+<div *ngIf="network && isTabletsOrMobiles()" class="swiper-container c-productsSwiper"
+     [swiper]="networkEstablishmentsConfig">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" (click)="openCoffeeShopPreview(network, -1)">
+      <img [src]="API_URL + network.avatar" [alt]="network.name" class="c-productsSwiper__img">
+    </div>
+    <div class="swiper-slide" *ngFor="let coffeeShop of getCoffeeShopsFromCurrentCity() let i = index"
+         (click)="openCoffeeShopPreview(coffeeShop, i)">
+      <div class="c-productsSwiper__info">
+        <p class="c-productsSwiper__infoTitle">{{coffeeShop.region.name_en | getLocalizationCityKey | translate}}</p>
+        <p class="c-productsSwiper__infoText">{{coffeeShop.address}}</p>
+        <p class="c-productsSwiper__infoCaption">{{'Тисніть, щоб розгорнути' | translate}}</p>
+      </div>
+      <img [lazyLoad]="API_URL + coffeeShop.img" defaultImage="/assets/img/img-not-loaded.svg"
+           alt="{{network.name}} - {{coffeeShop.region.name_en | getLocalizationCityKey | translate}} {{coffeeShop.address}}"
+           class="c-productsSwiper__img">
+    </div>
+    <div class="swiper-slide">
+      <div class="c-productsSwiper__content">
+        <p class="c-productsSwiper__title">{{'Ви можете переглянути більше закладів.' | translate}}</p>
+        <button class="o-button o-button--secondary"
+                (click)="openLocation()">{{'Переглянути всі заклади' | translate}}</button>
+      </div>
+    </div>
+  </div>
+  <div class="swiper-pagination c-productsSwiper__pagination"></div>
+</div>
+<div class="c-myAbonements" [ngClass]="{'c-myAbonements--blur': selectedCoffeeShop}">
+  <div class="c-cards__header">
+    <div class="container">
+      <div class="c-cards__headerContent">
+        <span class="c-cards__back" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </span>
+        <div class="c-cards__headerPreview previewHover" (click)="network ? openCoffeeShopPreview(network, -1) : false">
+          <img *ngIf="network?.avatar" class="c-cards__headerAvatar" defaultImage="/assets/img/img-not-loaded.svg"
+               [lazyLoad]="API_URL + network.avatar" [alt]="network.name">
+        </div>
+        <div class="c-cards__description">
+          <h1 class="c-cards__title">{{'Абонементи' | translate}}
+            <ng-container *ngIf="network">- {{network.name}}</ng-container>
+          </h1>
+          <h2
+            class="c-cards__subTitle">{{'Покажіть QR-код будь якого абонемента в кав\'ярні ' | translate}} {{network?.name}} {{' для того, щоб отримати своє замовлення' | translate}}</h2>
+        </div>
+        <span *ngIf="network"
+              class="o-shareBtn"
+              ngxClipboard [cbContent]="shopLinkForShare()"
+              (cbOnSuccess)="copyEstablishmentLink()">
+            <mat-icon class="o-shareBtn__icon">reply</mat-icon>
+          </span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="c-myAbonements__content">
+      <div class="c-myAbonementsList__wrapper">
+        <ng-container *ngIf="getAbonementsSub.closed; else loading">
+          <ng-container *ngIf="!error; else isErrorTemplate">
+            <ng-container *ngIf="abonements.length; else empty">
+              <notification *ngIf="deletedAbonements().length"
+                            [isEmitter]="true"
+                            (clickEmit)="getAbonements(this.currentEstablishmentSlug, true)"
+                            [NotificationType]="NotificationType.Bonuses"
+                            [btnTitle]="'Зарахувати бонуси' | translate"
+                            [title]="'Деякі ваші абонементи були видалені мережею у зв\'язку з тим, що вона більше не реалізує дану продукцію. На заміну видалених абонементів ви можете отримати ' + deletedAbonementsBonuses() + 'грн. бонусних коштів в даній кав\'ярні.' | translate">
+              </notification>
+              <ul class="c-myAbonementsList">
+                <li class="c-myAbonementsList__item" *ngFor="let abonement of abonements" [ngClass]="{'deleted': isDeletedAbonement(abonement)}">
+                  <div class="c-myAbonementsList__itemInfo">
+                    <div class="c-myAbonementsList__preview previewHover" (click)="openAbonementPreview(abonement)">
+                      <img
+                        [lazyLoad]="abonement.product? API_URL + abonement.product.img : '/assets/img/img-not-loaded.svg'"
+                        defaultImage="/assets/img/img-not-loaded.svg"
+                        [alt]="abonement.product ? abonement.product.name : abonement.product_name"
+                        class="c-myAbonementsList__img">
+                      <span class="c-myAbonementsList__badge">{{'Абонемент' | translate}}</span>
+                      <span *ngIf="isNewAbonement(abonement)" class="c-myAbonementsList__badge c-myAbonementsList__badge--new">{{'Новий' | translate}}</span>
+                    </div>
+                    <div class="c-myAbonementsList__description">
+                      <p class="c-myAbonementsList__title">
+                        {{abonement.product ? abonement.product.name : abonement.product_name}}
+                      </p>
+                      <p *ngIf="abonement.product && abonement.product.capacity" class="c-myAbonementsList__capacity">
+                        {{'Ємність:' | translate}} {{abonement.product.capacity.size}}{{abonement.product.capacity.unit}}
+                      </p>
+                      <p *ngIf="isDeletedAbonement(abonement)" class="c-myAbonementsList__text">
+                        {{'Деякі варіанти даного абонементу більше недоступні. Розгорніть, щоб побачити.' | translate}}
+                      </p>
+                      <p class="c-myAbonementsList__count">{{'Кількість' | translate}}: {{abonement.quantity}}</p>
+                    </div>
+                  </div>
+                  <button class="c-myAbonementsList__btn" (click)="openAbonementPreview(abonement)">
+                    {{'Використати' | translate}}
+                  </button>
+                </li>
+              </ul>
+            </ng-container>
+            <ng-template #empty>
+              <div class="c-cards__empty">
+                <p class="c-cards__emptyTitle">
+                  {{'У вас ще немає ніяких абонементів.' | translate}} 😧
+                </p>
+                <p class="c-cards__emptyText">
+                  {{'Виберіть місто і заклад в ньому для того, щоб придбати абонемент.' | translate}}
+                </p>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-template #isErrorTemplate>
+            <div class="c-cards__empty">
+              <p class="c-cards__emptyText">{{error | translate}}</p>
+            </div>
+          </ng-template>
+
+          <network-info *ngIf="network"
+                        [network]="network"
+                        [networkLoaded]="getAbonementsSub.closed"
+                        [isMobile]="true"></network-info>
+        </ng-container>
+        <ng-template #loading>
+          <spinner class="c-cards__spinner"></spinner>
+        </ng-template>
+      </div>
+
+      <div class="c-myAbonementsBasket__wrapper">
+        <shopping-cart [network]="network"
+                       [friendsData]="friendsData"
+                       [pageLoaded]="getAbonementsSub.closed"
+                       [currentCartType]="cartType.MyAbonements"></shopping-cart>
+
+        <network-info *ngIf="network" [network]="network" [networkLoaded]="getAbonementsSub.closed"></network-info>
+      </div>
+    </div>
+  </div>
+</div>
+
+<shopping-cart [isMobile]="true"
+               [network]="network"
+               [friendsData]="friendsData"
+               [pageLoaded]="getAbonementsSub.closed"
+               [currentCartType]="cartType.MyAbonements"></shopping-cart>
+

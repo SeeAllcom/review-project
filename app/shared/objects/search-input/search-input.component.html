@@ -1,0 +1,6 @@
+<div class="c-searchWrapper" (click)="searchShown = true"
+     [ngClass]="{'c-searchWrapper--fixed': isFixed, 'c-searchWrapper--show': searchShown}">
+  <input type="text" (keyup)="getValue(searchInput.value)" #searchInput [value]="searchValue$ | async" class="c-search"
+         [placeholder]="searchShown || !isFixed ? (placeholder | translate) : ''">
+  <mat-icon class="c-searchIcon">search</mat-icon>
+</div>

@@ -1,0 +1,428 @@
+@import "./src/assets/styles/helpers/_extends.scss";
+@import "./src/assets/styles/helpers/_mixins.scss";
+
+:root {
+  --ex-userAvatar-width: 150px;
+  --ex-friendAvatar-width: 130px;
+  --ex-friendItem-width: 20%;
+
+  @include phones-l {
+    --ex-userAvatar-width: 100px;
+  }
+}
+
+.c-friends {
+  &__preview {
+    &Spinner {
+      --mat-spinner-size: 100%;
+
+      z-index: 10;
+      opacity: 0;
+      visibility: collapse;
+      transition: var(--ex-transition-primary);
+
+      &.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .spinner {
+        position: absolute !important;
+        left: 0;
+        top: 0;
+      }
+    }
+  }
+  &User {
+    position: relative;
+    margin-bottom: 30px;
+    background: var(--ex-bg--gradientDark);
+
+    &__name {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ex-color-orange);
+
+      @include phones-l {
+        font-size: 18px;
+      }
+    }
+
+    &__content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      z-index: 6;
+      margin-left: 20px;
+
+      @include phones-xs {
+        margin-left: 0;
+        margin-top: 20px;
+      }
+
+      &Row {
+        display: flex;
+        margin-top: 10px;
+
+        @include phones-xs {
+          justify-content: center;
+        }
+      }
+
+      &Col {
+        text-align: center;
+        cursor: pointer;
+
+        &:not(:last-child) {
+          margin-right: 15px;
+
+          @include phones-m {
+            margin-right: 10px;
+          }
+        }
+      }
+
+      .o-button {
+        --buttonMinWidth: auto;
+        --buttonMinHeight: auto;
+
+        padding: 5px 10px;
+        background: none;
+        border: 1px solid var(--ex-color-light-blue);
+        border-radius: 5px;
+
+        &Icon {
+          @include tablets {
+            display: none;
+          }
+        }
+      }
+    }
+
+    &__title {
+      color: var(--ex-color-light-blue);
+      font-size: 12px;
+      text-transform: uppercase;
+
+      &.active {
+        color: var(--ex-color-orange);
+      }
+    }
+
+    &__number {
+      font-size: 28px;
+      color: var(--ex-color-white);
+      margin-bottom: 0;
+
+      @include phones-m {
+        font-size: 20px;
+      }
+    }
+
+    &__preview {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    &__header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 20px 0 ;
+      z-index: 5;
+
+      @include phones-xs {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    &__back {
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      line-height: initial;
+      border-radius: var(--borderRadius-primary);
+      z-index: 6;
+      color: var(--ex-color-white);
+      margin-right: 30px;
+
+      @include phones-l {
+        margin-right: 5px;
+      }
+
+      @include phones-xs {
+        position: absolute;
+        left: 0;
+        transform: translateX(calc(-100% + -10px));
+      }
+
+      &Text {
+        margin-left: 8px;
+
+        @include phones-l {
+          display: none;
+        }
+      }
+    }
+
+    &__avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      animation: fadeInWithScale 300ms both;
+
+      &Wrapper {
+        position: relative;
+        width: var(--ex-userAvatar-width);
+        min-width: var(--ex-userAvatar-width);
+        height: var(--ex-userAvatar-width);
+        background: var(--ex-bg--900);
+        padding: 5px;
+        z-index: 6;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+    }
+  }
+
+  &List {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -20px;
+
+    &__item {
+      width: var(--ex-friendItem-width);
+      padding-left: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-self: stretch;
+      overflow-x: auto;
+      border-radius: var(--borderRadius-primary);
+
+      &--disabled {
+        opacity: 0.8;
+        pointer-events: none;
+      }
+
+      @include tablets-xl {
+        --ex-friendItem-width: 25%;
+      }
+
+      @include tablets {
+        --ex-friendItem-width: 33%;
+      }
+
+      @include phones-l {
+        --ex-friendItem-width: 50%;
+      }
+
+      @include phones-xs {
+        --ex-friendItem-width: 100%;
+      }
+
+      @extend %none-scrollbar;
+
+      &Content {
+        min-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: var(--ex-bg--800);
+        border-radius: var(--borderRadius-primary);
+        transition: var(--ex-transition-primary);
+
+        &Add {
+          --mat-icon-size: 50px;
+
+          margin-bottom: 20px;
+          width: var(--ex-friendAvatar-width);
+          min-width: var(--ex-friendAvatar-width);
+          height: var(--ex-friendAvatar-width);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--ex-bg--700);
+          cursor: pointer;
+          transition: var(--ex-transition-secondary);
+
+          &:hover {
+            transform: rotate(90deg) scale(1.1);
+          }
+        }
+      }
+
+      &Actions {
+        display: flex;
+        transition: var(--ex-transition-primary);
+      }
+
+      &Action {
+        --mat-icon-size: 30px;
+
+        align-self: stretch;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ex-color-white);
+        background: var(--ex-bg--gradientViolet);
+        cursor: pointer;
+
+        &:first-child {
+          border-radius: var(--borderRadius-primary) 0 0 var(--borderRadius-primary);
+        }
+
+        &:last-child {
+          border-radius: 0 var(--borderRadius-primary) var(--borderRadius-primary) 0;
+        }
+
+        &:hover {
+          opacity: 0.9;
+        }
+
+        &--delete {
+          background: var(--ex-bg--gradientRed);
+        }
+      }
+
+      &.onboarding {
+        overflow: hidden;
+
+        .c-friendsList__item {
+          &Content {
+            transform: translateX(-100px);
+          }
+
+          &Actions {
+            transform: translateX(-100px);
+          }
+        }
+      }
+    }
+
+    &__preview {
+      position: relative;
+      width: 100%;
+      max-width: var(--ex-friendAvatar-width);
+      max-height: var(--ex-friendAvatar-width);
+      margin-bottom: 10px;
+      cursor: pointer;
+      background: var(--ex-bg--900);
+      padding: 3px;
+      border-radius: 50%;
+
+      &::before {
+        content: '';
+        display: block;
+        padding-bottom: 100%;
+      }
+
+      &Header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+
+      .c-friends__previewSpinner {
+        --mat-spinner-stroke: 3px !important;
+      }
+    }
+
+    &__avatar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    &__badge {
+      background: var(--ex-bg--gradientMain);
+      color: var(--ex-color-white);
+      font-weight: 600;
+      font-size: 15px;
+      min-width: 30px;
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      line-height: normal;
+      padding: 5px;
+      cursor: pointer;
+      transform: translateX(10px);
+      z-index: 2;
+
+      &--gift {
+        background: var(--ex-bg--gradientViolet);
+      }
+
+      &Text {
+        margin-left: 3px;
+      }
+
+      .mat-icon {
+        --mat-icon-size: 18px;
+      }
+    }
+
+    &__name {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--ex-color-white);
+    }
+
+    &__email {
+      font-size: 14px;
+      color: var(--ex-color-light-blue);
+      text-align: center;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    &__text {
+      margin-top: 5px;
+      color: var(--ex-color-light-blue);
+    }
+
+    &__btn {
+      width: 100%;
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ex-color-white);
+      text-align: left;
+      border: 1px solid var(--ex-color-light-blue);
+      border-radius: var(--borderRadius-primary);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: auto;
+
+      .mat-icon {
+        margin-right: 8px;
+      }
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}

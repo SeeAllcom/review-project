@@ -1,0 +1,31 @@
+<form class="c-dialog c-dialog--small" [formGroup]="localizationForm" (ngSubmit)="setLocalizations(localizationForm)">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Мова' | translate}}</p>
+    <button class="c-dialog__close" type="button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--center c-dialog__body--padding">
+    <p class="c-dialog__text c-dialog__text--small">
+      {{'Оберіть мову для продука CoffeePhone. Це може вплинути на правопис або словниковий запас, що використовується деякими з них.' | translate}}
+    </p>
+
+    <mat-form-field class="c-localization__country" appearance="fill">
+      <svg matPrefix class="c-localization__countryIcon">
+        <use [attr.xlink:href]="'assets/img/icons/sprites/'+flagsSpriteName+'#icon-flag-'+languageIcon"/>
+      </svg>
+      <mat-label>{{'Мова' | translate}}</mat-label>
+      <mat-select disableOptionCentering
+                  formControlName="language"
+                  (valueChange)="setLanguageIcon(languages[$event])">
+        <mat-option *ngFor="let lang of languages | keyvalue: originalOrder" [value]="lang.key">{{lang.value.title}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--gray" type="button" (click)="closeDialog()">{{'Закрити' | translate}}</button>
+      <button class="o-button o-button--secondary" type="submit">{{'Застосувати' | translate}}</button>
+    </div>
+  </div>
+</form>

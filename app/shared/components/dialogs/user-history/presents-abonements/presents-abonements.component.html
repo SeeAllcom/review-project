@@ -1,0 +1,43 @@
+<ng-container *ngIf="presents.length; else presentAbonementEmpty">
+  <div class="c-dialogHistoryTable">
+    <div class="c-dialogHistoryTable__row c-dialogHistoryTable__row--head">
+      <div class="c-dialogHistoryTable__cell">{{'Дата/час' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Заклад' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Ви/вам подарували' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Ім\'я відправника/отримувача' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Email відправника/отримувача' | translate}}</div>
+    </div>
+    <div class="c-dialogHistoryTable__row" *ngFor="let presentAbonement of presents"
+         (click)="openRowInfo(presentAbonement.data)">
+      <div class="c-dialogHistoryTable__cell c-dialogHistoryTable__cell--date"><span
+        class="mob">{{'Дата/час' | translate}}</span> {{presentAbonement.created_at | date: 'd MMM y H:mm'}}</div>
+      <div class="c-dialogHistoryTable__cell">
+        <span class="mob">{{'Заклад' | translate}}:</span>
+        <div class="c-dialogHistoryTable__cellName">
+          <img [lazyLoad]="API_URL + presentAbonement.network.avatar"
+               defaultImage="/assets/img/img-not-loaded.svg"
+               [alt]="presentAbonement.network.name"
+               class="c-dialogHistoryTable__cellImg">
+          {{presentAbonement.network.name}}
+        </div>
+      </div>
+      <div class="c-dialogHistoryTable__cell"
+           [ngClass]="{'c-dialogHistoryTable__cell--green': !presentAbonement.you_gave_present, 'c-dialogHistoryTable__cell--orange': presentAbonement.you_gave_present}">
+        <span class="mob">{{'Ви/вам подарували' | translate}}</span>
+        {{presentAbonement.you_gave_present ? ('Ви подарували' | translate) : ('Вам подарували' | translate)}}
+      </div>
+      <div class="c-dialogHistoryTable__cell">
+        <span class="mob">{{presentAbonement.you_gave_present ? ('Ім\'я отримувача' | translate) : ('Ім\'я відправника' | translate)}}</span>
+        {{presentAbonement.user.name}}
+      </div>
+      <div class="c-dialogHistoryTable__cell">
+        <span class="mob">{{presentAbonement.you_gave_present ? ('Email отримувача' | translate) : ('Email відправника' | translate)}}</span>
+        {{presentAbonement.user.email}}
+      </div>
+      <mat-icon class="c-dialogHistoryTable__rowIconMore">more_vert</mat-icon>
+    </div>
+  </div>
+</ng-container>
+<ng-template #presentAbonementEmpty>
+  <p class="c-dialogHistory__empty">{{'На даний момент у вас немає ніяких подарованих абонементів.' | translate}}</p>
+</ng-template>

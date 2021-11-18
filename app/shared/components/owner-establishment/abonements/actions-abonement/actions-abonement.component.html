@@ -1,0 +1,135 @@
+<form [formGroup]="form" class="c-dialog c-dialog--autoHeight c-dialog--average" (ngSubmit)="send()">
+  <div class="c-dialog__header">
+    <p
+      class="c-dialog__title">{{isAddAbonementTemplate ? 'Додавання абонементу' : 'Редагування абонементу' | translate}}</p>
+    <button class="c-dialog__close" type="button" matDialogClose>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body--padding overflow-y-auto">
+    <ng-container *ngIf="isAddAbonementTemplate">
+      <ul class="mb-5 overflow-x-scroll whitespace-nowrap">
+        <li
+          class="relative inline-flex justify-center items-center rounded-md py-2.5 px-3.5 border border-transparent overflow-hidden cursor-pointer mr-2.5 last:mr-0 h-8"
+          *ngFor="let category of categories"
+          [ngClass]="{'border-orange-500': categoryId === category.id}"
+          (click)="getCategoriesWithProduct(category.id)">
+          <div class="absolute left-0 top-0 w-full h-full">
+            <img [src]="API_URL + category.img" alt="" class="w-full h-full rounded-xs object-cover z-0">
+            <span class="absolute bg-black bg-opacity-50 block h-full left-0 top-0 w-full z-10"></span>
+          </div>
+          <p class="text-white font-bold text-center text-xs z-20">
+            {{getCategoryName(category.name) | translate}}
+          </p>
+        </li>
+      </ul>
+
+      <mat-form-field appearance="fill" class="c-friendsSelect__field">
+        <mat-label>{{'Виберіть товар' | translate}}</mat-label>
+        <mat-select
+          formControlName="product_id"
+          disableOptionCentering
+          required
+          [disabled]="!getProductsSub.closed"
+          role="listbox">
+          <mat-option>
+            <ngx-mat-select-search
+              [(ngModel)]="searchValue"
+              [ngModelOptions]="{standalone: true}"
+              [placeholderLabel]="'Знайти продукт' | translate"
+              noEntriesFoundLabel="{{'Ми не знайшли такого продукта' | translate}} 😞"
+              [ariaLabel]="'Знайти продукт' | translate"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let product of products | search:searchValue" role="listitem"
+                      [value]="product.id" (click)="selectProduct(product)">
+            <img [src]="API_URL + product.img" alt=""> {{product.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('product_id').hasError('required')">
+          {{'Поле є обов\'язкове!' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <div *ngIf="!isAddAbonementTemplate" class="flex items-center mb-3.5">
+      <div class="w-28 h-28 mr-2.5">
+        <img [src]="API_URL + data.abonement.product.img" alt="" class="w-full h-full object-cover rounded-xl">
+      </div>
+      <div class="flex-1">
+        <span class="bg-gray-500 block font-bold mb-2 px-2 py-1 rounded text-white text-xs w-max"
+              [ngClass]="{
+              'bg-gray-500': data.status === AbonementStatus.DidNotStart,
+              'bg-green-500': data.status === AbonementStatus.Started,
+              'bg-red-500': data.status === AbonementStatus.IsOver
+              }" [ngSwitch]="data.status">
+          <ng-container *ngSwitchCase="AbonementStatus.DidNotStart">{{'Ще не розпочався' | translate}}</ng-container>
+          <ng-container *ngSwitchCase="AbonementStatus.Started">{{'Активний' | translate}}</ng-container>
+          <ng-container *ngSwitchCase="AbonementStatus.IsOver">{{'Закінчився' | translate}}</ng-container>
+        </span>
+        <p class="text-white font-bold mb-2.5 text-xl">
+          {{data.abonement.product.name}} {{data.abonement.quantity}}{{'шт.' | translate}}
+        </p>
+        <p>
+          {{'Від'}} {{data.abonement.date_start | date: 'dd MMMM yyyy'}} {{'року' | translate}}. <br>
+          {{'До'}} {{data.abonement.date_end | date: 'dd MMMM yyyy'}} {{'року' | translate}}.
+        </p>
+      </div>
+    </div>
+
+    <mat-form-field *ngIf="isAddAbonementTemplate" appearance="fill" class="c-searchField">
+      <mat-label>{{'Кількість продуктів в абонементі' | translate}}</mat-label>
+      <label>
+        <input type="text" numbersOnly matInput formControlName="quantity" min="1" required>
+      </label>
+      <mat-error *ngIf="form.get('quantity').hasError('required')">
+        {{'Кількість є обов\'язковою' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <number-slider
+      [prefix]="'Ціна' | translate"
+      [suffix]="'грн' | translate"
+      [min]="1"
+      (value)="form.controls['price'].patchValue($event)"
+      [max]="getAbonementMaxPrice()"></number-slider>
+
+    <mat-form-field *ngIf="isAddAbonementTemplate" appearance="fill">
+      <mat-label>{{'Виберіть дату' | translate}}</mat-label>
+      <mat-date-range-input [rangePicker]="rangePicker" [min]="minDate">
+        <input matStartDate formControlName="date_start" [placeholder]="'Дата початку' | translate">
+        <input matEndDate formControlName="date_end" [placeholder]="'Дата закінчення' | translate">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>{{'Відмінити' | translate}}</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>{{'Застосувати' | translate}}</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+      <mat-error
+        *ngIf="form.get('date_start').hasError('required') || form.get('date_end').hasError('required')">
+        {{'Дата початку і закінчення є обов\'язковою' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{'Введіть опис' | translate}}</mat-label>
+      <label>
+        <textarea formControlName="description" matInput></textarea>
+      </label>
+    </mat-form-field>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--gray" type="button" matDialogClose>{{'Відмінити' | translate}}</button>
+      <button class="o-button o-button--secondary" type="submit" [disabled]="!sendSub.closed">
+        <ng-container *ngIf="sendSub.closed; else sending">
+          {{isAddAbonementTemplate ? 'Додати' : 'Зберегти' | translate}}
+        </ng-container>
+        <ng-template #sending>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,36 @@
+.c-auth__notification {
+  margin: 30px auto;
+  max-width: 360px;
+}
+.c-authForm {
+  display: flex;
+  flex-direction: column;
+  max-width: 360px;
+  padding: 15px;
+  border: 1px solid var(--color-powdery);
+  margin: 50px auto;
+}
+.c-authForm__title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.c-authForm__btn {
+  min-width: 100px;
+  min-height: 40px;
+  padding: 5px 15px;
+  background: var(--color-powdery);
+  text-transform: uppercase;
+  color: var(--color-black);
+  cursor: pointer;
+  margin-top: 20px;
+}
+.c-authForm__inputWrapper {
+  margin-bottom: 5px;
+}
+.c-authForm__error {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/*# sourceMappingURL=login.component.css.map */

@@ -1,0 +1,100 @@
+@import "../../../../../../src/assets/styles/helpers/_extends.scss";
+@import "../../../../../../src/assets/styles/helpers/_mixins.scss";
+
+.c-ownerProducts {
+  --category-item-margin: 15px;
+
+  @include phones-m {
+    --category-item-margin: 10px;
+  }
+
+  &__category {
+    position: sticky;
+    top: -30px;
+    overflow: auto;
+    max-width: 100%;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    z-index: 9;
+    background: var(--ex-bg--900);
+
+    @extend %none-scrollbar;
+
+    &List {
+      display: flex;
+      margin-left: calc(0px - var(--category-item-margin));
+    }
+
+    &Img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      object-fit: cover;
+      transition: var(--ex-transition-primary);
+    }
+
+    &Title {
+      position: relative;
+      color: var(--ex-color-white);
+      font-weight: 600;
+      font-size: 13px;
+      z-index: 2;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 0;
+
+      @include phones-m {
+        font-size: 12px;
+      }
+    }
+
+    &Item {
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      width: auto;
+      max-width: 250px;
+      min-width: 150px;
+      border-radius: var(--borderRadius-primary);
+      margin-left: var(--category-item-margin);
+      padding: 5px 15px;
+      cursor: pointer;
+      border: 1px solid var(--ex-bg--900);
+      transition: var(--ex-transition-primary);
+
+      @include phones-m {
+        height: 40px;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+
+      &:hover,
+      &.active {
+        border-color: var(--ex-color-main);
+
+        @include tablets-l-more {
+          .c-ownerProducts__categoryImg {
+            transform: scale(1.2);
+          }
+        }
+      }
+    }
+  }
+}

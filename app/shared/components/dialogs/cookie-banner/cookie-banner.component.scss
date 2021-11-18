@@ -1,0 +1,51 @@
+@import "src/assets/styles/helpers/_mixins.scss";
+
+.c-cookieBanner {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  padding: 20px;
+  z-index: 999;
+  max-width: 1340px;
+  transition: var(--ex-transition-primary);
+  transform: translateY(-100%);
+  visibility: collapse;
+
+  &.visible {
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    background: var(--ex-bg--700);
+    border-radius: 10px;
+    box-shadow: 0 0 13px 0 rgb(0 0 0 / 60%);
+    padding: 20px;
+  }
+
+  &__text {
+    font-size: 14px;
+    color: var(--ex-color-white);
+
+    @include phones-m {
+      font-size: 12px;
+    }
+  }
+
+  &__link {
+    color: var(--ex-color-main);
+  }
+
+  &__btn {
+    color: var(--ex-color-white);
+    font-size: 13px;
+    font-weight: 600;
+    margin-left: auto;
+    cursor: pointer;
+  }
+}

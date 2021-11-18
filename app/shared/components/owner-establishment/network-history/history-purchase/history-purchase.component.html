@@ -1,0 +1,55 @@
+<ng-container *ngIf="purchases.length; else purchasesEmpty">
+  <div class="c-dialogHistoryTable">
+    <div class="c-dialogHistoryTable__row c-dialogHistoryTable__row--head">
+      <div class="c-dialogHistoryTable__cell">{{'Дата/час' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Ім\'я покупця' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Email покупця' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Ваша ціна' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Сплатив покупець' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Зараховано на рахунок' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Бонусів' | translate}}</div>
+    </div>
+    <div class="c-dialogHistoryTable__row" *ngFor="let purchase of purchases" (click)="openRowInfo(purchase.data)">
+      <div class="c-dialogHistoryTable__cell c-dialogHistoryTable__cell--date"><span
+        class="mob">{{'Дата/час' | translate}}</span> {{(purchase.paid_at ? purchase.paid_at : purchase.updated_at) | date: 'd MMM y H:mm'}}</div>
+      <div class="c-dialogHistoryTable__cell"><span class="mob">{{'Ім\'я покупця' | translate}}
+        :</span> {{purchase.user.name}}</div>
+      <div class="c-dialogHistoryTable__cell"><span class="mob">{{'Email покупця' | translate}}
+        :</span> {{purchase.user.email}}</div>
+      <div class="c-dialogHistoryTable__cell"><span class="mob">{{'Ваша ціна' | translate}}
+        :</span> {{purchase.price}}{{'грн' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell" [ngClass]="{'c-dialogHistoryTable__cell--red': !purchase.paid_at}">
+        <span class="mob">{{'Сплатив покупець' | translate}}:</span>
+        <ng-container *ngIf="purchase.paid_at; else notPaidOperation">
+          {{purchase.price}}{{'грн' | translate}}
+        </ng-container>
+        <ng-template #notPaidOperation>
+          {{'Не оплачено' | translate}}
+          <ng-container *ngIf="purchase.is_spoiled === 1">
+            <br> {{'Замовлення недійсне' | translate}}
+          </ng-container>
+        </ng-template>
+      </div>
+      <div class="c-dialogHistoryTable__cell" [class.c-dialogHistoryTable__cell--green]="purchase.price_at">
+        <span class="mob">{{'Зараховано на рахунок' | translate}}:</span>
+        <ng-container *ngIf="purchase.payment_bonuses !== 1">
+          <ng-container *ngIf="purchase.price_at">+</ng-container>{{purchase.price_at ? purchase.price_at : '0'}}{{'грн' | translate}}
+        </ng-container>
+        <ng-container *ngIf="purchase.payment_bonuses === 1">
+          <span class="c-dialogHistoryTable__cellBonuses">{{'Оплачено бонусами' | translate}}</span>
+        </ng-container>
+      </div>
+      <div class="c-dialogHistoryTable__cell c-dialogHistoryTable__cell--violet">
+        <ng-container *ngIf="purchase.price_at else notPaid">
+          <span class="mob">{{'Бонуси' | translate}}:</span> {{purchase.bonus}}{{'грн' | translate}}
+        </ng-container>
+      </div>
+
+      <mat-icon class="c-dialogHistoryTable__rowIconMore">more_vert</mat-icon>
+    </div>
+  </div>
+</ng-container>
+<ng-template #purchasesEmpty>
+  <p class="c-dialogHistory__empty">{{'На даний момент у вас немає ніяких покупок.' | translate}}</p>
+</ng-template>
+<ng-template #notPaid>-</ng-template>

@@ -1,0 +1,48 @@
+<div class="c-footer">
+  <div *ngIf="isFooterVisible" class="c-footerDialog__overlay" (click)="toggleFooterVisibility()"></div>
+  <div class="c-footerDialog" [ngClass]="{'visible': isFooterVisible}">
+    <div class="container">
+      <ul class="c-footerDialog__list c-footerDialog__list--link c-footerDialog__list--margBottom">
+        <li class="c-footerDialog__listItem">
+          <a routerLink="/privacy-policy" class="c-footerDialog__listLink" (click)="toggleFooterVisibility()">{{'Політика конфіденційності' | translate}}</a>
+        </li>
+        <li class="c-footerDialog__listItem">
+          <a routerLink="/terms-of-use" class="c-footerDialog__listLink" (click)="toggleFooterVisibility()">{{'Правила користування' | translate}}</a>
+        </li>
+        <li class="c-footerDialog__listItem">
+          <a routerLink="/faq" class="c-footerDialog__listLink" (click)="toggleFooterVisibility()">{{'Питання і відповіді' | translate}}</a>
+        </li>
+        <li class="c-footerDialog__listItem">
+          <a routerLink="/what-is-coffeephone" class="c-footerDialog__listLink" (click)="toggleFooterVisibility()">{{'Про нас' | translate}}</a>
+        </li>
+        <li class="c-footerDialog__listItem">
+          <a routerLink="/network/for-partners" class="c-footerDialog__listLink" (click)="toggleFooterVisibility()">{{'Партнерам' | translate}}</a>
+        </li>
+      </ul>
+      <ul class="c-footerDialog__list c-footerDialog__list--margBottom c-footerDialog__list--payments">
+        <li class="c-footerDialog__listItem" *ngFor="let payment of payments">
+          <a [href]="payment.link" target="_blank" rel="nofollow noopener noreferrer" (click)="toggleFooterVisibility()">
+            <img [src]="payment.imgSrc" [alt]="payment.name" class="c-footerDialog__listImg">
+          </a>
+        </li>
+      </ul>
+      <p class="c-footerDialog__linkText">
+        {{'Зв\'язатися з нами: ' | translate}}
+        <a class="c-footerDialog__link" href="mailto:support@coffeephone.net">support@coffeephone.net</a>
+      </p>
+<!--      <a class="c-footerDialog__linkText c-footerDialog__linkText&#45;&#45;link" href="https://t.me/coffeephonebot" target="_blank" rel="noopener noreferrer nofollow">-->
+<!--        <mat-icon>chat</mat-icon> {{'Тех. Підтримка' | translate}}-->
+<!--      </a>-->
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="c-footer__content" (click)="toggleFooterVisibility()">
+      <p class="c-footer__text">© {{currentYear}} {{'CoffeePhone. Всі права захищені' | translate}}</p>
+      <span class="c-footer__button" [ngClass]="{'close': isFooterVisible}">
+        <mat-icon class="c-footer__buttonIcon info">info</mat-icon>
+        <mat-icon class="c-footer__buttonIcon close">close</mat-icon>
+      </span>
+    </div>
+  </div>
+</div>

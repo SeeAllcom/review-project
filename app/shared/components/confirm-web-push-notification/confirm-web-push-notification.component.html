@@ -1,0 +1,7 @@
+<ng-container *ngIf="requestPermissionLoaded">
+  <notification *ngIf="!isIos && !isGranted && !(isGrantedState$ | async)"
+                [title]="title | translate"
+                [isEmitter]="true"
+                [btnTitle]="'Дозволити'"
+                (clickEmit)="confirmWebNotification()"></notification>
+</ng-container>

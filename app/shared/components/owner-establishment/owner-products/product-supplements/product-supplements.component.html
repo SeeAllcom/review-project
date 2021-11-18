@@ -1,0 +1,76 @@
+<ng-container *ngIf="getFormControls(formProductSupplements, 'supplements').length || !notificationsShown; else notSupplements">
+  <form class="c-productSupplements__form" [formGroup]="formProductSupplements">
+    <div formArrayName="supplements" class="c-productSupplements">
+      <div *ngFor="let supplement of getFormControls(formProductSupplements, 'supplements'); let supplementIndex = index"
+           class="c-productSupplements__supplements">
+        <ng-container [formGroupName]="supplementIndex">
+          <p class="c-productSupplements__title">{{'Група добавок' | translate}}: {{supplementIndex + 1}}</p>
+          <mat-checkbox formControlName="choice_only_one"
+                        class="c-productSupplements__checkbox"
+                        (click)="choiceOnlyOne(supplement)">{{'Вибрати тільки одну позицію' | translate}}</mat-checkbox>
+          <mat-form-field appearance="fill">
+            <mat-label>{{'Назва групи добавок' | translate}}</mat-label>
+            <input type="text" formControlName="name"
+                   [placeholder]="'Прик. Виберіть молоко, Додайте сироп, Бажаєте замінник цукру?' | translate" matInput required>
+            <mat-error *ngIf="supplement.get('name').hasError('required')">
+              {{'Назва добавок є обов\'язковим' | translate}}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field *ngIf="!supplement.controls['choice_only_one'].value" appearance="fill">
+            <mat-label>{{'Максимально для додавання' | translate}}</mat-label>
+            <input type="number" formControlName="max_options" numbersOnly
+                   [placeholder]="'Макс. кількість добавок для даного товару' | translate" matInput>
+          </mat-form-field>
+          <button (click)="deleteSupplement(supplementIndex)" type="button" class="c-productSupplements__delete" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+          <div formArrayName="options" class="c-productSupplements__optionsWrapper">
+            <div *ngFor="let option of getFormControls(supplement, 'options'); let optionIndex = index"
+                 class="c-productSupplements__options">
+              <ng-container [formGroupName]="optionIndex">
+                <div class="c-productSupplements__row">
+                  <div class="c-productSupplements__col">
+                    <mat-form-field>
+                      <mat-label>{{'Назва добавки' | translate}}</mat-label>
+                      <label>
+                        <input type="text" formControlName="name" [placeholder]="'Прик. Кокосове молоко, Сироп Ваніль, Маршмелоу' | translate"
+                               matInput required>
+                      </label>
+                      <mat-error *ngIf="option.get('name').hasError('required')">
+                        {{'Назва добавки є обов\'язковим' | translate}}
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="c-productSupplements__col">
+                    <mat-form-field>
+                      <mat-label>{{'Ціна добавки' | translate}}</mat-label>
+                      <label>
+                        <input type="number" formControlName="price" numbersOnly
+                               [placeholder]="'Залиште пустим, якщо 0грн' | translate" matInput>
+                      </label>
+                      <span matSuffix>{{'грн' | translate}}</span>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <button *ngIf="getFormControls(supplement, 'options').length > 1" (click)="deleteOption(supplement.controls.options, optionIndex)"
+                        type="button" class="c-productSupplements__delete" mat-icon-button>
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </ng-container>
+            </div>
+          </div>
+          <button (click)="addNewOption(supplement.controls.options)" type="button"
+                  class="c-productSupplements__btn" mat-stroked-button color="primary">{{'Додати позицію' | translate}}</button>
+        </ng-container>
+      </div>
+    </div>
+  </form>
+  <button (click)="addNewSupplement()" class="c-productSupplements__btnGroup" type="button" mat-stroked-button>{{'Додати групу добавок' | translate}}</button>
+</ng-container>
+<ng-template #notSupplements>
+  <notification
+    [title]="'Додайте різні примусові і стандартні добавки для даного товару. Наприклад: вибір молока, сиропу, цукру, тошо. Якщо добавки не потрібні, проігноруйте дане повідомлення.' | translate"
+    [btnTitle]="'Додати групу добавок' | translate"
+    [isEmitter]="true"
+    (clickEmit)="addNewSupplement()"></notification>
+</ng-template>

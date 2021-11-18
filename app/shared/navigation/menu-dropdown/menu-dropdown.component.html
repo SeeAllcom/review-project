@@ -1,0 +1,73 @@
+<div class="c-user">
+  <div class="c-user__avatarBlock" [matMenuTriggerFor]="userNav">
+    <img [src]="(userData$ | async) && (userData$ | async).avatar ? API_URL + (userData$ | async).avatar : '/assets/img/img-user-avatar.svg'" alt="" class="c-user__avatar">
+    <mat-icon>expand_more</mat-icon>
+  </div>
+
+  <mat-menu #userNav="matMenu"
+            yPosition="below"
+            xPosition="before"
+            [overlapTrigger]="false"
+            class="c-dropdownList">
+    <a *ngIf="(isUserLogin$ | async)" routerLink="/cabinet/establishments-abonements" class="c-dropdownList__link"
+       mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">qr_code</mat-icon>
+      {{'Мої абонементи' | translate}}
+    </a>
+    <a *ngIf="(isUserLogin$ | async)" routerLink="/cabinet/friends" class="c-dropdownList__link" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">people</mat-icon>
+      {{'Мої друзі' | translate}}
+    </a>
+    <a *ngIf="(currentCity$ | async)" [routerLink]="(currentCity$ | async).name_en + '/purchase-establishments'"
+       class="c-dropdownList__link" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">local_cafe</mat-icon>
+      {{'Купити абонемент' | translate}}
+    </a>
+    <!--        TODO: hot order-->
+    <button *ngIf="false" (click)="openHotOrder()" class="c-dropdownList__link c-dropdownList__link--hotOrder" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">flash_on</mat-icon>
+      {{'Швидке замовлення' | translate}}
+    </button>
+
+    <a *ngIf="(isUserLogin$ | async)" routerLink="/cabinet/user" class="c-dropdownList__link" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">manage_accounts</mat-icon>
+      {{'Налаштування акаунта' | translate}}
+    </a>
+    <button class="c-dropdownList__link" (click)="openCitiesPage()" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">apartment</mat-icon>
+      {{'Вибрати місто' | translate}}
+    </button>
+    <button *ngIf="(isUserLogin$ | async)" (click)="openUserHistory()"
+            class="c-dropdownList__link c-dropdownList__link--mobS" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">history</mat-icon>
+      {{'Історія' | translate}}
+    </button>
+    <button (click)="openLanguagesDialog()" class="c-dropdownList__link c-dropdownList__link--mobS" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">public</mat-icon>
+      {{'Змінити мову' | translate}}
+    </button>
+    <a routerLink="/faq" class="c-dropdownList__link" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">help</mat-icon>
+      {{'Питання і відповіді' | translate}}
+    </a>
+    <a routerLink="/what-is-coffeephone" class="c-dropdownList__link" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">info</mat-icon>
+      {{'Що таке CoffeePhone' | translate}}
+    </a>
+    <a *ngIf="!(isUserLogin$ | async)" routerLink="/network/for-partners" class="c-dropdownList__link" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">storefront</mat-icon>
+      {{'Партнерам' | translate}}
+    </a>
+
+    <button *ngIf="!(isCabinetPages$ | async) && (isUserLogin$ | async)" class="c-dropdownList__link" (click)="logout()"
+            mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">logout</mat-icon>
+      {{'Вийти' | translate}}
+    </button>
+    <button *ngIf="(isCabinetPages$ | async) && (isUserLogin$ | async)" class="c-dropdownList__link"
+            (click)="logoutFromCabinetPages()" mat-menu-item>
+      <mat-icon class="c-dropdownList__icon">logout</mat-icon>
+      {{'Вийти' | translate}}
+    </button>
+  </mat-menu>
+</div>

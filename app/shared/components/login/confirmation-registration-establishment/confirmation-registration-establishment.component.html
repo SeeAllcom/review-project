@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="c-confirmedEmail">
+    <ng-container *ngIf="message">
+      <p class="c-confirmedEmail__success">{{message | translate}}</p>
+      <a routerLink="/network/login" class="o-button" matRipple>
+        <span class="o-buttonText">{{'Увійти' | translate}}</span>
+      </a>
+    </ng-container>
+    <mat-error class="c-confirmedEmail__error" *ngIf="error">{{error | translate}}</mat-error>
+  </div>
+</div>

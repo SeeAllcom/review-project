@@ -1,0 +1,454 @@
+<div class="c-forEstablishments">
+  <div class="header">
+    <div class="container">
+      <div class="header__content">
+        <img src="/assets/img/logo-business.svg" alt="CoffeePhone" class="header__logo">
+
+        <div class="header__actions">
+          <a href="mailto:partner@coffeephone.net" class="header__action header__action--notTablets">
+            partner@coffeephone.net
+          </a>
+<!--          <a class="header__action" href="https://t.me/coffeephonebot" target="_blank"-->
+<!--             rel="noopener noreferrer nofollow">-->
+<!--            <mat-icon>chat</mat-icon>-->
+<!--          </a>-->
+          <button class="header__action" (click)="openLocalizationDialog()">
+            <svg class="o-icon">
+              <use [attr.xlink:href]="'assets/img/icons/sprites/'+flagsSpriteName+'#icon-flag-'+flagIconName"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <section class="c-forEstablishments__main">
+    <div class="container">
+      <div class="c-forEstablishments__mainContent">
+        <div class="c-forEstablishments__mainInfo">
+          <h1 class="c-forEstablishments__mainTitle" addVisitedClass>
+            {{'Отримуйте' | translate}} <br>
+            <b>{{'нових клієнтів' | translate}}</b> <br>
+            {{'з інтернету' | translate}}
+          </h1>
+          <button class="o-button o-button--gradient" (click)="openRegistrationDialog()"
+                  matRipple addVisitedClass>{{'Зареєструвати кав\'ярню' | translate}}</button>
+        </div>
+        <img src="/assets/img/landings/establishment-registration/main-img.svg"
+             [alt]="'Отримуйте нових клієнтів з інтернету' | translate"
+             class="c-forEstablishments__mainImg" addVisitedClass>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="c-forEstablishments__argumentsWrapper">
+      <div class="c-forEstablishments__argumentsHeader" addVisitedClass>
+        <h2 class="c-forEstablishments__argumentsHeaderTitle">{{'Нові можливості' | translate}}</h2>
+        <p
+          class="c-forEstablishments__argumentsHeaderText">{{'Підключіться саме зараз, щоб отримати необмежену кількість нових можливостей' | translate}}</p>
+      </div>
+      <ul class="c-forEstablishments__arguments">
+        <li class="c-forEstablishments__argumentsItem" addVisitedClass>
+          <mat-icon class="c-forEstablishments__argumentsIcon">paid</mat-icon>
+          <h3 class="c-forEstablishments__argumentsTitle">{{'Надприбутковий маркетинг' | translate}}</h3>
+          <p
+            class="c-forEstablishments__argumentsText">{{'Всі ми знаємо, що кава для людей набула великої популярності та стала для них легальним наркотиком. З додатком CoffeePhone, якому немає конкурентів, кава стала ще популярнішою, та придбати її тепер набагато зручніше і вигідніше.' | translate}}</p>
+          <button class="c-forEstablishments__argumentsBtn"
+                  (click)="openRegistrationDialog()">{{'Підключитися' | translate}}
+            <mat-icon>east</mat-icon>
+          </button>
+        </li>
+        <li class="c-forEstablishments__argumentsItem" addVisitedClass>
+          <mat-icon class="c-forEstablishments__argumentsIcon">emoji_events</mat-icon>
+          <h3 class="c-forEstablishments__argumentsTitle">{{'У нас активні користувачі' | translate}}</h3>
+          <p
+            class="c-forEstablishments__argumentsText">{{'Наші користувачі люблять зручність в замовленні, яку надає їм CoffeePhone та хороші місця і класне обслуговування, яке надаєте їм ви. Вони будуть рекомендувати вас друзям. Просто здивуйте їх.' | translate}}</p>
+          <button class="c-forEstablishments__argumentsBtn"
+                  (click)="openRegistrationDialog()">{{'Підключитися' | translate}}
+            <mat-icon>east</mat-icon>
+          </button>
+        </li>
+        <li class="c-forEstablishments__argumentsItem" addVisitedClass>
+          <mat-icon class="c-forEstablishments__argumentsIcon">trending_up</mat-icon>
+          <h3 class="c-forEstablishments__argumentsTitle">{{'Ми – новий канал росту' | translate}}</h3>
+          <p
+            class="c-forEstablishments__argumentsText">{{'Збільшіть прибуток від продажів в інтернеті. Розмістивши свою мережу(заклад) на сервісі CoffeePhone, після цього про вас дізнається велика аудиторія людей.' | translate}}</p>
+          <button class="c-forEstablishments__argumentsBtn"
+                  (click)="openRegistrationDialog()">{{'Підключитися' | translate}}
+            <mat-icon>east</mat-icon>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="c-forEstablishmentsSwiper__section">
+    <div class="container">
+      <h3 class="c-forEstablishments__title" addVisitedClass>{{'CoffeePhone це не просто сервіс для продажу онлайн' | translate}}</h3>
+      <p class="c-forEstablishments__text" addVisitedClass>
+        {{'Зручність для ваших відвідувачів, та зручність для вас. Всеукраїнська реклама. Історія покупок. Повний звіт по бізнесу. Заклади на карті. Онлайн меню. Та багато іншого.' | translate}}
+      </p>
+    </div>
+
+    <div class="c-forEstablishmentsSwiper__wrapper" addVisitedClass>
+      <div class="swiper-container c-forEstablishmentsSwiper" [swiper]="swiperConfig">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide c-forEstablishmentsSwiper__slide" *ngFor="let slide of slides; let i = index">
+            <img [src]="slide.imgUrl" [alt]="slide.title" class="c-forEstablishmentsSwiper__img">
+            <p class="c-forEstablishmentsSwiper__title">{{slide.title | translate}}</p>
+            <p
+              class="c-forEstablishmentsSwiper__text">{{trimLongText(slide.description, slide.showFullDescription) | translate}}</p>
+            <p *ngIf="slide.description.length > maxWordsForDescr" class="c-forEstablishmentsSwiper__showMore"
+               (click)="showMore(i)">
+              <ng-container *ngIf="!slide.showFullDescription; else hideDescr">
+                {{'Показати більше' | translate}}
+                <mat-icon>expand_more</mat-icon>
+              </ng-container>
+              <ng-template #hideDescr>
+                {{'Сховати' | translate}}
+                <mat-icon>expand_less</mat-icon>
+              </ng-template>
+            </p>
+          </div>
+        </div>
+        <div class="swiper-pagination c-forEstablishmentsSwiper__pagination"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-forEstablishments__registr" addVisitedClass>
+    <div class="container">
+      <div class="c-forEstablishments__registrContent">
+        <h3
+          class="c-forEstablishments__registrTitle">{{'Приєднуйтесь до нас і піднімайте всеукраїнський рейтинг для вашого бізнесу' | translate}}</h3>
+        <button class="o-button" (click)="openRegistrationDialog()"><span
+          class="o-buttonText">{{'Приєднатися' | translate}}</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <h3 class="c-forEstablishments__title" addVisitedClass>{{'Чому CoffeePhone це вигідно?' | translate}}</h3>
+    <p class="c-forEstablishments__text" addVisitedClass>
+      {{'Ми врахували всі деталі сервісу, щоб власники кав\'ярень отримували максимум користі й підтримки, особливо зараз — під час карантину та обмежень' | translate}}
+    </p>
+  </div>
+
+  <div class="c-forEstablishmentsTable__wrapper">
+    <table class="c-forEstablishmentsTable" addVisitedClass>
+      <thead>
+      <tr>
+        <td></td>
+        <td>CoffeePhone</td>
+        <td>{{'Інший сервіс' | translate}}</td>
+        <td>{{'Свій сайт' | translate}}</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><b>{{'Комісія' | translate}}</b></td>
+        <td>{{'Безкоштовно' | translate}}</td>
+        <td>{{'15%-30%' | translate}}</td>
+        <td>{{'0%' | translate}}</td>
+      </tr>
+      <tr>
+        <td><b>{{'Термін запуску' | translate}}</b></td>
+        <td>{{'48 годин' | translate}}</td>
+        <td>{{'7-14 днів' | translate}}</td>
+        <td>{{'30+ днів' | translate}}</td>
+      </tr>
+      <tr>
+        <td><b>{{'Потреба в програмістах' | translate}}</b></td>
+        <td>{{'Ні' | translate}}</td>
+        <td>{{'Залежить від розвитку сервісу' | translate}}</td>
+        <td>{{'Так' | translate}}</td>
+      </tr>
+      <tr>
+        <td><b>{{'Вартість розробки' | translate}}</b></td>
+        <td>{{'-' | translate}}</td>
+        <td>{{'-' | translate}}</td>
+        <td>{{'$1000+' | translate}}</td>
+      </tr>
+      <tr>
+        <td><b>{{'Оновлення та покращення' | translate}}</b></td>
+        <td>{{'Автоматичне покращення і добавлення нових можливостей' | translate}}</td>
+        <td>{{'Залежить від сервісу' | translate}}</td>
+        <td>{{'$500/місяць' | translate}}</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="container">
+    <section class="c-cpFaqs">
+      <div class="l-container">
+        <h2 class="c-cpFaqs__caption">{{'Питання що часто задаються' | translate}}</h2>
+        <mat-accordion [multi]="true">
+          <mat-expansion-panel
+            #faqPanelFirst
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Для чого створений даний сервіс сервіс?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanelFirst.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+
+            <p class="c-cpFaqs__description">
+              {{'Сервіс створений, для того, щоб ви самостійно могли розмістити свою кав\'ярню для зручного продажу своєї продукції через інтернет на майданчику CoffeePhone. Додайте заклад зараз, щоб почати заробляти більше.' | translate}}
+            </p>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_2
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'З нами ви зможете:' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_2.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <div class="c-cpFaqs__description">
+              <ul>
+                <li>{{'залучити нових клієнтів в вашу програму лояльності і показати їм на практиці переваги вашого сервісу' | translate}}</li>
+                <li>{{'проанонсувати запуск нового відділення вашого бізнесу або суттєво збільшити відвідуваність старого відділення;' | translate}}</li>
+                <li>{{'проанонсувати запуск нової послуги.' | translate}}</li>
+                <li>{{'проанонсувати всі нововедення вашого бізнесу для мільйонів користувачів.' | translate}}</li>
+              </ul>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_3
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Чому співпрацювати з нами надійно і вигідно?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_3.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+
+            <div class="c-cpFaqs__description">
+              <ul>
+                <li>{{'у нас найширше регіональне покриття в Україні - 24 області;' | translate}}</li>
+                <li>{{'ми гарантуємо приплив великої кількості нових платоспроможних клієнтів;' | translate}}</li>
+                <li>{{'ми використовуємо всі можливі рекламні інструменти, щоб привернути до вас користувача: від контекстної реклами і до розміщення на ТБ;' | translate}}</li>
+                <li>{{'ви не витрачаєте грошей на рекламу, а платите знижкою тільки за тих, хто прийшов до вас як клієнт.' | translate}}</li>
+              </ul>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_4
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Як це працює?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon" [class.c-cpFaqs__icon--open]="faqPanel_4.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+
+            <div class="c-cpFaqs__description">
+              <ol>
+                <li>{{'Авторизуйтеся у нас на сайті ' | translate}} <a [href]="SITE_URL + '/network/login'"
+                                                                       target="_blank">{{SITE_URL}}/network/login</a>
+                </li>
+                <li>{{'Створіть свою мережу(заклад), додайте заклади у всі міста де існує ваша мережа(заклад), додайте свою продукцію та очікуйте на нових клієнтів.' | translate}}</li>
+                <li>{{'Ваша мережа(заклад) з\'явиться на сайті відразу після того як ви додасте інформацію про свою неї.' | translate}}</li>
+                <li>{{'Після розміщення мережі(заклада) її побачать мільйони наших користувачів і зможуть зручно переглядати та купувати вашу продукцію, переглядати нововедення та всі повідомлення які ви захочете анонсувати.' | translate}}</li>
+              </ol>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_5 [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'На яких умовах я можу розмістити мережу(заклад)?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_5.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <p class="c-cpFaqs__description">{{'Є декілька форматів розміщення:' | translate}}</p>
+
+            <div class="c-cpFaqs__description">
+              <ol>
+                <li>{{'Відсоток від продажу продукції - деяку вашу продукцію можна розмістити тільки за відсоток від продажів на нашому сервісі.' | translate}}</li>
+                <li>{{'Безкоштовне розміщення реклами - створення реклами яку клієнти побачать на сторінці вашої мережі(закладу).' | translate}}</li>
+                <li>{{'Платне розміщення реклами - створення реклами для всіх користувачів міста на вибрану вами кількість днів. Таку рекламу можна переглянути на сторінці вибору закладів у всіх містах де існує ваша мережа.' | translate}}</li>
+              </ol>
+            </div>
+
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_6 [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Скільки закладів і продукції я можу запустити?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_6.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <p
+              class="c-cpFaqs__description">{{'Ви можете запустити необмежену кількість закладів і продукції для вашої мережі і відслідковувати ефективність розміщення та історію продаж в особистому кабінеті.' | translate}}</p>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_7
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Як я дізнаюся, що мій клієнт прийшов від вашого сервісу?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_7.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <p
+              class="c-cpFaqs__description">{{'Після покупки абонемента клієнтом на нашому сервісі, користувач отримує унікальний QR-код, який дає йому право на отримання вашої продукції. QR-код користувач надасть вам в своєму девайсі на нашому сервісі безпосередньо при отриманні продукції.' | translate}}</p>
+            <p
+              class="c-cpFaqs__description">{{'Також ви отримуєте детальну історію по вашим продажам за будь який день від всіх клієнтів, які придбали вашу продукцію на нашому сервісі.' | translate}}</p>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            #faqPanel_8
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Що потрібно для того щоб зареєструвати заклад?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_8.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <div class="c-cpFaqs__description">
+              <ol>
+                <li>{{'Заповнити форму для подачі заявки на реєстрацію.' | translate}}</li>
+                <li>{{'Потім ви отримаєте лист на пошту яку вкажете в заявці або ми вам зателефонуємо.' | translate}}</li>
+                <li>{{'Якщо ви предоставите нам ваше меню: фото, назва, ціна, опис товару, всі міста і вулиці кожного закладу з фотографією його оздоблення. Ми запустимо вашу готову сторінку за 48 годин.' | translate}}</li>
+                <li>{{'Після чого, ви отримаєте всі права, дані для входу та інструкцію з управлінням.' | translate}}</li>
+              </ol>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            #faqPanel_9
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Для чого мені реєструвати свій заклад на CoffeePhone?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_9.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <div class="c-cpFaqs__description">
+              <ol>
+                <li>{{'Ви отримаєте більше клієнтів.' | translate}}</li>
+                <li>{{'Ваш заклад буде завжди рекламуватися.' | translate}}</li>
+                <li>{{'Клієнти отримують зручний сервіс для того, щоб зробити замовлення, купувати та дарувати абонементи своїм друзям.' | translate}}</li>
+                <li>{{'Клієнти можуть в будь який момент переглянути де розміщені ваші заклади на карті і як вони виглядають.' | translate}}</li>
+                <li>{{'Користувач купує абонемент на вашу продукцію і кошти відразу зараховуються на ваш рахунок.' | translate}}</li>
+                <li>{{'Отримаєте статистику та історію продаж на CoffeePhone та повноцінну базу даних всіх клієнтів які купували вашу продукцію на сервісі CoffeePhone.' | translate}}</li>
+                <li>{{'Не потрібно придумувати різні акції для заманювання нових клієнтів, так як CoffeePhone і являється акцією для клієнтів.' | translate}}</li>
+                <li>{{'Весь бізнес який розвивається, завжди, підключає для себе різні інновації.' | translate}}</li>
+              </ol>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </section>
+  </div>
+
+  <section class="c-forEstablishments__connection">
+    <div class="container">
+      <div class="c-forEstablishments__connectionContent">
+        <button class="o-button o-button--white" (click)="openRegistrationDialog()"><span
+          class="o-buttonText">{{'Розпочати зараз' | translate}}</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="c-forEstablishments__footer">
+    <div class="container">
+      <div class="c-forEstablishments__row">
+        <div class="c-forEstablishments__col">
+          <form class="c-forEstablishments__form" [formGroup]="form" (ngSubmit)="sendMail()">
+            <h3 class="c-forEstablishments__formTitle">{{'Напишіть нам якщо у вас з\'явилися запитання' | translate}}</h3>
+            <p class="c-forEstablishments__formText">{{'Ми завжди раді дати вам відповідь' | translate}}</p>
+
+            <mat-form-field class="o-formField" appearance="fill">
+              <mat-label>{{'Введіть ім\'я' | translate}}</mat-label>
+              <label>
+                <input type="text" formControlName="name" matInput required>
+              </label>
+              <mat-error *ngIf="form.get('name').hasError('required')">
+                {{'Ім\'я є обов\'язковим.' | translate}}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="o-formField" appearance="fill">
+              <mat-label>{{'Введіть email' | translate}}</mat-label>
+              <label>
+                <input type="email" formControlName="email" matInput required>
+              </label>
+              <mat-error *ngIf="form.get('email').hasError('email') && !form.hasError('required')">
+                {{'Будь ласка, введіть правильний email.' | translate}}
+              </mat-error>
+              <mat-error *ngIf="form.get('email').hasError('required')">
+                {{'Email є обов\'язковим.' | translate}}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="o-formField" appearance="fill">
+              <mat-label>{{'Введіть номер телефону' | translate}}</mat-label>
+              <label>
+                <input type="tel" formControlName="phone" prefix="+38" [mask]="'(000) 000-0000'" matInput required>
+              </label>
+              <mat-error *ngIf="form.get('phone').hasError('required')">
+                {{'Номер телефону є обов\'язковим.' | translate}}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="o-formField" appearance="fill">
+              <mat-label>{{'Введіть назву мережі(закладу)' | translate}}</mat-label>
+              <label>
+                <input type="text" formControlName="coffeeshop_name" matInput required>
+              </label>
+              <mat-error *ngIf="form.get('coffeeshop_name').hasError('required')">
+                {{'Назва закладу є обов\'язкова' | translate}}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="o-formField" appearance="fill">
+              <mat-label>{{'Коментар' | translate}}</mat-label>
+              <label>
+                <textarea formControlName="comment" matInput></textarea>
+              </label>
+              <mat-error *ngIf="form.get('comment').hasError('required')">
+                {{'Коментар є обов\'язковим.' | translate}}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-error class="c-forEstablishments__formError">{{error | translate}}</mat-error>
+
+            <button class="o-button o-button--gradient" type="submit">
+              <span *ngIf="sendMailSub.closed" class="o-buttonText">{{'Надіслати' | translate}}</span>
+              <span *ngIf="!sendMailSub.closed" class="o-buttonText">{{'Відправка...' | translate}}</span>
+            </button>
+          </form>
+        </div>
+        <div class="c-forEstablishments__col c-forEstablishments__col--reverse">
+          <h3 class="c-forEstablishments__footerTitle" addVisitedClass>
+            {{'Через 48 годин після відправлення форми' | translate}} <br>
+            <b>{{'Ви будете мати:' | translate}}</b>
+          </h3>
+          <ul class="c-forEstablishments__footerList">
+            <li addVisitedClass><mat-icon>web</mat-icon> {{'Сторінку на CoffeePhone, яка завжди рекламується великій кількості наших користувачів.' | translate}}</li>
+            <li addVisitedClass><mat-icon>qr_code</mat-icon> {{'Готове зручне онлайн меню, яке розміщується за допомогою QR-коду де забажаєте.' | translate}}</li>
+            <li addVisitedClass><mat-icon>place</mat-icon> {{'Розміщення ваших закладів на карті, щоб наші користувачі могли проложити маршрут до вас.' | translate}}</li>
+            <li addVisitedClass><mat-icon>sms</mat-icon> {{'Розмішення вашої реклами та всієї додаткової інформації для наших користувачів.' | translate}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="c-dialogHistory">
+  <div class="c-dialogHistory__header">
+    <div class="c-dialogHistory__tabs">
+      <button class="c-dialogHistory__tab"
+              (click)="changeTab(historyTabs.Purchase)"
+              [ngClass]="{'is-active': getActiveTab(historyTabs.Purchase)}">{{'Купівля' | translate}}</button>
+      <button class="c-dialogHistory__tab"
+              (click)="changeTab(historyTabs.WriteOff)"
+              [ngClass]="{'is-active': getActiveTab(historyTabs.WriteOff)}">{{'Списання' | translate}}</button>
+      <button class="c-dialogHistory__tab"
+              (click)="changeTab(historyTabs.Present)"
+              [ngClass]="{'is-active': getActiveTab(historyTabs.Present)}">{{'Подарунки' | translate}}</button>
+    </div>
+    <button class="c-dialogHistory__close" matDialogClose><mat-icon>close</mat-icon></button>
+  </div>
+  <div class="c-dialogHistory__body">
+    <ng-container *ngIf="getHistorySub.closed; else historyLoading">
+      <history-purchase [purchases]="historyPurchases" *ngIf="getActiveTab(historyTabs.Purchase)"></history-purchase>
+      <history-writeoff [writeoff]="historyUsedAbonements" *ngIf="getActiveTab(historyTabs.WriteOff)"></history-writeoff>
+      <history-present [historyPresents]="historyPresents" *ngIf="getActiveTab(historyTabs.Present)"></history-present>
+    </ng-container>
+    <ng-template #historyLoading>
+      <spinner class="c-dialog__spinner"></spinner>
+    </ng-template>
+  </div>
+  <div class="c-dialogHistory__footer">
+    <ngb-pagination *ngIf="collectionSize > itemsPerPage" class="o-pagination"
+                    [collectionSize]="collectionSize"
+                    [(page)]="page"
+                    [pageSize]="itemsPerPage"
+                    [ellipses]="true"
+                    [maxSize]="2"
+                    (pageChange)="onPageChange($event)"></ngb-pagination>
+  </div>
+</div>

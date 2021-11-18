@@ -1,0 +1,59 @@
+<div class="c-cards__header">
+  <div class="container">
+    <div class="c-cards__headerContent">
+      <span class="c-cards__back" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </span>
+      <div class="c-cards__description">
+        <h1 class="c-cards__title">{{'Заклади де ви купили абонемент' | translate}}</h1>
+        <h2 class="c-cards__subTitle">{{'Виберіть заклад в якому хочете використати абонемент' | translate}}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="c-cards">
+  <div class="container">
+    <ng-container *ngIf="getEstablishmentsSub.closed; else loading">
+      <ng-container *ngIf="!error; else isErrorTemplate">
+        <ng-container *ngIf="establishments.length; else empty">
+          <ul class="c-cardsList">
+            <li class="c-cardsList__item" *ngFor="let establishment of establishments"
+                (click)="openEstablishmentAbonements(establishment.slug)" addVisitedClass>
+              <span class="c-cardsList__itemBadge">{{'Абонементи' | translate}}</span>
+              <span class="c-cardsList__itemDisclose">
+              <span class="c-cardsList__itemDiscloseBtn">
+                <img src="/assets/img/icons/icon-more-disclose.svg" alt="">
+              </span>
+            </span>
+              <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + establishment.avatar" [alt]="establishment.name"
+                   class="c-cardsList__img">
+              <h3 class="c-cardsList__title">{{establishment.name}}</h3>
+            </li>
+          </ul>
+        </ng-container>
+        <ng-template #empty>
+          <div class="c-cards__empty">
+            <p class="c-cards__emptyTitle">
+              {{'У вас ще немає ніяких абонементів.' | translate}} 😧
+            </p>
+            <p class="c-cards__emptyText">
+              {{'Виберіть місто і заклад в ньому для того, щоб придбати абонемент.' | translate}}
+            </p>
+            <button *ngIf="!(isCurrentCity$ | async)" class="o-button o-button--secondary" (click)="openCitiesSelector()">{{'Вибрати місто'}}</button>
+            <a *ngIf="(isCurrentCity$ | async)" [routerLink]="'/' +  (isCurrentCity$ | async).name_en + '/purchase-establishments'" class="o-button o-button--secondary">
+              {{'Купити абонемент в '}}{{(isCurrentCity$ | async).name_en | getLocalizationCityKey | translate }}
+            </a>
+          </div>
+        </ng-template>
+      </ng-container>
+      <ng-template #isErrorTemplate>
+        <div class="c-cards__empty">
+          <p class="c-cards__emptyText c-cards__emptyText--error">{{error | translate}}</p>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #loading>
+      <spinner class="c-cards__spinner"></spinner>
+    </ng-template>
+  </div>
+</div>

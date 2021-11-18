@@ -1,0 +1,54 @@
+.spinner {
+  width: var(--mat-spinner-size);
+  height: var(--mat-spinner-size);
+  border-radius: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+
+  &__ring {
+    display: inline-block;
+    position: absolute;
+    width: var(--mat-spinner-size);
+    height: var(--mat-spinner-size);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 1;
+    border-radius: 50%;
+    border: var(--mat-spinner-stroke) solid var(--mat-spinner-color);
+    border-left-color: transparent;
+    background: transparent;
+    animation: rotate 1s infinite linear;
+  }
+
+  &__icon {
+    --mat-icon-size: var(--mat-spinner-size);
+
+    color: var(--mat-spinner-color);
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 1;
+    background: transparent;
+    animation: rotate 1s infinite linear;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(1turn);
+  }
+}

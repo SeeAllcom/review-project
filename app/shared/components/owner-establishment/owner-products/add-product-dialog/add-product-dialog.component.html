@@ -1,0 +1,106 @@
+<form [formGroup]="formProduct" (ngSubmit)="addProduct()" class="c-dialog c-dialog--autoHeight">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Додавання товару' | translate}}</p>
+    <button class="c-dialog__close" type="button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body">
+    <image-preview [url]="''"
+                   [title]="'Вкажіть зображення товару' | translate"
+                   [formControlInput]="formProduct.controls['img']"></image-preview>
+    <div class="c-dialogForm__row c-dialogForm__row--column">
+      <div class="c-dialogForm__col">
+        <mat-form-field>
+          <mat-label>{{'Введіть назву товару' | translate}}</mat-label>
+          <label>
+            <input type="text" formControlName="name" matInput required>
+          </label>
+          <mat-error *ngIf="formProduct.get('name').hasError('required')">
+            {{'Назва є обов\'язковим' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="c-dialogForm__col">
+        <mat-form-field>
+          <mat-label>{{'Вкажіть категорію товару' | translate}}</mat-label>
+          <mat-select
+            disableOptionCentering
+            formControlName="category_id"
+            role="listbox"
+            required>
+            <mat-option *ngFor="let category of allCategories" [value]="category.id" role="listitem">
+              {{getCategoryName(category.name) | translate}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formProduct.get('category_id').hasError('required')">
+            {{'Категорія є обов\'язкова' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="c-dialogForm__row c-dialogForm__row--column">
+      <div class="c-dialogForm__col">
+        <mat-form-field class="c-dialogForm__field">
+          <mat-label>{{'Введіть ціну товару' | translate}}</mat-label>
+          <label>
+            <input numbersOnly formControlName="price"
+                   [placeholder]="'валюта - Грн' | translate" matInput required>
+          </label>
+          <span matSuffix>{{'грн' | translate}}</span>
+          <mat-error *ngIf="formProduct.get('price').hasError('required')">
+            {{'Ціна є обов\'язкова' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="c-dialogForm__col">
+        <form class="c-dialogForm__fieldsCapacity" formGroupName="capacity">
+          <mat-form-field class="c-dialogForm__field c-dialogForm__fieldsCapacitySize">
+            <mat-label>{{'Вкажіть ємність' | translate}}</mat-label>
+            <label>
+              <input numbersOnly formControlName="size" matInput required>
+            </label>
+          </mat-form-field>
+          <mat-form-field class="c-dialogForm__fieldsCapacityUnit" [matTooltip]="'Одиниця вимірювання' | translate">
+            <mat-label>{{'Одиниця вимірювання' | translate}}</mat-label>
+            <mat-select
+              disableOptionCentering
+              formControlName="unit"
+              role="listbox"
+              required>
+              <mat-option *ngFor="let productCapacity of productCapacityData" role="listitem"
+                          [value]="productCapacity.id">
+                {{productCapacity.unit}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+
+    <mat-form-field class="c-ownerSettings__formField">
+      <mat-label>{{'Введіть опис' | translate}}</mat-label>
+      <label>
+        <textarea formControlName="description" matInput></textarea>
+      </label>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="can_purchase_as_abonement">{{'Можливо придбати як абонемент' | translate}}</mat-slide-toggle>
+
+    <product-supplements (supplementsValue)="getSupplementsValue($event)"></product-supplements>
+  </div>
+  <div class="c-dialog__footer">
+    <mat-error *ngIf="error" class="mat-error c-dialog__footerError">{{error | translate}}</mat-error>
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--secondary" type="submit" [disabled]="!addingSub.closed" matRipple>
+        <ng-container *ngIf="addingSub.closed; else addingLoading">
+          <span class="o-buttonText">{{'Додати товар' | translate}}</span>
+        </ng-container>
+        <ng-template #addingLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

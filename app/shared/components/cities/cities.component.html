@@ -1,0 +1,81 @@
+<div class="c-cities c-cities--areas">
+  <div class="c-cities__bgGradient"></div>
+  <div class="container">
+    <div class="c-citiesMain">
+      <div class="c-citiesMain__info">
+        <h1 class="c-citiesMain__title">
+          {{'Пити каву тепер' | translate}}
+          <br>
+          <b>{{'зручніше та дешевше' | translate}}</b>
+          <br>
+          {{'Разом з CoffeePhone' | translate}}
+        </h1>
+        <ul class="c-citiesMain__subTitle">
+          <li class="c-citiesMain__subTitleItem">
+            <mat-icon>savings</mat-icon>
+            {{'Робіть замовлення через зручне QR-меню та отримуйте бонуси' | translate}}
+          </li>
+          <li class="c-citiesMain__subTitleItem c-citiesMain__subTitleItem--gift">
+            <mat-icon>card_giftcard</mat-icon>
+            {{'Купуйте абонементи на продукцію в закладах за нижчою ціною' | translate}}
+          </li>
+          <li class="c-citiesMain__subTitleItem c-citiesMain__subTitleItem--location">
+            <mat-icon>location_on</mat-icon>
+            {{'Переглядайте розміщення закладів на карті та прокладайте до них маршрут' | translate}}
+          </li>
+        </ul>
+
+        <!--        TODO: hot order-->
+        <button *ngIf="false" class="o-button o-button--gradientMain" (click)="openFastOrder()" matRipple>
+          <span class="o-buttonText">{{'Швидке замовлення' | translate}}</span>
+        </button>
+
+        <p class="c-citiesMain__text" (click)="scrollToAnchor(citiesSection)">{{'Вибрати своє місто' | translate}}</p>
+      </div>
+      <img src="/assets/img/main-page-img.png"
+           [alt]="'Пити каву тепер зручніше і вигідніше разом з CoffeePhone' | translate" class="c-citiesMain__img">
+    </div>
+  </div>
+  <div class="c-cards" #citiesSection>
+    <div class="container">
+      <ng-container *ngIf="isCitiesLoaded; else loading">
+        <ng-container *ngIf="!error; else errorTemplate">
+          <ng-container *ngIf="cities.length && (cities | search:(searchCityValue$ | async)).length; else citiesEmpty">
+            <ul class="c-cardsList" *ngIf="cities">
+              <li class="c-cardsList__item" *ngFor="let city of cities | search:(searchCityValue$ | async)"
+                  (click)="openSmallCities(city.name_en)" addVisitedClass>
+            <span class="c-cardsList__itemDisclose">
+              <span class="c-cardsList__itemDiscloseBtn">
+                <img src="/assets/img/icons/icon-more-disclose.svg" alt="">
+              </span>
+            </span>
+                <img *ngIf="city.img" defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + city.img.path"
+                     [alt]="city.name" class="c-cardsList__img">
+                <h3 class="c-cardsList__title">{{city.name}}</h3>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #citiesEmpty>
+            <div class="c-cards__empty">
+              <p class="c-cards__emptyText"
+                 *ngIf="!cities.length">{{'Зараз немає міст із зареєстрованими закладами.' | translate}} 😞</p>
+              <p class="c-cards__emptyText"
+                 *ngIf="!(cities | search:(searchCityValue$ | async)).length && cities.length">{{'Такої області немає' | translate}}
+                😞</p>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-template #errorTemplate>
+          <div class="c-cards__empty">
+            <p class="c-cards__emptyText c-cards__emptyText--error">{{error | translate}}</p>
+          </div>
+        </ng-template>
+      </ng-container>
+      <ng-template #loading>
+        <spinner class="c-cards__spinner"></spinner>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<search-input *ngIf="isCitiesLoaded" [isFixed]="true" [placeholder]="'Знайти область'"></search-input>
+<scroll-top [nearSearch]="true"></scroll-top>

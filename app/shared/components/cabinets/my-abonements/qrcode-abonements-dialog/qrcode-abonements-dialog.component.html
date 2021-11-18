@@ -1,0 +1,74 @@
+<div class="c-dialogQrCode c-dialog c-dialog--average" [ngClass]="{'c-dialog--autoHeight': !isMyOrder}">
+  <div class="c-dialog__header">
+    <p *ngIf="!isMyOrder" class="c-dialog__title c-dialog__title--small">{{'QR-код для замовлення' | translate}}</p>
+    <p *ngIf="isMyOrder" class="c-dialog__title c-dialog__title--link c-dialog__title--small"
+       (click)="toggleMyOrderTemplate()">
+      <mat-icon class="c-dialogQrCode__linkIcon">arrow_back</mat-icon>
+      {{'Назад' | translate}}</p>
+    <button class="c-dialog__close" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="!isMyOrder; else myOrder">
+    <div class="c-dialog__body c-dialog__body--center c-dialog__body--padding">
+      <p class="c-dialog__text c-dialog__text--bold c-dialog__text--center">
+        {{'QR-код успішно згенерувався' | translate}} 😌
+      </p>
+      <p class="c-dialog__text c-dialog__text--center c-dialog__text--small">
+        {{'Покажіть цей QR-код в кав\'ярні, щоб забрати своє замовлення.' | translate}}
+      </p>
+      <img class="c-dialogQrCode__img" [lazyLoad]="abonementQrCodeData.qrCode"
+           defaultImage="/assets/img/img-not-loaded.svg" alt="">
+      <p class="c-dialogQrCode__text">
+        {{'Після закриття діалогового вікна, цей QR-код буде недійсний для захисту ваших абонементів.' | translate}}
+        <tooltip class="c-dialog__textIcon"
+                 [title]="'Якщо ви хочете поділитися цим абонементом з другом, перейдіть на сторінку Мої Абонементи, виберіть потрібні абонементи і подаруйте їх своєму другу.' | translate">
+          <mat-icon>help</mat-icon>
+        </tooltip>
+      </p>
+      <button class="c-dialogQrCode__link c-dialogQrCode__link--underline c-dialogQrCode__link--center"
+              (click)="toggleMyOrderTemplate()">{{'Переглянути замовлення' | translate}}</button>
+    </div>
+  </ng-container>
+  <ng-template #myOrder>
+    <div class="c-dialog__body c-dialog__body--padding">
+      <p class="c-dialog__bodyTitle">{{'Ваше замовлення'| translate}}</p>
+      <div class="c-dialogTable">
+        <div class="c-dialogTable__row c-dialogTable__row--head">
+          <div class="c-dialogTable__cell c-dialogTable__cell--notPhones">№</div>
+          <div class="c-dialogTable__cell">{{'Товар' | translate}}</div>
+          <div class="c-dialogTable__cell">{{'Кількість' | translate}}</div>
+        </div>
+        <div class="c-dialogTable__row" *ngFor="let abonement of abonementQrCodeData.usedAbonement.data; let i = index">
+          <div class="c-dialogTable__cell c-dialogTable__cell--notPhones"><span class="mob">№:</span> {{i + 1}}</div>
+          <div class="c-dialogTable__cell">
+            <span class="mob">{{'Товар' | translate}}:</span>
+            <div>
+              {{abonement.product_name}}
+              <ul class="c-dialogTable__cellSupplements">
+                <li *ngFor="let option of abonement.supplement_options">
+                  {{option.name}}<ng-container *ngIf="option.quantity > 1">({{option.quantity}})</ng-container>,
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="c-dialogTable__cell">
+            <span class="mob">{{'Кількість' | translate}}:</span>{{abonement.quantity}}{{'шт' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--gray" type="button" (click)="closeDialog()">
+        <ng-container *ngIf="deletingUnusedQrcode.closed; else btnLoading">
+          {{'Закрити' | translate}}
+        </ng-container>
+        <ng-template #btnLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--black"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</div>

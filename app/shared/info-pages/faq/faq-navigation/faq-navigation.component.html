@@ -1,0 +1,24 @@
+<nav class="c-faqNav">
+  <mat-accordion [multi]="true" class="c-faqNav__list c-faqNav__list--outer">
+    <mat-expansion-panel *ngFor="let category of categories; let i = index;"
+                         [expanded]="arePanelsExpanded"
+                         class="c-faqNav__item open">
+      <mat-expansion-panel-header class="c-faqNav__itemTitle">
+        {{category.title}}
+      </mat-expansion-panel-header>
+      <ol *ngIf="category.faqArticles.length"
+          class="c-faqNav__list c-faqNav__list--inner">
+        <li *ngFor="let article of category.faqArticles"
+            class="c-faqNav__item">
+          <a [routerLink]='"."'
+             (click)="smoothScrollHandler(i);forceScrollingOnSameAnchor()"
+             [fragment]="article.articleId"
+             [class.active]="faqNavBlock === article.articleId"
+             class="c-faqNav__itemTitle">
+            {{article.title}}
+          </a>
+        </li>
+      </ol>
+    </mat-expansion-panel>
+  </mat-accordion>
+</nav>

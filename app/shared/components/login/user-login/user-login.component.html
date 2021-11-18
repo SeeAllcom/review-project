@@ -1,0 +1,63 @@
+<form class="c-authForm" [formGroup]="loginForm" (ngSubmit)="login()">
+  <mat-form-field appearance="fill" class="c-authForm__inputWrapper">
+    <mat-label>{{'Введіть email' | translate}}</mat-label>
+    <label>
+      <input type="email" matInput formControlName="email" autocomplete="on">
+    </label>
+    <mat-error *ngIf="loginForm.get('email').hasError('email') && !loginForm.hasError('required')">
+      {{'Будь ласка, введіть вірний email' | translate}}
+    </mat-error>
+    <mat-error *ngIf="loginForm.get('email').hasError('required')">
+      {{'Email є обов\'язковим' | translate}}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="c-authForm__inputWrapper">
+    <mat-label>{{'Введіть пароль' | translate}}</mat-label>
+    <label>
+      <input [type]="isVisibilityPassword ? 'text' : 'password'" matInput formControlName="password" autocomplete="on" [minLength]="minLengthForPassword">
+      <mat-icon (click)="isVisibilityPassword = !isVisibilityPassword" class="mat-form-field-icon--password">
+        {{isVisibilityPassword ? 'visibility' : 'visibility_off'}}
+      </mat-icon>
+    </label>
+    <mat-error *ngIf="loginForm.hasError('password') && !loginForm.hasError('required')">
+      {{'Будь ласка, введіть вірний пароль' | translate}}
+    </mat-error>
+    <mat-error *ngIf="loginForm.get('password').hasError('required')">
+      {{'Пароль є обов\'язковим' | translate}}
+    </mat-error>
+    <mat-error *ngIf="loginForm.get('password').hasError('minlength')">
+      {{'Пароль повинен мати ' | translate}} {{minLengthForPassword}} {{' символів.' | translate}}
+    </mat-error>
+  </mat-form-field>
+  <div class="c-auth__linkBlock">
+    <p class="c-auth__link" (click)="changeTab(authTabsType.SignUp)">{{'У мене немає акаунта' | translate}}</p>
+    <p class="c-auth__link" (click)="changeTab(authTabsType.PasswordRecovery)">{{'Забули пароль?' | translate}}</p>
+  </div>
+
+  <mat-error class="c-authForm__error" *ngIf="error">{{error | translate}}
+
+    <ng-container *ngIf="!isSendingEmailAgain; else sendEmailAgainLoading">
+          <span *ngIf="error === exchangeCodeMessageError['ConfirmYourEmail']"
+                class="c-authForm__sendEmail"
+                (click)="sendMailAgain()">
+            {{'Відправити лист ще раз' | translate}}
+          </span>
+    </ng-container>
+    <ng-template #sendEmailAgainLoading>
+      <span class="c-authForm__sendEmail" disabled>{{'Надсилаємо' | translate}}...</span>
+    </ng-template>
+  </mat-error>
+
+  <button class="o-button" type="submit" [disabled]="!loginSub.closed" matRipple>
+            <span class="o-buttonText">
+              <ng-container *ngIf="loginSub.closed; else btnLoading">
+                {{'Авторизуватися' | translate}}
+              </ng-container>
+            </span>
+  </button>
+</form>
+
+<ng-template #btnLoading>
+  <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+</ng-template>

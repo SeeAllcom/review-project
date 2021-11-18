@@ -1,0 +1,54 @@
+<div class="c-productPreview__overlay" matDialogClose></div>
+<div class="c-productPreview">
+  <div class="c-productPreview__inner">
+    <span class="c-productPreview__close" matDialogClose><mat-icon>close</mat-icon></span>
+    <div class="c-productPreview__body">
+      <div class="c-productPreview__content">
+        <div class="c-productPreview__imgBlock">
+          <img [src]="API_URL + abonement.product.img" [alt]="abonement.product.name"
+               class="c-productPreview__img" [class.enlarged]="imgEnlarged" (click)="imgEnlarged = !imgEnlarged">
+        </div>
+
+        <div class="c-productPreview__info">
+          <div class="c-productPreview__infoHeader">
+            <div>
+              <p class="c-productPreview__title">{{abonement.product.name}}</p>
+              <p *ngIf="abonement.product.capacity"
+                 class="c-productPreview__capacity">{{'Ємність:'}} {{abonement.product.capacity.size}}{{abonement.product.capacity.unit}}</p>
+            </div>
+            <div class="c-productPreview__priceBlock">
+              <p class="c-productPreview__price">{{abonement.quantity}}{{'шт' | translate}}</p>
+            </div>
+          </div>
+
+          <p *ngIf="abonement.product.description"
+             class="c-productPreview__description">{{abonement.product.description}}</p>
+
+          <div *ngIf="getSelectedAbonementsByAbonementId().length" class="c-productPreview__order">
+            <span class="c-productPreview__orderTitle">{{'Ви обрали' | translate}}:</span>
+            <ul class="c-productPreview__orderList">
+              <li *ngFor="let selectedAbonement of getSelectedAbonementsByAbonementId()">
+                <span style="color: var(--ex-color-orange);">{{selectedAbonement.quantityForOrder}}&#32;{{abonement.product.name}}&#32;</span>
+                <ng-container *ngIf="selectedAbonement.supplement.supplement_options?.length else withoutSupplements">{{'з'}}&#32;</ng-container>
+                <ng-template #withoutSupplements>{{'класичний' | translate}}</ng-template>
+                <ng-container *ngFor="let option of selectedAbonement.supplement.supplement_options; let i = index">
+                  <span style="font-size: 11px;">{{option.name}}<ng-container *ngIf="option.quantity > 1">({{option.quantity}})</ng-container>,&#32;</span>
+                </ng-container>
+              </li>
+            </ul>
+          </div>
+
+          <spinner *ngIf="!getSupplementsSub.closed" class="c-dialog__spinner"></spinner>
+
+          <button class="c-productPreview__btn o-button o-button--secondary"
+                  [disabled]="getSelectedAbonementsCountByAbonementId() === 0" matDialogClose>
+            {{ '{ count, plural, one{Додати до замовлення {count} товар} few{Додати до замовлення {count} товара} other{Додати до замовлення {count} товарів} }' | translate: {count: getSelectedAbonementsCountByAbonementId()} }}
+          </button>
+        </div>
+      </div>
+      <div *ngIf="abonement.supplements.length" class="c-productPreview__supplements">
+        <abonement-supplements [abonement]="abonement" [supplements]="supplements"></abonement-supplements>
+      </div>
+    </div>
+  </div>
+</div>

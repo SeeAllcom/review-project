@@ -1,0 +1,16 @@
+<div class="c-dialog c-dialog--confirm">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title c-dialog__title--small">{{data.title | translate}}</p>
+    <button class="c-dialog__close" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--padding">
+    <p class="c-dialog__text">{{data.description | translate}}</p>
+    <p class="c-dialog__text c-dialog__text--small">{{data.hint | translate}}</p>
+  </div>
+  <div class="p-5 flex items-center justify-end">
+    <button class="o-button o-button--transparent mr-1" (click)="closeDialog()">{{'Відмінити' | translate}}</button>
+    <button class="o-button o-button--secondary ml-1" (click)="confirm()">{{'Підтвердити' | translate}}</button>
+  </div>
+</div>

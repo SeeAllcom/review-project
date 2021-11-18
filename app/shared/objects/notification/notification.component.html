@@ -1,0 +1,5 @@
+<div *ngIf="isShown" class="o-notification o-notification--{{NotificationType}}">
+  <p class="o-notification__text">{{title | translate}}</p>
+  <button *ngIf="isEmitter" class="o-button o-button--secondary" (click)="confirmEmit()" matRipple>{{btnTitle | translate}}</button>
+  <span *ngIf="isCanClose" class="o-notification__close" (click)="closeNotification()"><mat-icon>close</mat-icon></span>
+</div>

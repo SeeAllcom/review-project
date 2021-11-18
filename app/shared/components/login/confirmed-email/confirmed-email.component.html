@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="c-confirmedEmail">
+    <ng-container *ngIf="message">
+      <p class="c-confirmedEmail__success">{{message}}</p>
+      <button class="o-button" (click)="openLoginDialog()" matRipple>
+        <span class="o-buttonText">{{'Увійти' | translate}}</span>
+      </button>
+    </ng-container>
+    <mat-error class="c-confirmedEmail__error" *ngIf="error">{{error}}</mat-error>
+  </div>
+</div>

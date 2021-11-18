@@ -1,0 +1,72 @@
+<div class="c-dialogHistory">
+  <div class="c-dialogHistory__header">
+    <div class="c-dialogHistory__tabs">
+      <button class="c-dialogHistory__tab"
+              (click)="changeTab(historyTabs.Purchase)"
+              [ngClass]="{'is-active': getActiveTab(historyTabs.Purchase)}">{{'Купівля' | translate}}</button>
+      <button class="c-dialogHistory__tab"
+              (click)="changeTab(historyTabs.WriteOff)"
+              [ngClass]="{'is-active': getActiveTab(historyTabs.WriteOff)}">{{'Списання' | translate}}</button>
+      <button class="c-dialogHistory__tab"
+              (click)="changeTab(historyTabs.Presents)"
+              [ngClass]="{'is-active': getActiveTab(historyTabs.Presents)}">
+        {{'Подарунки' | translate}}
+        <span *ngIf="historyUpdated$ | async" class="c-dialogHistory__tabNotification"></span>
+      </button>
+    </div>
+    <mat-form-field *ngIf="historyNetworks.length" appearance="fill" class="c-dialogHistory__selectField">
+      <mat-label>{{'Вибрати кав\'ярню' | translate}}</mat-label>
+      <mat-select
+        class="c-dialogHistory__establishmentsSelect"
+        [formControl]="areaFilterCtrl"
+        disableOptionCentering
+        [disabled]="historyNetworks.length <= 1"
+        role="listbox">
+        <mat-option>
+          <ngx-mat-select-search
+            [(ngModel)]="searchCoffeeShopValue"
+            [placeholderLabel]="'Знайти кав\'ярню' | translate"
+            noEntriesFoundLabel="{{'Такої кав\'ярні у вас немає' | translate}} 😞"
+            [ariaLabel]="'Знайти кав\'ярню' | translate"></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngIf="(historyNetworks | search:searchCoffeeShopValue).length" [value]="''" role="listitem"
+                    (click)="getUserHistorySomeCoffeeShops('')">
+          {{'Всі кав\'ярні' | translate}}
+        </mat-option>
+        <mat-option *ngFor="let network of historyNetworks | search:searchCoffeeShopValue" role="listitem"
+                    [value]="network.id.toString()" (click)="getUserHistorySomeCoffeeShops(network.id.toString())">
+          {{network.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button class="c-dialogHistory__close" matDialogClose>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialogHistory__body c-dialogHistory__body--mobPadding">
+    <ng-container *ngIf="getHistorySub.closed; else historyLoading">
+      <ng-container *ngIf="!error; else errorTemplate">
+        <purchased-abonements *ngIf="getActiveTab(historyTabs.Purchase)"
+                              [purchases]="historyPurchases"></purchased-abonements>
+        <writeoff-abonements *ngIf="getActiveTab(historyTabs.WriteOff)"
+                             [writeoff]="historyUsedAbonements"></writeoff-abonements>
+        <presents-abonements *ngIf="getActiveTab(historyTabs.Presents)" [presents]="presents"></presents-abonements>
+      </ng-container>
+      <ng-template #errorTemplate>
+        <p class="c-dialogHistory__empty c-dialogHistory__empty--error">{{getErrorMsg(error) | translate}}</p>
+      </ng-template>
+    </ng-container>
+    <ng-template #historyLoading>
+      <spinner class="c-dialog__spinner"></spinner>
+    </ng-template>
+  </div>
+  <div class="c-dialogHistory__footer">
+    <ngb-pagination *ngIf="collectionSize > itemsPerPage" class="o-pagination"
+                    [collectionSize]="collectionSize"
+                    [pageSize]="itemsPerPage"
+                    [ellipses]="true"
+                    [maxSize]="2"
+                    [(page)]="page"
+                    (pageChange)="onPageChange($event)"></ngb-pagination>
+  </div>
+</div>

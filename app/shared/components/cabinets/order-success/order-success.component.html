@@ -1,0 +1,57 @@
+<div class="c-orderSuccess">
+  <div class="container">
+    <div class="c-orderSuccess__content">
+      <mat-icon class="c-orderSuccess__icon">check</mat-icon>
+      <h1 class="c-orderSuccess__title">{{'Замовлення успішне!' | translate}}</h1>
+      <ng-container *ngIf="!abonements.length && backendResponse?.order?.data?.length; else abonementsIsExist">
+        <p class="c-orderSuccess__text c-orderSuccess__text--smallMargin">{{'Всі подальші дії з придбаними абонементами ви можете провести в розділі "Мої Абонементи".' | translate}}</p>
+        <a routerLink="/cabinet/establishments-abonements" class="o-link">{{'Перейти до моїх абонементів' | translate}}</a>
+        <br>
+      </ng-container>
+      <ng-template #abonementsIsExist>
+        <p class="c-orderSuccess__text">{{'Зараз ви можете згенерувати QR-код вашого замовлення, або зробити це пізніше, перейшовши в розділ "Мої абонементи". Також ви можете подарувати цей абонемент(и) своєму другу' | translate}}</p>
+        <mat-button-toggle-group *ngIf="!serverError || !abonements.length" class="c-orderSuccess__toggleBtn">
+          <mat-button-toggle (click)="generateQrCode()">
+            <ng-container *ngIf="openingQrCodeDialog.closed else toggleBtnLoading">{{'Згенерувати QR-код' | translate}}</ng-container>
+          </mat-button-toggle>
+          <mat-button-toggle (click)="showSendGiftTemplate()">{{'Подарувати другу' | translate}}</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <div *ngIf="isSendGiftTemplate" class="c-orderSuccess__form">
+          <friends-select [friendsData]="friendsData"
+                          [friendEmailForGift]="friendsEmail"
+                          [appearance]="'fill'" class="c-orderSuccess__formSelect"></friends-select>
+          <mat-error *ngIf="sendGiftError" class="o-inputPassword__filedError">{{sendGiftError | translate}}</mat-error>
+
+          <div *ngIf="sendGiftError">
+            <button class="o-button" style="margin-bottom: 20px;"
+                    ngxClipboard
+                    [cbContent]="shopLinkForShare()"
+                    (cbOnSuccess)="copyEstablishmentLink()">
+              <span class="o-buttonText">{{'Запросити друга' | translate}}</span>
+            </button>
+          </div>
+
+          <button class="o-button o-button--secondary" [disabled]="!sendingGiftSub.closed" (click)="sengGiftToFriend()"
+                  matRipple>
+            <ng-container *ngIf="sendingGiftSub.closed; else btnLoading">
+              {{'Подарувати' | translate}}
+            </ng-container>
+            <ng-template #btnLoading>
+              <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+            </ng-template>
+          </button>
+        </div>
+      </ng-template>
+
+      <mat-error *ngIf="sendGiftError && !isSendGiftTemplate" class="o-inputPassword__filedError">{{sendGiftError | translate}}</mat-error>
+      <mat-error *ngIf="errorGenerate" class="o-inputPassword__filedError">{{errorGenerate | translate}}</mat-error>
+
+      <a routerLink="/" class="o-link">{{'Повернутися на головну' | translate}}</a>
+    </div>
+  </div>
+</div>
+
+<ng-template #toggleBtnLoading>
+  <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+</ng-template>

@@ -1,0 +1,99 @@
+<div class="c-ownerAbonements">
+  <div class="c-ownerContent__header">
+    <p class="c-ownerContent__headerTitle">
+      {{'Абонементи' | translate}}
+    </p>
+    <button class="o-button" (click)="openAddAbonementsDialog()" matRipple>
+      <span class="o-buttonText">{{'Додати абонемент' | translate}}</span>
+    </button>
+  </div>
+  <ng-template *ngTemplateOutlet="this[currentTemplate]"></ng-template>
+</div>
+
+<ng-template #abonementsTemplate>
+  <ul class="c-ownerProductsList">
+    <li *ngFor="let abonement of abonements" class="c-ownerProductsList__item">
+      <div class="c-ownerProductsList__preview previewHover"
+           [ngClass]="{'c-ownerProductsList__preview--darkened filter grayscale': convertDateToTimestamp(abonement.date_end) < todayTimestamp}"
+           (click)="openEditAbonementDialog(abonement)">
+        <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + abonement.product.img"
+             [alt]="abonement.product.name"
+             class="c-ownerProductsList__img">
+        <mat-icon *ngIf="convertDateToTimestamp(abonement.date_end) < todayTimestamp"
+                  class="c-ownerProductsList__previewIcon">timer_off
+        </mat-icon>
+      </div>
+      <div class="c-ownerProductsList__itemInfo">
+        <p class="c-ownerProductsList__itemBadge"
+           [ngClass]="{
+              'bg-gray-500': getAbonementStatus(abonement) === AbonementStatus.DidNotStart,
+              'bg-green-500': getAbonementStatus(abonement) === AbonementStatus.Started,
+              'bg-red-500': getAbonementStatus(abonement) === AbonementStatus.IsOver
+              }" [ngSwitch]="getAbonementStatus(abonement)">
+          <ng-container *ngSwitchCase="AbonementStatus.DidNotStart">
+            {{'Розпочнеться' | translate}} {{abonement.date_start | date: 'dd.MM.yyyy'}}
+          </ng-container>
+          <ng-container *ngSwitchCase="AbonementStatus.Started">
+            {{'Закінчиться' | translate}} {{abonement.date_end | date: 'dd.MM.yyyy'}}
+          </ng-container>
+          <ng-container *ngSwitchCase="AbonementStatus.IsOver">
+            {{'Закінчився' | translate}} {{abonement.date_end | date: 'dd.MM.yyyy'}}
+          </ng-container>
+        </p>
+        <p class="c-ownerProductsList__title">
+          {{abonement.quantity}} {{abonement.product.name}}
+          <ng-container *ngIf="abonement.product.capacity">
+            ({{abonement.product.capacity.size}}{{abonement.product.capacity.unit}})
+          </ng-container>
+        </p>
+        <p *ngIf="abonement.description" class="c-ownerProductsList__text">{{trimLongText(abonement.description)}}</p>
+        <div class="mt-auto">
+          <p class="c-ownerProductsList__price c-ownerProductsList__price--gray">
+            {{'Стара ціна:' | translate}}<strong> {{abonement.price_old}}{{'грн' | translate}}</strong>
+          </p>
+          <p class="c-ownerProductsList__price">{{'Ціна зі знижкою: ' | translate}}
+            <strong>{{abonement.price}}{{'грн' | translate}}</strong>
+          </p>
+        </div>
+      </div>
+      <button class="c-ownerProductsList__actions"
+              [matMenuTriggerFor]="userNav"
+              #openMenuTrigger="matMenuTrigger"
+              [class.active]="openMenuTrigger.menuOpen"
+              mat-icon-button aria-label="abonements actions">
+        <mat-icon>more_vert</mat-icon>
+
+        <mat-menu #userNav="matMenu"
+                  yPosition="below"
+                  xPosition="before"
+                  [overlapTrigger]="false"
+                  class="c-dropdownList">
+
+          <button class="c-dropdownList__link" mat-menu-item (click)="openEditAbonementDialog(abonement)">
+            <mat-icon class="c-dropdownList__icon">edit</mat-icon>
+            {{'Редагувати' | translate}}
+          </button>
+          <button class="c-dropdownList__link" mat-menu-item (click)="openDeleteAbonementDialog(abonement)">
+            <mat-icon class="c-dropdownList__icon c-dropdownList__icon--delete">delete</mat-icon>
+            {{'Видалити' | translate}}
+          </button>
+        </mat-menu>
+      </button>
+    </li>
+  </ul>
+</ng-template>
+
+<ng-template #empty>
+  <div class="c-owner__empty">
+    <p class="c-owner__emptyTitle">{{'У вас немає абонементів.' | translate}} 😞</p>
+    <p class="c-owner__emptyText">{{'Щоб додадти абонементи, натисніть на кнопку "Додати абонемент"' | translate}}</p>
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <spinner class="c-owner__spinner"></spinner>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <p class="c-owner__error">{{error | translate}}</p>
+</ng-template>

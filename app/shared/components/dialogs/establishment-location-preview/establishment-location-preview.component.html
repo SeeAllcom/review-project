@@ -1,0 +1,38 @@
+<div *ngIf="activeSlide" class="c-establishmentLocation__preview">
+  <div class="c-establishmentLocation__previewContent">
+    <img [src]="getCoffeeShopImage(activeSlide)"
+         [alt]="activeSlide.region ? (activeSlide.region.name_en | getLocalizationCityKey | translate) : activeSlide.name"
+         class="c-establishmentLocation__previewImg" [class.enlarged]="imgEnlarged" (click)="imgEnlarged = !imgEnlarged">
+    <div class="c-establishmentLocation__previewInfo" (click)="openGoogleMaps(activeSlide)">
+      <p class="c-establishmentLocation__previewCity">
+        <ng-container *ngIf="activeSlide.region; else network">
+          {{'м.' | translate}}{{activeSlide.region.name_en | getLocalizationCityKey | translate}}
+        </ng-container>
+        <ng-template #network>
+          {{activeSlide.name}}
+        </ng-template>
+      </p>
+      <p class="c-establishmentLocation__previewAddress">
+        {{activeSlide.address ? activeSlide.address : activeSlide.description}}
+      </p>
+      <p *ngIf="activeSlide.address" class="c-establishmentLocation__previewHint">
+        {{'Тисніть на адресу, щоб відкрити карту.' | translate}}
+      </p>
+    </div>
+  </div>
+  <div class="c-establishmentLocation__navWrapper">
+    <button *ngIf="(data.index !== -1) && (data.index !== 0)"
+            class="c-establishmentLocation__nav c-establishmentLocation__nav--prev"
+            (click)="prevSlide()">
+      <mat-icon class="c-establishmentLocation__navIcon">chevron_left</mat-icon>
+      {{'Попередній' | translate}}
+    </button>
+    <span class="c-establishmentLocation__previewClose" matDialogClose><mat-icon>close</mat-icon></span>
+    <button *ngIf="data.index !== data.slides.length - 1"
+            class="c-establishmentLocation__nav c-establishmentLocation__nav--next"
+            (click)="nextSlide()">
+      {{'Наступний' | translate}}
+      <mat-icon class="c-establishmentLocation__navIcon">chevron_right</mat-icon>
+    </button>
+  </div>
+</div>

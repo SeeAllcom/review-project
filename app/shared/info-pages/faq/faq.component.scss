@@ -1,0 +1,244 @@
+@import "src/assets/styles/helpers/_mixins.scss";
+@import "src/assets/styles/helpers/_extends.scss";
+
+.c-faq {
+  display: flex;
+
+  @include tablets {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  @include tablets-more {
+    .c-scrollTop {
+      display: none;
+    }
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--ex-color-main);
+    margin-bottom: 20px;
+  }
+
+  &Nav {
+    @include tablets {
+      border-top: 1px solid var(--ex-bg--700);
+    }
+
+    &__list {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ex-color-white);
+      counter-reset: nav;
+      list-style: none;
+
+      &--inner {
+        display: none;
+        margin-left: 15px;
+        font-size: 14px;
+
+        @include tablets {
+          margin-left: 8px;
+          padding-bottom: 10px;
+
+          .c-faqNav__itemTitle {
+            min-height: auto;
+          }
+        }
+      }
+    }
+
+    &__icon {
+      --mat-icon-size: 18px;
+
+      opacity: 0.5;
+
+      @include tablets {
+        --mat-icon-size: 28px;
+
+        margin-left: auto;
+        opacity: 1;
+
+        .c-faqNav__itemTitle {
+          min-height: 50px;
+        }
+      }
+    }
+
+    &__item {
+      &.mat-expansion-panel {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        border-bottom: 0;
+        background: transparent;
+        box-shadow: none;
+
+        @include tablets {
+          &:not(:last-child) {
+            border-bottom: 1px solid var(--ex-bg--700);
+          }
+        }
+
+        .mat-expansion-panel-body {
+          padding: 0 24px 0;
+        }
+      }
+
+      &Title {
+        display: flex;
+        padding: 10px 24px;
+        cursor: pointer;
+        transition: var(--ex-transition-secondary);
+        text-decoration: none;
+
+        @include tablets {
+          width: 100%;
+        }
+
+        &::before {
+          margin-right: 4px;
+          counter-increment: nav;
+          content: counters(nav, ".") ". ";
+        }
+
+        @include tablets-more {
+          &:hover,
+          &.active {
+            color: var(--ex-color-main);
+          }
+        }
+      }
+    }
+
+    &__item.open {
+      .c-faqNav {
+        &__list--inner {
+          display: block;
+        }
+
+        &__icon {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+
+  &__sidebar {
+    position: sticky;
+    top: var(--ex-header-height);
+    height: calc(var(--screen-height) - var(--ex-header-height) - var(--ex-userFooter-height));
+    flex: 30%;
+    min-width: 320px;
+    max-width: 400px;
+    background: var(--ex-bg--900);
+    overflow-y: auto;
+
+    &Header {
+      padding: 24px 24px 10px;
+    }
+
+    @extend %custom-scrollbar;
+
+    @include tablets {
+      position: static;
+      height: auto;
+      background: none;
+      max-width: 100%;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex: 70%;
+    flex-direction: column;
+    align-items: center;
+    counter-reset: sectionList;
+    height: 100%;
+    overflow-y: auto;
+    background: var(--ex-bg--800);
+
+    div {
+      width: 100%;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: 400px;
+      object-fit: contain;
+
+      @include phones {
+        height: 200px;
+        margin: auto;
+      }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-weight: 500;
+      font-size: 20px;
+      color: var(--ex-color-main);
+      margin-bottom: 30px;
+
+      @include tablets {
+        font-size: 16px;
+      }
+    }
+
+    p,
+    ul,
+    ol {
+      color: var(--ex-color-white);
+      font-size: 14px;
+      line-height: 22px;
+      margin-top: 20px;
+
+      @include tablets {
+        font-size: 12px;
+      }
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    ul,
+    ol {
+      padding-left: 15px;
+    }
+  }
+
+  &__section {
+    padding: 50px 30px 0;
+    width: 100%;
+
+    &List {
+      width: 100%;
+      counter-increment: sectionList;
+      counter-reset: section;
+    }
+
+    h2::before {
+      margin-right: 4px;
+      counter-increment: section;
+      content: counter(sectionList) "." counter(section) " ";
+    }
+
+    a {
+      word-break: break-word;
+    }
+
+    @include phones {
+      padding: 30px 16px;
+    }
+  }
+}

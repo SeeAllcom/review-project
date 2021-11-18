@@ -1,0 +1,122 @@
+@import "./src/assets/styles/helpers/_mixins.scss";
+
+.c-establishmentLocation {
+  &__nav {
+    position: absolute;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px 5px 0;
+    border-radius: 3px;
+    color: var(--ex-color-black);
+    background: var(--ex-color-white);
+    box-shadow: 0 0 15px 0 rgb(0 0 0 / 60%);
+    cursor: pointer;
+
+    &Wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    &--next {
+      left: unset;
+      right: 15px;
+      margin-left: auto;
+      padding: 5px 0 5px 10px;
+    }
+  }
+
+  &__preview {
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    height: 800px;
+    max-width: 100%;
+    max-height: var(--screen-height);
+    background: var(--ex-bg--800);
+    border-radius: var(--borderRadius-primary);
+    overflow: hidden;
+
+    @include tablets-l {
+      width: 100vw;
+      height: var(--screen-height);
+    }
+
+    &Img {
+      height: 100%;
+      max-width: 100%;
+      width: 100%;
+      max-height: 70%;
+      margin: 0 auto;
+      object-fit: cover;
+      border-radius: 0 0 30px 30px;
+      cursor: pointer;
+
+      &.enlarged {
+        object-fit: contain;
+      }
+    }
+
+    &Content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    &Info {
+      text-align: center;
+      margin-top: auto;
+      position: relative;
+      padding: 20px;
+      z-index: 2;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    &City {
+      font-size: 24px;
+      color: var(--ex-color-white);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    &Address {
+      color: var(--ex-color-white);
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    &Hint {
+      font-size: 13px;
+      color: var(--ex-color-secondary);
+    }
+
+    &Close {
+      width: 45px;
+      height: 45px;
+      min-height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--ex-color-white);
+      color: var(--ex-color-black);
+      z-index: 2;
+      margin: auto;
+      cursor: pointer;
+      transition: var(--ex-transition-primary);
+      box-shadow: 0 0 15px 0 rgb(0 0 0 / 60%);
+
+      &:hover {
+        transform: scale(1.2) rotate(180deg);
+      }
+    }
+  }
+}

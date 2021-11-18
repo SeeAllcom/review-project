@@ -1,0 +1,83 @@
+<div class="c-establishmentLogin">
+  <div class="c-establishmentLogin__tabs">
+    <img class="c-establishmentLogin__logo" src="/assets/img/logo-business.svg" alt="CoffeePhone | Business">
+    <p class="c-establishmentLogin__title">{{'Увійдіть до свого облікового запису' | translate}}</p>
+
+    <div class="c-establishmentLogin__notification" *ngIf="unauthenticatedError">
+      <mat-icon class="c-establishmentLogin__notificationIcon">warning</mat-icon>
+      <p class="c-establishmentLogin__notificationText">{{(unauthenticatedError | translate)}}</p>
+    </div>
+
+    <form [formGroup]="form" class="c-establishmentLogin__form" (ngSubmit)="sendForm()">
+      <mat-form-field class="c-establishmentLogin__formInput">
+        <mat-label>{{'Введіть email' | translate}}</mat-label>
+        <label>
+          <input type="email" formControlName="email" matInput>
+        </label>
+        <mat-error *ngIf="form.get('email').hasError('email') && !form.hasError('required')">
+          {{'Будь ласка, введіть правильний email' | translate}}
+        </mat-error>
+        <mat-error *ngIf="form.get('email').hasError('required')">
+          {{'Email є обов\'язковим' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="c-establishmentLogin__formInput">
+        <mat-label>{{'Введите пароль' | translate}}</mat-label>
+        <label>
+          <input [type]="isVisibilityPassword ? 'text' : 'password'" formControlName="password" matInput>
+          <mat-icon (click)="isVisibilityPassword = !isVisibilityPassword" class="mat-form-field-icon--password">
+            {{isVisibilityPassword ? 'visibility' : 'visibility_off'}}
+          </mat-icon>
+        </label>
+        <mat-error *ngIf="form.get('password').hasError('required')">
+          {{'Пароль є обов\'язковим' | translate}}
+        </mat-error>
+        <mat-error *ngIf="form.get('password').hasError('minlength')">
+          {{'Пароль повинен мати ' | translate}} {{minLengthForPassword}} {{' символів.' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <div class="c-establishmentLogin__formLinks">
+        <a class="c-establishmentLogin__formLink" href="/network/for-partners" target="_blank">{{'Я новий партнер' | translate}}</a>
+        <p class="c-establishmentLogin__formLink" (click)="openPasswordRecovery()">{{'Забули пароль?' | translate}}</p>
+      </div>
+
+      <mat-error class="c-establishmentLogin__error" *ngIf="error">{{error | translate}}
+
+        <ng-container *ngIf="!isSendingEmailAgain; else sendEmailAgainLoading">
+          <span *ngIf="error === exchangeCodeMessageError['ConfirmYourEmail']"
+                class="c-establishmentLogin__sendEmail"
+                (click)="sendMailAgain()">
+            {{'Відправити лист ще раз' | translate}}
+          </span>
+        </ng-container>
+        <ng-template #sendEmailAgainLoading>
+          <span class="c-establishmentLogin__sendEmail" disabled>{{'Надсилаємо' | translate}}...</span>
+        </ng-template>
+      </mat-error>
+
+      <button class="o-button" type="submit" matRipple>
+        <ng-container *ngIf="loginSub.closed; else loginLoading">
+          <span class="o-buttonText">{{'Увійти' | translate}}</span>
+        </ng-container>
+        <ng-template #loginLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </form>
+  </div>
+  <div class="c-establishmentLogin__bg">
+    <div class="c-establishmentLogin__notice">
+      <p class="c-establishmentLogin__noticeTitle">{{'Вітаємо партнерів на CoffeePhone' | translate}}</p>
+      <p class="c-establishmentLogin__noticeText">
+        {{'Цей сервіс створений, для того, щоб ви самостійно могли розмістити свою кав\'ярню для зручного продажу своєї продукції через інтернет на майданчику' | translate }}
+        <a href="/" target="_blank" class="o-link">CoffeePhone</a>.
+        {{'Додайте заклад зараз, щоб почати заробляти більше.' | translate}}
+      </p>
+      <a routerLink="/network/for-partners" class="c-establishmentLogin__noticeLink">
+        {{'Дізнатися більше' | translate}}
+        <mat-icon>arrow_right_alt</mat-icon>
+      </a>
+    </div>
+  </div>
+</div>

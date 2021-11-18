@@ -1,0 +1,127 @@
+<div class="c-owner">
+  <div class="c-ownerTabs__overlay" [class.is-visible]="isMenuVisible" (click)="toggleMenuVisible()"></div>
+  <div class="c-ownerTabs__wrapper" [class.is-visible]="isMenuVisible">
+    <div class="c-ownerTabs__header">
+      <a routerLink="/network/products">
+        <img *ngIf="!isTabsToggled" src="/assets/img/logo-business.svg" alt="CoffeePhone | Business"
+             class="c-owner__logo">
+        <img *ngIf="isTabsToggled" src="/assets/img/favicon-business-v2.png" alt="CoffeePhone | Business"
+             class="c-owner__logo c-owner__logo--small">
+      </a>
+      <button class="c-ownerTabs__arrow"
+              [ngClass]="{'rotate': isTabsToggled}"
+              (click)="toggleTabs()">
+        <mat-icon class="c-ownerTabs__arrowIcon">chevron_left</mat-icon>
+      </button>
+    </div>
+    <ul class="c-ownerTabs" [ngClass]="{'smaller': isTabsToggled}">
+      <li class="c-ownerTabs__item">
+        <a routerLink="/network/report" routerLinkActive="active" class="c-ownerTabs__link" (click)="hideMenu()">
+          <mat-icon class="c-ownerTabs__linkIcon">signal_cellular_alt</mat-icon>
+          <span class="c-ownerTabs__linkText">{{'Звіт' | translate}}</span>
+        </a>
+      </li>
+      <li class="c-ownerTabs__item">
+        <a routerLink="/network/products" routerLinkActive="active" class="c-ownerTabs__link" (click)="hideMenu()">
+          <mat-icon class="c-ownerTabs__linkIcon">shopping_cart</mat-icon>
+          <span class="c-ownerTabs__linkText">{{'Товар' | translate}}</span>
+        </a>
+      </li>
+      <li class="c-ownerTabs__item">
+        <a routerLink="/network/abonements" routerLinkActive="active" class="c-ownerTabs__link" (click)="hideMenu()">
+          <mat-icon class="c-ownerTabs__linkIcon">redeem</mat-icon>
+          <span class="c-ownerTabs__linkText">{{'Абонементи' | translate}}</span>
+        </a>
+      </li>
+      <li *ngIf="(isOwnerLoggedIn$ | async)" class="c-ownerTabs__item">
+        <a routerLink="/network/establishments" routerLinkActive="active" class="c-ownerTabs__link"
+           (click)="hideMenu()">
+          <mat-icon class="c-ownerTabs__linkIcon">storefront</mat-icon>
+          <span class="c-ownerTabs__linkText">{{'Заклади' | translate}}</span>
+        </a>
+      </li>
+      <li *ngIf="(isOwnerLoggedIn$ | async)" class="c-ownerTabs__item">
+        <a routerLink="/network/workers" routerLinkActive="active" class="c-ownerTabs__link" (click)="hideMenu()">
+          <mat-icon class="c-ownerTabs__linkIcon">engineering</mat-icon>
+          <span class="c-ownerTabs__linkText">{{'Працівники' | translate}}</span>
+        </a>
+      </li>
+      <li class="c-ownerTabs__item">
+        <button class="c-ownerTabs__link" (click)="openNetworkHistory(); hideMenu()">
+          <mat-icon class="c-ownerTabs__linkIcon">history</mat-icon>
+          <span class="c-ownerTabs__linkText">{{'Історія' | translate}}</span>
+        </button>
+      </li>
+      <li class="c-ownerTabs__item">
+        <a routerLink="/network/settings" routerLinkActive="active" class="c-ownerTabs__link" (click)="hideMenu()">
+          <mat-icon class="c-ownerTabs__linkIcon">settings</mat-icon>
+          <span class="c-ownerTabs__linkText">{{'Налаштування' | translate}}</span>
+        </a>
+      </li>
+    </ul>
+    <div class="c-ownerTabs__footer">
+      <ng-container *ngIf="(networkData$ | async)">
+        <a class="c-ownerQrCode" [href]="qrcodeHref" (click)="saveQrCode(qrCodeImage)"
+           [matTooltip]="'Завантажте QR-код вашої мережі і розмістіть в своїх закладх, для відображення віртуального меню і зручного замовлення для користувачів CoffeePhone' | translate" download>
+          <mat-icon>qr_code</mat-icon>
+          <p *ngIf="!isTabsToggled" class="c-ownerQrCode__title">{{'Завантажити QR-код' | translate}}</p>
+          <ngx-qrcode #qrCodeImage
+                      class="c-ownerQrCode__code"
+                      [elementType]="qrcodeType"
+                      [alt]="(networkData$ | async).slug"
+                      [value]="siteUrl + '/establishment/' + (networkData$ | async).slug + '?fromEstablishment=true'"></ngx-qrcode>
+        </a>
+      </ng-container>
+      <div class="c-ownerUser" (click)="goToSettings()">
+        <ng-container *ngIf="getNetworkInfoSub.closed; else networkLoading">
+          <ng-container *ngIf="(networkData$ | async); else networkNotExist">
+            <img [src]="API_URL + (networkData$ | async).avatar" [alt]="(networkData$ | async).name"
+                 class="c-ownerUser__avatar">
+            <div *ngIf="!isTabsToggled" class="c-ownerUser__info">
+              <p class="c-ownerUser__title">{{(networkData$ | async).name}}</p>
+              <p *ngIf="coffeeShopData$ | async"
+                 class="c-ownerUser__text c-ownerUser__text--bold">{{getTranslatedCityName((coffeeShopData$ | async).region.name_en) | translate}}</p>
+              <p *ngIf="coffeeShopData$ | async"
+                 class="c-ownerUser__text c-ownerUser__text--address">{{(coffeeShopData$ | async).address}}</p>
+            </div>
+          </ng-container>
+          <ng-template #networkNotExist>
+            <a *ngIf="!isTabsToggled && !(isWorkerLoggedIn$ | async)" routerLink="/network/settings"
+               class="o-button"><span class="o-buttonText">{{'Налаштувати мережу' | translate}}</span></a>
+            <p *ngIf="(isWorkerLoggedIn$ | async)" class="c-ownerUser__title">{{'Дані не загрузилися' | translate}}</p>
+          </ng-template>
+        </ng-container>
+        <ng-template #networkLoading>
+          <spinner class="c-ownerUser__spinner"></spinner>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="c-ownerContent" [ngClass]="{'bigger': isTabsToggled}">
+    <div class="c-ownerHeader">
+      <button class="c-ownerHeader__menu" (click)="toggleMenuVisible()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <button class="c-ownerHeader__btn" (click)="openQrCodeScanner()" matRipple>
+        <mat-icon class="c-ownerHeader__btnIcon">qr_code_scanner</mat-icon>
+        {{'Сканер' | translate}}
+      </button>
+      <button class="c-ownerHeader__action" [matTooltip]="'Історія' | translate" (click)="openNetworkHistory()"
+              matRipple>
+        <mat-icon>history</mat-icon>
+      </button>
+      <button class="c-ownerHeader__logout" (click)="logout()">
+        <ng-container *ngIf="logoutSub.closed; else logoutLoading">
+          <mat-icon>logout</mat-icon>
+          <span class="c-ownerHeader__logoutText">{{'Вийти' | translate}}</span>
+        </ng-container>
+        <ng-template #logoutLoading>
+          <spinner class="c-ownerHeader__logoutSpinner"></spinner>
+        </ng-template>
+      </button>
+    </div>
+    <div class="c-ownerBody">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

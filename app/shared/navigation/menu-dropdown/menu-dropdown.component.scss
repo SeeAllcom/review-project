@@ -1,0 +1,65 @@
+@import "../../../../../src/assets/styles/helpers/_mixins.scss";
+
+.c-dropdown {
+  &List {
+    &.mat-menu-panel {
+      min-width: 200px;
+    }
+
+    &__link {
+      display: flex;
+      align-items: center;
+
+      &--mobS {
+        display: none;
+
+        @include phones-s {
+          display: block;
+        }
+      }
+
+      &--hotOrder {
+        --ex-bg--gradientMain: var(--ex-color-light-blue);
+      }
+    }
+
+    &__icon {
+      &.mat-icon {
+        margin-right: 10px;
+        background: var(--ex-bg--gradientMain);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      &--delete {
+        &.mat-icon {
+          background: var(--ex-bg--gradientRed);
+          -webkit-background-clip: text;
+        }
+      }
+    }
+  }
+}
+
+
+.c-user {
+  position: relative;
+
+  &__avatar {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 3px;
+
+    @include phones-m {
+      margin-right: 5px;
+    }
+
+    &Block {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+}

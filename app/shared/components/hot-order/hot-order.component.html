@@ -1,0 +1,128 @@
+<form class="c-orderForm" [formGroup]="orderForm">
+  <div class="c-orderForm__header">
+    <p class="c-orderForm__title">{{'Швидке замовлення' | translate}}</p>
+
+    <span class="c-orderForm__close" matDialogClose>
+      <mat-icon>close</mat-icon>
+    </span>
+  </div>
+  <div class="c-orderForm__body">
+    <mat-form-field appearance="fill" class="c-cityDialog__formField">
+      <mat-label>{{'Виберіть місто' | translate}}</mat-label>
+      <mat-select
+        disableOptionCentering
+        formControlName="city"
+        role="listbox"
+        (valueChange)="getEstablishments($event)"
+        [disabled]="!isCitiesLoaded">
+        <ng-container *ngIf="areasWithRegions.length; else citiesEmpty">
+          <mat-option role="listitem">
+            <ngx-mat-select-search
+              [formControl]="areaFilterCtrl"
+              [placeholderLabel]="'Знайти місто' | translate"
+              noEntriesFoundLabel="{{'Ми не знайшли таке місто' | translate}} 😞"
+              ariaLabel="Найти свой город"></ngx-mat-select-search>
+          </mat-option>
+          <mat-optgroup *ngFor="let area of filteredArea | async"
+                        [label]="area.name_en | getLocalizationCityKey | translate">
+            <mat-option *ngFor="let region of area.regions" [value]="region.name_en" role="listitem">
+              {{region.name_en | getLocalizationCityKey | translate}}
+            </mat-option>
+          </mat-optgroup>
+        </ng-container>
+        <ng-template #citiesEmpty>
+          <p class="c-cityDialog__text c-cityDialog__text--empty">
+            {{'Зараз немає міст із зареєстрованими закладами.' | translate}}😞
+          </p>
+        </ng-template>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="c-cityDialog__formField">
+      <mat-label>{{'Виберіть заклад' | translate}}</mat-label>
+      <mat-select
+        disableOptionCentering
+        formControlName="establishment"
+        role="listbox"
+        (valueChange)="getCategoriesWithProducts($event, true)"
+        [disabled]="!networksSub.closed || establishments.length === 0">
+        <ng-container *ngIf="establishments.length; else establishmentsEmpty">
+          <mat-option role="listitem">
+            <ngx-mat-select-search
+              [formControl]="shopsFilter"
+              [placeholderLabel]="'Знайти заклад' | translate"
+              noEntriesFoundLabel="{{'Ми не знайшли такий заклад' | translate}} 😞"
+              ariaLabel="Знайти кав'ярню"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let establishment of establishments | search:shopsFilter.value:'slug'"
+                      [value]="establishment.slug" role="listitem">
+            <img [src]="API_URL + establishment.avatar" [alt]="establishment.name" class="c-cityDialog__formFieldImg">
+            <span class="c-cityDialog__formFieldText">{{establishment.name}}</span>
+          </mat-option>
+        </ng-container>
+        <ng-template #establishmentsEmpty>
+          <p class="c-cityDialog__text c-cityDialog__text--empty">
+            {{'Зараз немає закладів в цьому місті.' | translate}}😞
+          </p>
+        </ng-template>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <ng-container
+    *ngIf="orderForm.controls.city.valid && orderForm.controls.establishment.valid; else establishmentNotSelected">
+    <ng-container *ngIf="categories.length && establishmentProducts.length; else productsEmpty">
+      <div class="c-orderForm__body c-orderForm__body--scroll">
+        <p class="c-orderForm__title">{{'Ваше замовлення' | translate}}</p>
+        <ul class="c-orderFormCategories">
+          <li class="c-orderFormCategories__item"
+              *ngFor="let category of categories"
+              [ngClass]="{'active': category.id === currentCategoryId}"
+              (click)="changeCategory(category.id)">
+            <img [src]="API_URL + category.img" [alt]="getLocalizationCategoriesKey(category.name) | translate"
+                 class="c-orderFormCategories__img">
+            <span class="c-orderFormCategories__title">
+              {{getLocalizationCategoriesKey(category.name) | translate}}
+            </span>
+          </li>
+        </ul>
+
+        <ul class="c-orderFormProduct">
+          <li *ngFor="let product of establishmentProducts" class="c-orderFormProduct__item">
+            <div class="c-orderFormProduct__info">
+              <img [src]="API_URL + product.img" [alt]="product.name" class="c-orderFormProduct__img">
+              <div>
+                <p class="c-orderFormProduct__name">{{product.name}}</p>
+                <p *ngIf="product.capacity" class="c-orderFormProduct__capacity">
+                  {{product.capacity.size}}{{product.capacity.unit}}
+                </p>
+              </div>
+              <div class="c-orderFormProduct__prices">
+                <p *ngIf="product.price !== product.bonus" class="c-orderFormProduct__price c-orderFormProduct__price--bonus">
+                  +{{+product.bonus}}{{'грн' | translate}}
+                </p>
+                <p class="c-orderFormProduct__price">{{+product.price}}{{'грн' | translate}}</p>
+              </div>
+            </div>
+
+            <button class="c-orderForm__btn" (click)="openProductPreview(product)" matRipple><mat-icon>add</mat-icon></button>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+    <ng-template #productsEmpty>
+      <div class="c-orderForm__body">
+        <p class="c-orderForm__empty">{{'Товари скоро з\'являться на нашій вітрині'  | translate}}😌</p>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-template #establishmentNotSelected>
+    <div class="c-orderForm__body">
+      <p class="c-orderForm__empty">{{'Оберіть місто і заклад, щоб зробити швидке замовлення.'  | translate}}</p>
+    </div>
+  </ng-template>
+
+  <shopping-cart [isMobile]="true"
+                 [network]="network"
+                 [pageLoaded]="categoriesWithProductsSub.closed"
+                 [currentCartType]="cartType.ProductsTemplate"></shopping-cart>
+</form>

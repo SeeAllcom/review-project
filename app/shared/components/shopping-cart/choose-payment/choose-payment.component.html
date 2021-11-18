@@ -1,0 +1,46 @@
+<div class="c-shoppingCartPayment__wrapper" [ngClass]="{'c-shoppingCartPayment__wrapper--visible': isVisible}">
+  <ul class="c-shoppingCartPayment">
+    <li class="c-shoppingCartPayment__item">
+      <p class="c-shoppingCartPayment__title">
+        {{'Виберіть спосіб оплати' | translate}}
+      </p>
+    </li>
+    <li class="c-shoppingCartPayment__item"
+        [class.disabled]="!isLoggedIn || getActualPrice() > bonuses"
+        (click)="bonusesPayment.emit(); closePayments()">
+      <span class="c-shoppingCartPayment__itemIcon c-shoppingCartPayment__itemIcon--bonuses"><mat-icon>savings</mat-icon></span>
+      <div class="c-shoppingCartPayment__itemInfo">
+        <p class="c-shoppingCartPayment__itemName">{{'Бонуси' | translate}}</p>
+        <p class="c-shoppingCartPayment__itemCaption">
+          <ng-container *ngIf="!isLoggedIn; else userLoggedIn">
+            {{'Авторизуйтеся, щоб оплатити бонусами' | translate}}
+          </ng-container>
+          <ng-template #userLoggedIn>
+            <ng-container *ngIf="getActualPrice() > bonuses; else bonusesTemplate">{{'Недостатня кількість бонусів для оплати' | translate}}</ng-container>
+            <ng-template #bonusesTemplate>{{'На вашому рахунку' | translate}} {{bonuses}}{{'грн бонусів'}}</ng-template>
+          </ng-template>
+        </p>
+      </div>
+    </li>
+    <li class="c-shoppingCartPayment__item" (click)="startOnlinePayment()">
+      <span class="c-shoppingCartPayment__itemIcon"><mat-icon>wifi</mat-icon></span>
+      <div class="c-shoppingCartPayment__itemInfo">
+        <p class="c-shoppingCartPayment__itemName">{{'Онлайн' | translate}}</p>
+        <p class="c-shoppingCartPayment__itemCaption">{{'Стягується комісія в розмірі' | translate}} {{commission}}%</p>
+      </div>
+    </li>
+    <li class="c-shoppingCartPayment__item" (click)="cashPayment.emit(); closePayments()">
+      <span class="c-shoppingCartPayment__itemIcon"><mat-icon>payments</mat-icon></span>
+      <div class="c-shoppingCartPayment__itemInfo">
+        <p class="c-shoppingCartPayment__itemName">{{'PayPass | Готівка' | translate}}</p>
+        <p class="c-shoppingCartPayment__itemCaption">{{'Доступно тільки в закладах' | translate}}</p>
+      </div>
+    </li>
+    <li class="c-shoppingCartPayment__item" (click)="closePayments()">
+      <span class="c-shoppingCartPayment__itemIcon c-shoppingCartPayment__itemIcon--close"><mat-icon>close</mat-icon></span>
+      <div class="c-shoppingCartPayment__itemInfo">
+        <p class="c-shoppingCartPayment__itemName">{{'Відмінити' | translate}}</p>
+      </div>
+    </li>
+  </ul>
+</div>

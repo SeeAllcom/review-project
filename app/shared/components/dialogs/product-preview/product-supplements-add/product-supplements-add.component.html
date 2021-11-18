@@ -1,0 +1,44 @@
+<div class="c-userProductSupplements__wrapper">
+  <div class="c-userProductSupplements" *ngFor="let supplement of getFormControls(formProductSupplements, 'supplements')">
+    <p class="c-userProductSupplements__title">{{supplement.controls.name.value}}</p>
+    <ul class="c-userProductSupplements__badges">
+      <li *ngIf="supplement.controls.required.value"
+          class="c-userProductSupplements__badge required">{{'Обов\'язково' | translate}}</li>
+      <li *ngIf="supplement.controls.choice_only_one.value"
+          class="c-userProductSupplements__badge">{{'Виберіть одну позицію' | translate}}</li>
+      <li *ngIf="supplement.controls.max_options.value && supplement.controls.max_options.value !== 1"
+          class="c-userProductSupplements__badge">{{'Максимально для замовлення:' | translate}} {{supplement.controls.max_options.value}}</li>
+    </ul>
+
+    <ul class="c-userProductSupplementsList">
+      <li class="c-userProductSupplementsList__item" *ngFor="let option of getFormControls(supplement, 'options')"
+          (click)="toggleProductSupplements(option, supplement)"
+          [ngClass]="{'disabled': isOptionDisabled(option, supplement), 'selected': isOptionSelected(option)}">
+        <div class="c-userProductSupplementsList__info">
+          <span class="c-userProductSupplementsList__name">{{option.controls.name.value}}</span>
+          <span *ngIf="option.controls.price.value"
+                class="c-userProductSupplementsList__price">+{{option.controls.price.value}}{{'грн' | translate}}</span>
+        </div>
+
+        <div *ngIf="!supplement.controls.choice_only_one.value" class="c-userProductSupplementsList__actions">
+          <button *ngIf="option.controls.quantity.value >= 1"
+                  (click)="removeOptionQuantity(option, $event)"
+                  class="c-userProductSupplementsList__action">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span *ngIf="option.controls.quantity.value >= 1"
+                class="c-userProductSupplementsList__quantity">{{option.controls.quantity.value}}</span>
+          <button class="c-userProductSupplementsList__action"
+                  [class.disabled]="isOptionDisabled(option, supplement)"
+                  (click)="addOptionQuantity(option, supplement, $event)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <span *ngIf="supplement.controls.choice_only_one.value" class="c-userProductSupplementsList__action">
+          <mat-icon *ngIf="!isOptionSelected(option)">add</mat-icon>
+          <mat-icon *ngIf="isOptionSelected(option)">done</mat-icon>
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>

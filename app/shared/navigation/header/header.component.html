@@ -1,0 +1,49 @@
+<div class="header">
+  <div class="container">
+    <div class="header__content">
+      <a routerLink="/">
+        <img src="/assets/img/logo-beta.svg" alt="CoffeePhone" class="header__logo">
+        <img src="/assets/img/favicon.png" alt="CoffeePhone" class="header__logo header__logo--mob">
+      </a>
+      <ul class="header__menu" *ngIf="!(isUserLogin$ | async)">
+        <li class="header__menuItem">
+          <a routerLink="/what-is-coffeephone" class="header__menuLink">{{'Що таке CoffeePhone' | translate}}</a>
+        </li>
+        <li class="header__menuItem">
+          <a routerLink="/network/for-partners" class="header__menuLink">{{'Партнерам' | translate}}</a>
+        </li>
+      </ul>
+
+      <div class="header__actions">
+<!--        <a href="https://t.me/coffeephonebot" target="_blank" rel="noopener noreferrer nofollow" class="header__action">-->
+<!--          <mat-icon>chat</mat-icon>-->
+<!--        </a>-->
+        <span *ngIf="(isUserLogin$ | async)"
+              class="header__action header__action--notMobS" (click)="openUserHistory()">
+          <mat-icon>history</mat-icon>
+        </span>
+        <p class="header__action" [ngClass]="{'is-small': !(isUserLogin$ | async)}" (click)="openCitiesSelector()">
+          <mat-icon class="header__actionIcon">apartment</mat-icon>
+          <span *ngIf="currentCity$ | async" class="header__actionText"
+                [ngClass]="{'is-hidden': !(isUserLogin$ | async)}">
+            {{(currentCity$ | async).name_en | getLocalizationCityKey | translate}}
+          </span>
+        </p>
+        <span class="header__action header__action--notMobS" (click)="openLocalizationDialog()">
+          <svg class="o-icon">
+            <use [attr.xlink:href]="'assets/img/icons/sprites/'+flagsSpriteName+'#icon-flag-'+flagIconName"/>
+          </svg>
+        </span>
+      </div>
+
+      <button *ngIf="!(isUserLogin$ | async)" class="header__auth" (click)="openAuthDialog(authTabsTypeEnum.Login)">
+        <span class="header__authText">{{'Увійти' | translate}}</span>
+      </button>
+      <button *ngIf="!(isUserLogin$ | async)" class="header__auth header__auth--signUp"
+              (click)="openAuthDialog(authTabsTypeEnum.SignUp)">
+        <span class="header__authText" translate>{{'Реєстрація' | translate}}</span>
+      </button>
+      <menu-dropdown></menu-dropdown>
+    </div>
+  </div>
+</div>

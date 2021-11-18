@@ -1,0 +1,88 @@
+@import "../../../../../../../src/assets/styles/helpers/_mixins.scss";
+
+.c-establishmentLocation {
+  &__map {
+    width: 100%;
+    height: 100%;
+    border: none;
+    z-index: 1;
+
+    .map-container {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+
+    &Wrapper {
+      --ex-previewHover-after-size: 30px;
+      --ex-previewHover-borderRadius: 5px;
+
+      width: 55px;
+      min-width: 55px;
+      height: 55px;
+      min-height: 45px;
+      position: relative;
+      cursor: pointer;
+      margin-right: 10px;
+      overflow: hidden;
+      display: flex;
+    }
+  }
+
+  &__location {
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    padding: 3px 10px;
+
+    @media(hover: hover) and (pointer: fine) {
+      &:hover {
+        box-shadow: 0 -70px 0 0 rgb(255, 255, 255, 0.1) inset;
+      }
+    }
+  }
+
+  &__loading {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__close {
+    --mat-icon-size: 30px;
+
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: var(--ex-color-white);
+    cursor: pointer;
+    z-index: 2;
+
+    @include tablets {
+      padding: 3px;
+      background: var(--ex-bg--700);
+      border-radius: var(--borderRadius-primary);
+    }
+  }
+}

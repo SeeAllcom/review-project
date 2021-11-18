@@ -1,0 +1,171 @@
+@import "src/assets/styles/helpers/_mixins.scss";
+
+.c-appBanner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  height: var(--screen-height);
+  padding: 20px;
+  z-index: 999;
+  transition: var(--ex-transition-primary);
+  transform: translateY(100%);
+  visibility: collapse;
+
+  &.visible {
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  @include tablets-xl-more {
+    display: none;
+  }
+
+  &__download {
+    --mat-icon-size: 24px;
+
+    margin-right: 15px;
+    color: var(--ex-color-secondary);
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    background-color: var(--ex-bg--700);
+    background-image: url("/assets/img/app-banner-img.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: var(--borderRadius-primary);
+    padding: 20px;
+    height: 620px;
+    max-height: 100%;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.8);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: 0;
+      border: 20px solid transparent;
+      border-top: 20px solid var(--ex-bg--700);
+    }
+
+    &Header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      margin-bottom: auto;
+
+      &Close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ex-color-light-blue);
+      }
+    }
+
+    &Logo {
+      max-width: 120px;
+      margin-right: 15px;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .o-button {
+      flex: 1;
+
+      &:first-child {
+        border-radius: var(--borderRadius-primary) 0 0 var(--borderRadius-primary);
+      }
+
+      &:last-child {
+        border-radius: 0 var(--borderRadius-primary) var(--borderRadius-primary) 0;
+      }
+
+      &One {
+        border-radius: var(--borderRadius-primary) !important;
+      }
+    }
+
+    @include phones-xs {
+      flex-direction: column;
+
+      .o-button {
+        width: 100%;
+        border-radius: var(--borderRadius-primary) !important;
+
+        &:first-child {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+
+  &__text {
+    font-size: 12px;
+
+    .mat-icon {
+      --mat-icon-size: 18px;
+
+      vertical-align: middle;
+    }
+  }
+
+  &__btn {
+    color: var(--ex-color-white);
+    font-size: 12px;
+    text-decoration: underline;
+    margin-left: auto;
+  }
+
+  &HowDownload {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: auto;
+      padding: 20px;
+      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.0));
+      border-radius: var(--borderRadius-primary) var(--borderRadius-primary) 0 0;
+
+      &Back {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    &__video {
+      width: 100%;
+      height: calc(100% - 65px);
+    }
+  }
+}

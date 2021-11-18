@@ -1,0 +1,80 @@
+<ng-container *ngIf="registeredSuccess; else registerFormTemplate">
+  <div class="c-auth__success">{{registeredSuccess | translate}}</div>
+</ng-container>
+<ng-template #registerFormTemplate>
+  <form class="c-authForm" [formGroup]="registerForm" (ngSubmit)="register()">
+    <div class="c-authForm__row">
+      <div class="c-authForm__col">
+        <mat-form-field appearance="fill" class="c-authForm__inputWrapper">
+          <mat-label>{{'Введіть ім\'я' | translate}}</mat-label>
+          <label>
+            <input type="text" formControlName="name" matInput inputMode="text">
+          </label>
+          <mat-error *ngIf="registerForm.get('name').hasError('required')">
+            {{'Ім\'я є обов\'язковим' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="c-authForm__col">
+        <mat-form-field appearance="fill" class="c-authForm__inputWrapper">
+          <mat-label>{{'Введіть email' | translate}}</mat-label>
+          <label>
+            <input type="email" matInput formControlName="email" inputMode="text" autocomplete="off">
+          </label>
+          <mat-error *ngIf="registerForm.get('email').hasError('email') && !registerForm.hasError('required')">
+            {{'Будь ласка, введіть вірний email' | translate}}
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('email').hasError('required')">
+            {{'Email є обов\'язковим' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="c-authForm__inputWrapper">
+      <input-password [placeholder]="'Введіть пароль' | translate"
+                      [formControl]="registerForm.get('password')"
+                      (paste)="false"
+                      [autoCompleteType]="'off'"
+                      ngDefaultControl></input-password>
+    </div>
+
+    <div class="c-authForm__inputWrapper">
+      <input-password [placeholder]="'Повторіть пароль' | translate"
+                      [formControl]="registerForm.get('password_confirmation')"
+                      (paste)="false"
+                      [autoCompleteType]="'off'"
+                      ngDefaultControl></input-password>
+
+      <mat-error class="c-authForm__inputError"
+                 *ngIf="registerForm.get('password_confirmation').valid && registerForm.errors?.equivalent">
+        {{'Паролі не збігаються. Будь ласка, повторно введіть свій пароль' | translate}}
+      </mat-error>
+    </div>
+
+    <mat-checkbox class="c-authForm__checkbox" [(ngModel)]="checked" formControlName="privacy_policy">
+      {{'Я згідний з вашою ' | translate}}
+      <a href="/privacy-policy" target="_blank">{{'політикою конфіденційності' | translate}}</a>
+      {{'та' | translate}}
+      <a href="/terms-of-use" target="_blank">{{'правилами користування' | translate}}</a>.
+    </mat-checkbox>
+
+    <mat-error class="o-error" *ngIf="isRegisterFormInvalid && !checked">
+      {{'Нажміть на чекбокс, для того щоб зареєструватися' | translate}}
+    </mat-error>
+
+    <mat-error class="c-authForm__error" *ngIf="error">{{error}}</mat-error>
+
+    <button class="o-button" type="submit" [disabled]="!registerSub.closed" matRipple>
+        <span class="o-buttonText">
+          <ng-container *ngIf="registerSub.closed; else btnLoading">
+            {{'Зареєструватися' | translate}}
+          </ng-container>
+        </span>
+    </button>
+  </form>
+</ng-template>
+
+<ng-template #btnLoading>
+  <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+</ng-template>

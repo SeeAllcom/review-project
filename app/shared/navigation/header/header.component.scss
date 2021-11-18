@@ -1,0 +1,239 @@
+@import "../../../../../src/assets/styles/helpers/_mixins.scss";
+
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  transition: var(--ex-transition-primary);
+
+  @include tablets {
+    &.hidden {
+      transform: translateY(-100%);
+    }
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--ex-bg--900);
+  border-bottom: 1px solid var(--ex-bg--800);
+  height: var(--ex-header-height);
+
+  @include tablets {
+    display: none;
+  }
+
+  &--visible {
+    display: flex;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  &__action {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    margin-bottom: 0;
+    cursor: pointer;
+    color: var(--ex-color-light-blue);
+    transition: var(--ex-transition-secondary);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--ex-color-white);
+    }
+
+    @include tablets {
+      margin-right: 10px;
+      max-width: 150px;
+    }
+
+    &--notification {
+      &::after,
+      &::before {
+        @include size(10px);
+
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: -3px;
+        background-color: var(--ex-color-red);
+        border-radius: 50%;
+        box-shadow: 0 0 0 0 var(--ex-color-red);
+      }
+
+      &::before {
+        animation: pulse 1.5s infinite cubic-bezier(0.22, 0.61, 0.36, 1);
+        will-change: transform;
+      }
+    }
+
+    &.is-small {
+      max-width: 150px;
+    }
+
+    &Text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-transform: capitalize;
+      line-height: normal;
+
+      &.is-hidden {
+        @include phones-m {
+          display: none;
+        }
+      }
+
+      @include tablets {
+        margin-right: 5px;
+      }
+    }
+
+    &Icon {
+      margin-right: 5px;
+      color: currentColor;
+    }
+
+    &Spinner {
+      --mat-spinner-size: 20px;
+      --mat-spinner-stroke: 2px;
+
+      padding: 0 10px;
+    }
+
+    &--notMobS {
+      @include phones-s {
+        display: none;
+      }
+    }
+  }
+
+  &__logo {
+    max-width: 115px;
+    opacity: 0;
+    animation: headerLogoAnim 1.7s both;
+
+    @keyframes headerLogoAnim {
+      0% {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @include phones-l {
+      display: none;
+    }
+
+    &--mob {
+      display: none;
+
+      @include phones-l {
+        display: block;
+        border-radius: 5px;
+      }
+    }
+
+    @include phones-xs {
+      max-height: 25px;
+    }
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    &Link {
+      font-size: 12px;
+      color: var(--ex-color-white);
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    @include tablets-l {
+      display: none;
+    }
+  }
+
+  &__auth {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    position: relative;
+    min-width: 100px;
+    min-height: 35px;
+    padding: 0 5px;
+    background: var(--ex-bg--900);
+    color: var(--ex-color-white);
+    border: 1px solid;
+    border-image-source: var(--ex-bg--gradientMain);
+    border-image-slice: 1;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    margin-right: 15px;
+
+    &--signUp {
+      background: var(--ex-bg--gradientMain);
+
+      @include phones-xs {
+        display: none;
+      }
+    }
+
+    @include phones-m {
+      min-width: unset;
+      margin-right: 10px;
+    }
+
+    @include phones-xs {
+      padding: 5px 10px;
+    }
+
+    &Text {
+      position: relative;
+      z-index: 2;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 120%;
+      height: 100%;
+      background: var(--ex-bg--gradientMain);
+      z-index: 0;
+      transform: translateX(-120%);
+      transition: all 0.25s;
+    }
+
+    &:hover {
+      &::after {
+        transform: translateY(0);
+      }
+    }
+  }
+}

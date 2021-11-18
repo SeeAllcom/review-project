@@ -1,0 +1,41 @@
+<ng-container *ngIf="historyPresents.length; else presentEmpty">
+  <div class="c-dialogHistoryTable">
+    <div class="c-dialogHistoryTable__row c-dialogHistoryTable__row--head">
+      <div class="c-dialogHistoryTable__cell">{{'Дата/час' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Подарував' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell"></div>
+      <div class="c-dialogHistoryTable__cell">{{'Отримав' | translate}}</div>
+    </div>
+    <div class="c-dialogHistoryTable__row" *ngFor="let present of historyPresents"
+         (click)="openRowInfo(present.data)">
+      <div class="c-dialogHistoryTable__cell c-dialogHistoryTable__cell--date"><span
+        class="mob">{{'Дата/час' | translate}}</span> {{present.updated_at | date: 'd MMM y H:mm'}}</div>
+      <div class="c-dialogHistoryTable__cell">
+        <span class="mob">{{'Подарував' | translate}}:</span>
+        <p>
+          {{present.user_sender.name}}
+          <br>
+          {{present.user_sender.email}}
+        </p>
+      </div>
+      <div class="c-dialogHistoryTable__cell">
+        <div class="c-dialogHistoryTable__cellArrow">
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+      </div>
+      <div class="c-dialogHistoryTable__cell">
+        <span class="mob">{{'Отримав' | translate}}:</span>
+        <p>
+          {{present.user_recipient.name}}
+          <br>
+          {{present.user_recipient.email}}
+        </p>
+      </div>
+
+      <mat-icon class="c-dialogHistoryTable__rowIconMore">more_vert</mat-icon>
+    </div>
+  </div>
+</ng-container>
+<ng-template #presentEmpty>
+  <p class="c-dialogHistory__empty">{{'На даний момент користувачі не дарували абонементи один одному.' | translate}}</p>
+</ng-template>

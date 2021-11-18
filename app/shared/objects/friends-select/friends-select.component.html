@@ -1,0 +1,24 @@
+<mat-form-field *ngIf="shown" [appearance]="appearance" class="c-friendsSelect__field">
+  <mat-label>{{'Виберіть друга для подарунку' | translate}}</mat-label>
+  <mat-select
+    class="c-friendsSelect"
+    [formControl]="friendEmailForGift"
+    disableOptionCentering
+    role="listbox">
+    <mat-option>
+      <ngx-mat-select-search
+        [(ngModel)]="searchFriendValue"
+        name="friendEmail"
+        [placeholderLabel]="'Знайти друга' | translate"
+        noEntriesFoundLabel="{{'Ми не знайшли такого друга' | translate}} 😞"
+        [ariaLabel]="'Знайти друга' | translate"></ngx-mat-select-search>
+    </mat-option>
+    <mat-option *ngFor="let friend of filteredFriends()" role="listitem"
+                [value]="friend.email">
+      <div class="c-friendsSelect__option">
+        <img [src]="friend.avatar ? API_URL + friend.avatar : '/assets/img/img-user-avatar.svg'" alt=""> {{friend.name}}
+      </div>
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="friendEmailForGift.hasError('required')">{{'Поле є обов\'язкове!' | translate}}</mat-error>
+</mat-form-field>

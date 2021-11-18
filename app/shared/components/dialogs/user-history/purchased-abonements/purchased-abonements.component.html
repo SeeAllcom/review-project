@@ -1,0 +1,73 @@
+<ng-container *ngIf="purchases.length; else purchasesEmpty">
+  <div class="c-dialogHistoryTable">
+    <div class="c-dialogHistoryTable__row c-dialogHistoryTable__row--head">
+      <div class="c-dialogHistoryTable__cell">{{'Дата/час' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Заклад' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Ціна в закладі' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Сплатили ви' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell">{{'Бонуси' | translate}}</div>
+    </div>
+    <div class="c-dialogHistoryTable__row" *ngFor="let purchase of purchases" (click)="openRowInfo(purchase.data)">
+      <div class="c-dialogHistoryTable__cell c-dialogHistoryTable__cell--date"><span
+        class="mob">{{'Дата/час' | translate}}</span> {{(purchase.updated_at) | date: 'd MMM y H:mm'}}
+      </div>
+      <div class="c-dialogHistoryTable__cell">
+        <span class="mob">{{'Заклад' | translate}}:</span>
+        <div class="c-dialogHistoryTable__cellName">
+          <img [lazyLoad]="API_URL + purchase.network.avatar"
+               defaultImage="/assets/img/img-not-loaded.svg"
+               [alt]="purchase.network.name"
+               class="c-dialogHistoryTable__cellImg">
+          {{purchase.network.name}}
+        </div>
+      </div>
+      <div class="c-dialogHistoryTable__cell"><span class="mob">{{'Ціна в закладі' | translate}}
+        :</span> {{purchase.price}}{{'грн' | translate}}</div>
+      <div class="c-dialogHistoryTable__cell"
+           [ngClass]="{'c-dialogHistoryTable__cell--orange': purchase.price_ad, 'c-dialogHistoryTable__cell--red': !purchase.paid_at}">
+        <span class="mob">{{'Сплатили ви' | translate}}:</span>
+        <ng-container *ngIf="purchase.paid_at; else notPaidOperation">
+          <div class="c-dialogHistoryTable__cellGift">
+            <tooltip *ngIf="purchase.present" class="c-dialogHistoryTable__cellGiftIcon"
+                     [title]="purchase.data.length > 1 ?
+                         ('Ви подарували ці абонементи своєму другу відразу після оплати' | translate)
+                       : ('Ви подарували цей абонемент своєму другу відразу після оплати' | translate)">
+              <mat-icon style="color: var(--ex-color-light-blue);">card_giftcard</mat-icon>
+            </tooltip>
+            <span [class.c-dialogHistoryTable__cellBonuses]="purchase.payment_bonuses === 1">
+              <mat-icon
+                *ngIf="purchase.payment_bonuses === 1">savings</mat-icon> -{{purchase.price}}{{'грн' | translate}}
+            </span>
+          </div>
+        </ng-container>
+        <ng-template #notPaidOperation>
+          {{'Не оплачено' | translate}} <br>
+          <span *ngIf="purchase.is_spoiled !== 1"
+                style="color: var(--ex-color-white);">{{'До оплати:' | translate}} {{purchase.price_commission}}{{'грн' | translate}}</span>
+        </ng-template>
+      </div>
+      <div class="c-dialogHistoryTable__cell c-dialogHistoryTable__cell--violet">
+        <ng-container *ngIf="purchase.paid_at; else notPaidBtn">
+          <span class="mob">{{'Бонуси' | translate}}:</span>+{{+purchase.bonus}}{{'грн' | translate}}
+        </ng-container>
+        <ng-template #notPaidBtn>
+          <ng-container *ngIf="purchase.is_spoiled !== 1; else paymentErrorTemplate">
+            <button class="c-dialogHistoryTable__btn" (click)="payOrder(purchase)">
+              <ng-container *ngIf="!this.isBtnWithSpinner(purchase)">{{'Оплатити' | translate}}</ng-container>
+              <spinner *ngIf="!payOrderSub.closed && this.isBtnWithSpinner(purchase)"
+                       class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+            </button>
+          </ng-container>
+          <ng-template #paymentErrorTemplate>
+            <span style="color: var(--ex-color-red);">{{'TheOrderIsSpoiled' | getBackendMessage | translate}}</span>
+          </ng-template>
+        </ng-template>
+      </div>
+
+      <mat-icon class="c-dialogHistoryTable__rowIconMore">more_vert</mat-icon>
+    </div>
+  </div>
+</ng-container>
+<ng-template #purchasesEmpty>
+  <p class="c-dialogHistory__empty">{{'На даний момент у вас немає ніяких покупок.' | translate}}</p>
+</ng-template>

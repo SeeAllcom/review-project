@@ -1,0 +1,69 @@
+<form class="c-dialog c-dialog--autoHeight" [formGroup]="form" (ngSubmit)="send()">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Редагування закладу' | translate}}</p>
+    <span class="c-dialog__close" type="button" mat-dialog-close><mat-icon>close</mat-icon></span>
+  </div>
+  <div class="c-dialog__body c-dialog__body--padding">
+    <image-preview [url]="API_URL + data.avatar"
+                   [title]="'Аватарка' | translate" [formControlInput]="form.controls['avatar']"></image-preview>
+
+    <div class="c-dialogForm__row c-dialogForm__row--column">
+      <div class="c-dialogForm__col">
+        <mat-form-field class="c-dialog__inputWrapper">
+          <mat-label>{{'Введіть назву' | translate}}</mat-label>
+          <label>
+            <input type="text" matInput formControlName="name" [value]="data.name">
+          </label>
+        </mat-form-field>
+      </div>
+      <div class="c-dialogForm__col">
+        <mat-form-field class="c-dialog__inputWrapper">
+          <mat-label>{{'Графік роботи' | translate}}</mat-label>
+          <label>
+            <input type="text" matInput formControlName="work_schedule" [value]="data.work_schedule">
+          </label>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="c-dialogForm__row c-dialogForm__row--column">
+      <div class="c-dialogForm__col">
+        <mat-form-field class="c-dialog__inputWrapper">
+          <mat-label>{{'Посилання на Instagram' | translate}}</mat-label>
+          <label>
+            <input type="text" matInput formControlName="instagram" [value]="data.instagram">
+          </label>
+        </mat-form-field>
+      </div>
+      <div class="c-dialogForm__col">
+        <mat-form-field class="c-dialog__inputWrapper">
+          <mat-label>{{'Посилання на Facebook' | translate}}</mat-label>
+          <label>
+            <input type="text" matInput formControlName="facebook" [value]="data.facebook">
+          </label>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-form-field class="c-dialog__inputWrapper">
+      <mat-label>{{'Введіть опис' | translate}}</mat-label>
+      <label>
+        <textarea matInput formControlName="description" [value]="data.description"></textarea>
+      </label>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="inaccessible">{{'Мережа недоступна для користувачів CoffeePhone' | translate}}</mat-slide-toggle>
+
+    <mat-error *ngIf="error">{{error | translate}}</mat-error>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button" type="submit" [disabled]="!form.dirty || !sendSub.closed">
+        <ng-container *ngIf="sendSub.closed; else loading">
+          <span class="o-buttonText">{{'Зберегти зміни' | translate}}</span>
+        </ng-container>
+        <ng-template #loading>
+          <spinner class="o-buttonSpinner"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

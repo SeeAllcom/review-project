@@ -1,0 +1,88 @@
+@import "/src/assets/styles/helpers/_mixins.scss";
+
+.c-orderSuccess {
+  padding: 80px 0 40px;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+
+    .o-button {
+      width: 100%;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 50px;
+
+    &Select {
+      width: 100%;
+    }
+  }
+
+  &__icon {
+    --mat-icon-size: 110px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    background: var(--ex-bg--gradientGreen);
+    border-radius: 50%;
+    margin: 0 auto 30px;
+    animation: bubble 1.8s both;
+  }
+
+  &__title {
+    font-size: 34px;
+    text-align: center;
+    margin-bottom: 15px;
+    animation: 350ms fadeInToTop 1.6s both;
+
+    @include phones-m {
+      font-size: 24px;
+    }
+  }
+
+  &__text {
+    color: var(--ex-color-light-blue);
+    font-size: 14px;
+    margin-bottom: 50px;
+    animation: 350ms fadeInToTop 1.9s both;
+
+    &--smallMargin {
+      margin-bottom: 15px;
+    }
+  }
+
+  &__toggleBtn {
+    width: 100%;
+    margin-bottom: 40px;
+    animation: 350ms fadeInToTop 2.1s both;
+
+    .mat-button-toggle {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .o-link {
+    animation: 350ms fadeIn 2.3s both;
+  }
+
+  .inputPassword__filedError {
+    margin-bottom: 20px;
+  }
+}

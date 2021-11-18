@@ -1,0 +1,212 @@
+<div class="с-whatCoffeePhone">
+  <section class="с-whatCoffeePhone__main">
+    <div class="container">
+      <div class="с-whatCoffeePhone__mainContent">
+        <div class="с-whatCoffeePhone__mainInfo">
+          <h1 class="с-whatCoffeePhone__mainTitle">
+            {{'Пити каву тепер' | translate}} <br>
+            <b>{{'зручніше та дешевше' | translate}}</b> <br>
+            {{'разом з CoffeePhone' | translate}}
+          </h1>
+          <button class="o-button o-button--gradient" (click)="openRegistrationDialog()"
+                  matRipple>{{'Розпочати' | translate}}</button>
+        </div>
+        <img src="/assets/img/landings/establishment-registration/main-img.svg"
+             [alt]="'Отримуйте нових клієнтів з інтернету' | translate"
+             class="с-whatCoffeePhone__mainImg">
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <ul class="с-whatCoffeePhone__arguments">
+      <li class="с-whatCoffeePhone__argumentsItem">
+        <img src="assets/img/landings/about-us/arguments-1.svg" [alt]="'Надзвичайна зручність' | translate" class="с-whatCoffeePhone__argumentsIcon">
+        <h3 class="с-whatCoffeePhone__argumentsTitle">{{'Надзвичайна зручність' | translate}}</h3>
+        <p class="с-whatCoffeePhone__argumentsText">{{'Всі ми знаємо, що кава для людей набула великої популярності та стала для них легальним наркотиком. З додатком CoffeePhone, якому немає конкурентів, кава стала ще популярнішою, та придбати її тепер набагато зручніше і вигідніше.' | translate}}</p>
+      </li>
+      <li class="с-whatCoffeePhone__argumentsItem">
+        <img src="assets/img/landings/about-us/arguments-2.svg" [alt]="'Надзвичайна економія' | translate" class="с-whatCoffeePhone__argumentsIcon">
+        <h3 class="с-whatCoffeePhone__argumentsTitle">{{'Надзвичайна економія' | translate}}</h3>
+        <p class="с-whatCoffeePhone__argumentsText">{{'Тепер не потрібно переплачувати, стояти в чергах і довго розмовляти з офіціантами, на заміну цьому прийшов CoffeePhone, просто виберіть улюблений заклад, зробіть замовлення через зручний конструктор, та покажіть QR-код замовлення офіціанту, після чого очікуйте на своє замовлленя.' | translate}}</p>
+      </li>
+      <li class="с-whatCoffeePhone__argumentsItem">
+        <img src="assets/img/landings/about-us/arguments-3.svg" [alt]="'Надзвичайна приємність' | translate" class="с-whatCoffeePhone__argumentsIcon">
+        <h3 class="с-whatCoffeePhone__argumentsTitle">{{'Надзвичайна приємність' | translate}}</h3>
+        <p class="с-whatCoffeePhone__argumentsText">{{'Якщо ви хочете зробити приємно своєму другу і не знаєте як, просто подаруйте абонемент(и) своєму другу. Ніхто не відмовиться від кружечки запашної кави зранку та кусочок смачного чизкейка подарованого від свого друга, навіть якщо він з іншого міста.' | translate}}</p>
+      </li>
+    </ul>
+  </div>
+
+  <section class="с-whatCoffeePhone__registr">
+    <div class="container">
+      <div class="с-whatCoffeePhone__registrContent">
+        <h3 class="с-whatCoffeePhone__registrTitle">{{'Приєднуйтесь до нас та отримуйте нові можливості зробити приємно собі та своїм друзям' | translate}}</h3>
+        <button class="o-button" (click)="openRegistrationDialog()"><span class="o-buttonText">{{'Приєднатися' | translate}}</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <section class="c-cpFaqs">
+      <div class="l-container">
+        <h2 class="c-cpFaqs__caption">{{'Питання що часто задаються' | translate}}</h2>
+        <mat-accordion [multi]="true">
+          <mat-expansion-panel
+            #faqPanelFirst
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Що я можу за допомогою даного сервісу?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanelFirst.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+
+            <p class="c-cpFaqs__description">
+              {{'За допомогою CoffeePhone ви можете придбати незліченну кількість абонементів на каву в улюбленій кав\'ярні, зможете, в будь-який момент, подивитися розміщення кав\'ярень на карті у вашому місті, зможете подарувати абонемент(и) своєму другу та безліч інших можливостей.' | translate}}
+            </p>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_2
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'З нами ви зможете:' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_2.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <p class="c-cpFaqs__description">{{'З кожним замовленням через CoffeePhone ви отримаєте бонусні кошти на рахунок кав\'ярні в якій зробили замовлення. Ви можете придбати будь-яку кількість абонементів і скласти своє замовлення як забажаєте. Після цього, щоб отримати своє замовлення, то в кав\'ярні вам залишиться тільки показати QR-код.' | translate}}</p>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_3
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Для чого мені купувати абонемент на каву?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_3.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+
+            <p class="c-cpFaqs__description">{{'CoffeePhone - це кава на виніс, кава по дорозі на роботу, кава після обіду. Як бути, якщо ви віддаєте перевагу пити каву в різних місцях? Відмінним рішенням для вас стане електронний абонемент на каву, його можна використати в будь-який момент, та з кожною купівлею абонементів ви отримуєте кешбек. ' | translate}}</p>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_4
+            [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Як це працює?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon" [class.c-cpFaqs__icon--open]="faqPanel_4.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+
+            <p class="c-cpFaqs__description">{{'За кожен придбаний вами абонемент ви отримаєте бонусні кошти на ваш рахунок. Хіба не вигідно потішити себе улюбленою кавою. Тим паче, ви можете використати абонементи в будь-який момент, або можете подарувати абонемент(и) своєму другу.' | translate}}</p>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_5 [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Де я можу використати абонемент?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_5.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <p class="c-cpFaqs__description">{{'Купивши абонементи в улюбленій кав\'ярні, ви можете використовувати його в будь-якій точці де знаходиться ця мережа.' | translate}}</p>
+          </mat-expansion-panel>
+          <mat-expansion-panel
+            #faqPanel_6 [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Звідки такі знижки?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_6.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <p class="c-cpFaqs__description">{{'Ми спільно з партнерами домовляємося про вигідні умови для наших користувачів, гарантуючи партнеру масштабну рекламну кампанію і нових клієнтів. Натомість партнер надає вам кешбек з кожного замовлення.' | translate}}</p>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            #faqPanel_7 [hideToggle]="true">
+            <mat-expansion-panel-header [collapsedHeight]="'80px'" [expandedHeight]="'80px'">
+              <mat-panel-title
+                class="c-cpFaqs__title">{{'Що таке абонемент?' | translate}}</mat-panel-title>
+              <mat-icon class="c-cpFaqs__icon"
+                        [class.c-cpFaqs__icon--open]="faqPanel_7.expanded">add
+              </mat-icon>
+            </mat-expansion-panel-header>
+            <p class="c-cpFaqs__description">{{'Абонемент це унікальний QR-код на будь-яку продукцію, яку ви придбали в доступних закладах на CoffeePhone. QR-код може містити в собі як і один абонемент так і безліч. Вибравши продукцію для замовлення, ви генеруєте QR-код, який показуєте в закладі для отримання замовлення.' | translate}}</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </section>
+  </div>
+
+  <section class="с-whatCoffeePhone__connection">
+    <div class="container">
+      <div class="с-whatCoffeePhone__connectionContent">
+        <button class="o-button o-button--white" (click)="openRegistrationDialog()"><span class="o-buttonText">{{'Хочу економити' | translate}}</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <form class="с-whatCoffeePhone__form" [formGroup]="form" (ngSubmit)="sendMail()">
+      <h3 class="с-whatCoffeePhone__formTitle">{{'Напишіть нам якщо у вас з\'явилися запитання' | translate}}</h3>
+      <p class="с-whatCoffeePhone__formText">{{'Ми завжди раді дати вам відповідь' | translate}}</p>
+
+      <mat-form-field class="o-formField" appearance="fill">
+        <mat-label>{{'Введіть ім\'я' | translate}}</mat-label>
+        <label>
+          <input type="text" formControlName="name" matInput required>
+        </label>
+        <mat-error *ngIf="form.get('name').hasError('required')">
+          {{'Ім\'я є обов\'язковим.' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="o-formField" appearance="fill">
+        <mat-label>{{'Введіть email' | translate}}</mat-label>
+        <label>
+          <input type="email" formControlName="email" matInput required>
+        </label>
+        <mat-error *ngIf="form.get('email').hasError('email') && !form.hasError('required')">
+          {{'Будь ласка, введіть правильний email.' | translate}}
+        </mat-error>
+        <mat-error *ngIf="form.get('email').hasError('required')">
+          {{'Email є обов\'язковим.' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="o-formField" appearance="fill">
+        <mat-label>{{'Введіть номер телефону' | translate}}</mat-label>
+        <label>
+          <input type="tel" formControlName="phone" prefix="+38" [mask]="'(000) 000-0000'" matInput required>
+        </label>
+        <mat-error *ngIf="form.get('phone').hasError('required')">
+          {{'Номер телефону є обов\'язковим.' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="o-formField" appearance="fill">
+        <mat-label>{{'Коментар' | translate}}</mat-label>
+        <label>
+          <textarea formControlName="comment" matInput></textarea>
+        </label>
+        <mat-error *ngIf="form.get('comment').hasError('required')">
+          {{'Коментар є обов\'язковим.' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-error class="с-whatCoffeePhone__formError">{{error | translate}}</mat-error>
+
+      <button class="o-button o-button--gradient" type="submit">
+        <span *ngIf="sendMailSub.closed" class="o-buttonText">{{'Надіслати' | translate}}</span>
+        <span *ngIf="!sendMailSub.closed" class="o-buttonText">{{'Відправка...' | translate}}</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<app-footer *ngIf="isPwaApp()"></app-footer>

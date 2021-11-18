@@ -1,0 +1,28 @@
+<div class="c-historyRowInfo__wrapper" matDialogClose></div>
+<div class="c-historyRowInfo">
+  <div class="c-historyRowInfo__header">
+    <p class="c-historyRowInfo__title">{{'Замовлені товари' | translate}}</p>
+    <button class="c-historyRowInfo__close" matDialogClose>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-historyRowInfo__body">
+    <ul class="c-historyRowInfo__list">
+      <li class="c-historyRowInfo__item">
+        <span>{{'Назва' | translate}}</span>
+        <span>{{'Кількість' | translate}}</span>
+      </li>
+      <li class="c-historyRowInfo__item" *ngFor="let abonement of data">
+        <div>
+          <span>{{abonement.product_name}}</span>
+          <ul class="c-historyRowInfo__supplements">
+            <li *ngFor="let supplement of abonement.supplement_options">
+              {{supplement.name}}<ng-container *ngIf="supplement.quantity > 1">({{supplement.quantity}})</ng-container>,
+            </li>
+          </ul>
+        </div>
+        <span>{{abonement.quantity}}{{'шт' | translate}}</span>
+      </li>
+    </ul>
+  </div>
+</div>

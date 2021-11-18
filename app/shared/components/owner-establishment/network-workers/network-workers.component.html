@@ -1,0 +1,90 @@
+<div class="c-ownerContent__header">
+  <div class="c-ownerContent__headerTitle" [ngClass]="{'searchActive': searchInputVisible}">
+    {{'Працівники' | translate}}
+    <div class="c-ownerContent__headerSearch">
+      <div *ngIf="searchInputVisible" class="c-ownerContent__headerSearchOverlay" (click)="hiddenSearchWorkers()"></div>
+      <input class="c-ownerContent__headerSearchInput"
+             [ngClass]="{'active': searchInputVisible}"
+             type="search" [(ngModel)]="searchAddressValue" (keyup)="applyFilter(searchAddressValue)" [placeholder]="'Пошук працівників...' | translate">
+      <button class="c-ownerContent__headerSearchBtn"
+              (click)="toggleSearchVisibility(searchInputVisible)" matRipple>
+        <mat-icon *ngIf="!searchInputVisible">search</mat-icon>
+        <mat-icon *ngIf="searchInputVisible">close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <button class="o-button" (click)="openAddWorkerDialog()" matRipple>
+    <span class="o-buttonText">{{'Додати працівника' | translate}}</span>
+  </button>
+</div>
+
+<div class="c-workers">
+  <ng-container *ngIf="getWorkersSub.closed; else workersLoading">
+    <ng-container *ngIf="workers.length; else workersEmpty">
+      <ng-container *ngIf="dataSource.filteredData.length; else workersNotFound">
+        <ul class="c-workersList">
+          <li class="c-workersList__item">
+            <div class="c-workersList__table" matSort (matSortChange)="sortData($event)">
+              <div class="c-workersList__tableRow c-workersList__tableRow--head">
+                <div class="c-workersList__tableCell c-workersList__tableCell--date" mat-sort-header="date">{{'Дата/час створення' | translate}}</div>
+                <div class="c-workersList__tableCell" mat-sort-header="email">{{'Email/Підтвердження' | translate}}</div>
+                <div class="c-workersList__tableCell" mat-sort-header="name">{{'Ім\'я' | translate}}</div>
+                <div class="c-workersList__tableCell" mat-sort-header="address">{{'Адреса' | translate}}</div>
+                <div class="c-workersList__tableCell c-workersList__tableCell--center">{{'Дії' | translate}}</div>
+              </div>
+              <div class="c-workersList__tableRow" *ngFor="let worker of dataSource.filteredData; let i = index">
+                <div class="c-workersList__tableCell c-workersList__tableCell--date">
+                  {{worker.created_at | date: 'd MMM y H:mm'}}
+                </div>
+                <div class="c-workersList__tableCell">
+                  <span class="c-workersList__tableEmail">
+                    {{worker.email}}
+                    <tooltip [title]="'Email ' + (worker?.confirmed_email ? ('підтверджено' | translate) : ('не підтверджено' | translate))">
+                      <mat-icon [class]="'c-workersList__tableIcon ' + (worker.confirmed_email ? 'confirmed' : 'notConfirmed')">{{worker.confirmed_email ? 'check' : 'close'}}</mat-icon>
+                    </tooltip>
+                  </span>
+                </div>
+                <div class="c-workersList__tableCell">
+                  <span>{{worker.name}}</span>
+                </div>
+                <div class="c-workersList__tableCell">
+                <span *ngFor="let coffeeShop of worker.coffee_shops">
+                  {{'м.' | translate}} {{coffeeShop.region.name_en | getLocalizationCityKey | translate}}, {{coffeeShop.address}}
+                </span>
+                </div>
+                <div class="c-workersList__tableCell">
+                  <div class="c-workersList__tableCell--btns">
+                    <button class="c-workersList__tableBtn c-workersList__tableBtn--edit" matRipple [matTooltip]="('Редагувати працівника ' | translate) + worker.name" (click)="editWorker(worker)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="c-workersList__tableBtn c-workersList__tableBtn--delete" matRipple [matTooltip]="('Видалити працівника ' | translate) + worker.name" (click)="openDeleteWorkerDialog(worker)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #workersNotFound>
+        <div class="c-workersList__table">
+          <div class="c-workersList__tableRow c-workersList__tableRow--head">
+            <div class="c-workersList__tableCell c-workersList__tableCell--date">{{'Дата/час створення' | translate}}</div>
+            <div class="c-workersList__tableCell">{{'Email' | translate}}</div>
+            <div class="c-workersList__tableCell">{{'Ім\'я' | translate}}</div>
+            <div class="c-workersList__tableCell">{{'Адреса' | translate}}</div>
+            <div class="c-workersList__tableCell c-workersList__tableCell--center">{{'Дії' | translate}}</div>
+          </div>
+        </div>
+        <p class="c-owner__empty">{{'За запитом' | translate}} "{{searchAddressValue}}" {{'нічого не знайдено.' | translate}}</p>
+      </ng-template>
+    </ng-container>
+    <ng-template #workersEmpty>
+      <p class="c-owner__empty">{{'Працівників ще немає...' | translate}}</p>
+    </ng-template>
+  </ng-container>
+  <ng-template #workersLoading>
+    <spinner class="c-owner__spinner"></spinner>
+  </ng-template>
+</div>

@@ -1,0 +1,21 @@
+<form [formGroup]="form">
+  <ng-container *ngFor="let day of weekDays">
+    <p class="c-dialog__text c-dialog__text--bold c-dialog__text--main">{{day.dayName | translate}}</p>
+    <div class="flex" [formGroupName]="day.controlName">
+      <mat-form-field class="mr-2.5">
+        <mat-label>{{'Початок'}}</mat-label>
+        <input type="time" formControlName="start" matInput>
+        <mat-error>
+          {{'Початок робочого часу є обов\'язковим полем' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{'Кінець'}}</mat-label>
+        <input type="time" formControlName="end" matInput>
+        <mat-error>
+          {{'Кінець робочого часу є обов\'язковим полем' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+</form>

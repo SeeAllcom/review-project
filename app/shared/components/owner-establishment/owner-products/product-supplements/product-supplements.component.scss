@@ -1,0 +1,72 @@
+@import "./src/assets/styles/helpers/_mixins.scss";
+
+.c-productSupplements {
+  &__form {
+    margin-top: 15px;
+  }
+
+  &__row {
+    display: flex;
+
+    @include phones-l {
+      flex-direction: column;
+    }
+  }
+
+  &__col {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--ex-color-secondary);
+  }
+
+  &__checkbox {
+    margin-bottom: 20px;
+  }
+
+  &__delete {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--ex-bg--gradientGray);
+
+    &:hover {
+      background: var(--ex-bg--gradientRed);
+    }
+  }
+
+  &__btn {
+    margin-left: auto;
+
+    &Group {
+      width: 100%;
+    }
+  }
+
+  &__supplements {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__supplements,
+  &__options {
+    position: relative;
+    background: var(--ex-bg--900);
+    padding: 15px;
+    border-radius: var(--borderRadius-primary);
+    margin-bottom: 15px;
+  }
+
+  &__options {
+    background: var(--ex-bg--700);
+
+    &Wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

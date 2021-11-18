@@ -1,0 +1,67 @@
+<form class="c-dialog c-dialog--small c-dialog--autoHeight c-dialog--showToTop" [formGroup]="form"
+      (ngSubmit)="addEstablishment()">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Додавання кав\'ярні' | translate}}</p>
+    <button class="c-dialog__close" type="button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--center c-dialog__body--padding">
+    <p class="c-dialog__text c-dialog__text--small">
+      {{'Якщо у вас є кілька закладів, ви можете додати їх тут.' | translate}}
+    </p>
+
+    <image-preview [url]="''" [title]="'Вкажіть зображення закладу' | translate" [formControlInput]="form.controls['img']"></image-preview>
+    <mat-form-field>
+      <mat-label>{{'Введіть адресу закладу' | translate}}</mat-label>
+      <label>
+        <input class="" type="text" formControlName="address" matInput [placeholder]="'Вул. або координати Google Maps' | translate" required>
+      </label>
+      <mat-error *ngIf="form.get('address').hasError('required')">
+        {{'Адреса є обов\'язкова' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'Вкажіть місто закладу' | translate}}</mat-label>
+      <mat-select
+        [compareWith]="compareObjects"
+        disableOptionCentering
+        formControlName="region"
+        role="listbox"
+        [disabled]="!getCitiesSub.closed"
+        required>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="areaFilterCtrl"
+            [placeholderLabel]="'Знайти потрібне місто' | translate"
+            noEntriesFoundLabel="{{'Такого міста немає' | translate}} 😞"
+            [ariaLabel]="'Знайти потрібне місто' | translate"></ngx-mat-select-search>
+        </mat-option>
+        <mat-optgroup *ngFor="let area of filteredArea | async"
+                      [label]="area.name_en | getLocalizationCityKey | translate">
+          <mat-option *ngFor="let region of area.regions" [value]="region" role="listitem">
+            {{region.name_en | getLocalizationCityKey | translate}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+      <mat-error *ngIf="form.get('region').hasError('required')">
+        {{'Місто є обов\'язковим' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-error *ngIf="error" class="mat-error">{{error | translate}}</mat-error>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--secondary" type="submit" [disabled]="!addingSub.closed" matRipple>
+        <ng-container *ngIf="addingSub.closed; else addingLoading">
+          <span class="o-buttonText">{{'Додати заклад' | translate}}</span>
+        </ng-container>
+        <ng-template #addingLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

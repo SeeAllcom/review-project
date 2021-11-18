@@ -1,0 +1,327 @@
+@import "/src/assets/styles/helpers/_extends.scss";
+@import "/src/assets/styles/helpers/_mixins.scss";
+
+:root {
+  --ex-orderForm-width: 100%;
+  --ex-orderForm-borderRadius: var(--borderRadius-primary);
+}
+
+:host {
+  display: contents;
+}
+
+.c-orderForm {
+  --ex-orderForm-width: 600px;
+
+  max-width: 100%;
+  height: var(--ex-orderForm-width);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: var(--screen-height);
+  background: var(--ex-bg--800);
+  z-index: 10;
+  width: var(--ex-orderForm-width);
+  overflow: hidden;
+  border-radius: var(--borderRadius-primary);
+
+  @include tablets-l {
+    margin-bottom: 30px;
+  }
+
+  @include tablets {
+    --ex-orderForm-width: 100vw;
+
+    overflow: hidden;
+    height: var(--screen-height);
+    border-radius: 0;
+  }
+
+  &__close {
+    --increase-size: 30px;
+
+    width: var(--increase-size);
+    height: var(--increase-size);
+    object-fit: contain;
+    opacity: 0.6;
+    cursor: pointer;
+    color: var(--ex-color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ex-bg--700);
+    border-radius: 5px;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__header {
+    padding: 20px 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    line-height: normal;
+  }
+
+  &__body {
+    padding: 0 20px;
+
+    &--scroll {
+      overflow-y: auto;
+
+      @extend %custom-scrollbar;
+    }
+  }
+
+  &__title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ex-color-white);
+    margin-bottom: 0;
+
+    &--center {
+      text-align: center;
+      margin-bottom: 15px;
+      color: var(--ex-color-main);
+    }
+  }
+
+  &__empty {
+    font-size: 14px;
+    text-align: center;
+    color: var(--ex-color-light-blue);
+    margin: 0 auto 20px;
+    max-width: 280px;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    width: fit-content;
+    background: var(--ex-color-secondary);
+    padding: 10px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 5px;
+    color: var(--ex-color-white);
+  }
+
+  &Product {
+    position: relative;
+    padding-bottom: 80px;
+    overflow-y: auto;
+
+    @extend %none-scrollbar;
+
+    &__item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+
+      @include tablets-l {
+        margin-bottom: 15px;
+      }
+    }
+
+    &__info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    &__img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      margin-right: 10px;
+      border-radius: 5px;
+
+      @include phones-s {
+        display: none;
+      }
+    }
+
+    &__prices {
+      margin-left: auto;
+      text-align: right;
+      margin-right: 15px;
+    }
+
+    &__price {
+      color: var(--ex-color-white);
+      margin-bottom: 0;
+      font-weight: 600;
+      text-align: right;
+      white-space: nowrap;
+
+      &--bonus {
+        color: var(--ex-color-violet);
+        font-size: 12px;
+      }
+    }
+
+    &__name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 0;
+      margin-right: 10px;
+      color: var(--ex-color-white);
+    }
+
+    &__capacity {
+      font-size: 13px;
+      color: var(--ex-color-light-blue);
+      margin-top: 5px;
+      margin-bottom: 0;
+    }
+
+    &__btn {
+      color: var(--ex-color-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      min-width: 120px;
+      border: 1px solid var(--ex-color-secondary);
+      min-height: 35px;
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 5px 10px;
+
+      .mat-icon {
+        --mat-icon-size: 20px;
+      }
+
+      @include phones-m {
+        min-width: unset;
+      }
+
+      &Text {
+        margin-left: 5px;
+
+        @include phones-m {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &Categories {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--ex-bg--800);
+    display: flex;
+    align-items: center;
+    margin-left: -10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-top: 10px;
+    margin-bottom: 20px;
+
+    @extend %none-scrollbar;
+
+    &__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--ex-transition-primary);
+    }
+
+    &__title {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      transform: translateY(-50%);
+      color: var(--ex-color-white);
+      z-index: 2;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 0 5px;
+    }
+
+    &__item {
+      position: relative;
+      width: 120px;
+      min-width: 120px;
+      height: 30px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+      overflow: hidden;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+
+      @include tablets-l {
+        height: 35px;
+        min-width: 140px;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+
+      &:hover,
+      &.active {
+        border-color: var(--ex-color-main);
+
+        .c-orderFormCategories__img {
+          transform: scale(1.5);
+        }
+      }
+    }
+  }
+
+  .c-shoppingCart {
+    &Mobile {
+      position: absolute;
+      bottom: 0;
+
+      @include tablets-l-more {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    &__inner--mobile {
+      @include tablets-more {
+        max-height: 420px;
+      }
+    }
+
+    &__title--empty {
+      @include tablets-l-more {
+        margin-bottom: 20px;
+      }
+    }
+
+    &__footerInner {
+      @include tablets-l-more {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between
+      }
+    }
+  }
+}

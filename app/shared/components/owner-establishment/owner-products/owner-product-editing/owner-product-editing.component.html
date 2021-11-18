@@ -1,0 +1,127 @@
+<form class="c-dialog c-dialog--autoHeight" [formGroup]="form" (ngSubmit)="updateProduct()">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Редагування товару' | translate}}: {{product.name}}</p>
+    <button class="c-dialog__close" type="button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--padding">
+    <image-preview [url]="API_URL + product.img"
+                   [title]="'Зображення товару' | translate"
+                   [formControlInput]="form.controls['img']"></image-preview>
+
+    <div class="c-dialogForm__row c-dialogForm__row--column">
+      <div class="c-dialogForm__col">
+        <mat-form-field>
+          <mat-label>{{'Введіть назву' | translate}}</mat-label>
+          <label>
+            <input type="text" matInput formControlName="name" [value]="product.name">
+          </label>
+          <mat-error *ngIf="form.get('name').hasError('required')">
+            {{'Назва є обов\'язковим' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="c-dialogForm__col">
+        <mat-form-field>
+          <mat-label>{{'Вкажіть категорію товару' | translate}}</mat-label>
+          <mat-select
+            disableOptionCentering
+            formControlName="category_id"
+            role="listbox"
+            required>
+            <mat-option *ngFor="let category of allCategories" [value]="category.id" role="listitem">
+              {{getCategoryName(category.name) | translate}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('category_id').hasError('required')">
+            {{'Категорія є обов\'язкова' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="c-dialogForm__row c-dialogForm__row--column">
+      <div class="c-dialogForm__col">
+        <mat-form-field class="c-dialogForm__field">
+          <mat-label>{{'Вкажіть ціну' | translate}}</mat-label>
+          <label>
+            <input numbersOnly matInput formControlName="price" [value]="product.price.toString()">
+          </label>
+          <span matSuffix>{{'грн' | translate}}</span>
+          <mat-error *ngIf="form.get('price').hasError('required')">
+            {{'Ціна є обов\'язкова' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="c-dialogForm__col">
+        <form class="c-dialogForm__fieldsCapacity" formGroupName="capacity">
+          <mat-form-field class="c-dialogForm__field c-dialogForm__fieldsCapacitySize">
+            <mat-label>{{'Вкажіть ємність' | translate}}</mat-label>
+            <label>
+              <input numbersOnly formControlName="size" matInput>
+            </label>
+          </mat-form-field>
+          <mat-form-field class="c-dialogForm__fieldsCapacityUnit" [matTooltip]="'Одиниця вимірювання' | translate">
+            <mat-label>{{'Одиниця вимірювання' | translate}}</mat-label>
+            <mat-select
+              disableOptionCentering
+              formControlName="unit"
+              role="listbox"
+              required>
+              <mat-option *ngFor="let productCapacity of productCapacityData" role="listitem"
+                          [value]="productCapacity.id">
+                {{productCapacity.unit}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+
+    <mat-form-field class="c-dialog__inputWrapper">
+      <mat-label>{{'Введіть опис' | translate}}</mat-label>
+      <label>
+        <textarea matInput formControlName="description" [value]="product.description"></textarea>
+      </label>
+    </mat-form-field>
+    <mat-slide-toggle formControlName="can_purchase_as_abonement">{{'Можливо придбати як абонемент' | translate}}</mat-slide-toggle>
+    <mat-slide-toggle (change)="hideToggle = false"
+                      [(ngModel)]="inaccessibleToggle"
+                      formControlName="inaccessible"
+                      [checked]="inaccessibleToggle && !hideToggle">{{'Недоступний для продажу' | translate}}</mat-slide-toggle>
+    <mat-slide-toggle (change)="inaccessibleToggle = false"
+                      [(ngModel)]="hideToggle"
+                      formControlName="hide"
+                      [checked]="hideToggle && !inaccessibleToggle">{{'Знятий з вітрини' | translate}}</mat-slide-toggle>
+
+    <product-supplements *ngIf="getSupplementsSub.closed" [supplementsData]="supplementsData"
+                         (supplementsValue)="getSupplementsValue($event)"></product-supplements>
+  </div>
+  <div class="c-dialog__footer">
+    <mat-error *ngIf="isExistAbonementsWithSupplements" class="mat-error c-dialog__footerError">
+      {{'ExistAbonementsWithSupplements' | getBackendMessage | translate}}
+    </mat-error>
+
+    <div class="c-dialog__footerBtns">
+      <button *ngIf="isExistAbonementsWithSupplements" class="o-button o-button--gray" type="button" matDialogClose>
+        <span class="o-buttonText">{{'Скасувати' | translate}}</span>
+      </button>
+      <button class="o-button" type="submit"
+              [class.o-button--secondary]="isExistAbonementsWithSupplements"
+              [disabled]="!form.dirty && !formProductSupplementsChanged">
+        <ng-container *ngIf="updateProductSub.closed; else updatingLoading">
+          <ng-container *ngIf="!isExistAbonementsWithSupplements; else deletedAbonementsExistForUsers">
+            <span class="o-buttonText">{{'Зберегти зміни' | translate}}</span>
+          </ng-container>
+          <ng-template #deletedAbonementsExistForUsers>
+            <span class="o-buttonText">{{'Підтвердити видалення' | translate}}</span>
+          </ng-template>
+        </ng-container>
+        <ng-template #updatingLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

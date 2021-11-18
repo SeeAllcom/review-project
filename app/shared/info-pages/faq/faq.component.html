@@ -1,0 +1,25 @@
+<div class="c-faq">
+  <div class="c-faq__sidebar">
+    <div class="c-faq__sidebarHeader">
+      <h1 class="c-faq__title">{{'Питання і відповіді' | translate}}</h1>
+    </div>
+
+    <faq-navigation [faqNavBlock]="currentSection" [categories]="categories"></faq-navigation>
+  </div>
+  <div class="c-faq__content" windowScrollSpy
+       (sectionChange$)="onSectionChange($event)"
+       [changeAnchorOnScroll]="true"
+       [spiedClass]="'c-faq__section'">
+    <scroll-top></scroll-top>
+    <div *ngFor="let category of categories">
+      <div class="c-faq__sectionList" *ngIf="category.faqArticles.length">
+        <section class="c-faq__section" *ngFor="let article of category.faqArticles" [id]="article.articleId">
+          <h2>{{article.title}}</h2>
+          <markdown [data]="article.description"></markdown>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer *ngIf="isPwaApp()"></app-footer>

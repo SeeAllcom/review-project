@@ -1,0 +1,10 @@
+.c-locator {
+  width: 100vw;
+  height: calc(var(--screen-height) - var(--ex-header-height));
+
+  &__iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}

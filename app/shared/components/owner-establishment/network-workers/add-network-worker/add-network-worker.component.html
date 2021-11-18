@@ -1,0 +1,108 @@
+<form class="c-dialog c-dialog--average c-dialog--autoHeight" [formGroup]="form" (ngSubmit)="addWorker()">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Додавання працівника' | translate}}</p>
+    <button class="c-dialog__close" type="button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--padding">
+    <p
+      class="c-dialog__text c-dialog__text--small">{{'Ви можете додати кілька працівників для одного заклад.' | translate}}</p>
+    <ng-container *ngIf="getCitiesSub.closed; else loading">
+
+      <div class="c-dialogForm__row c-dialogForm__row--column">
+        <div class="c-dialogForm__col">
+          <mat-form-field>
+            <mat-label>{{'Введіть ім\'я Працівника' | translate}}</mat-label>
+            <label>
+              <input type="text" formControlName="name" matInput required>
+            </label>
+            <mat-error *ngIf="form.get('name').hasError('required')">
+              {{'Ім\'я є обов\'язковим' | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="c-dialogForm__col">
+          <mat-form-field>
+            <mat-label>{{'Введіть email Працівника' | translate}}</mat-label>
+            <label>
+              <input type="text" formControlName="email" matInput required>
+            </label>
+            <mat-error *ngIf="form.get('email').hasError('required')">
+              {{'Email є обов\'язковим' | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="o-inputPassword__filed">
+        <input-password [appearance]="'standard'"
+                        [placeholder]="'Введіть пароль для Працівника' | translate"
+                        [formControl]="form.get('password')"
+                        (paste)="false"
+                        ngDefaultControl></input-password>
+      </div>
+
+      <div class="o-inputPassword__filed">
+        <input-password [appearance]="'standard'"
+                        [placeholder]="'Повторіть пароль' | translate"
+                        [formControl]="form.get('password_confirmation')"
+                        (paste)="false"
+                        ngDefaultControl></input-password>
+        <mat-error class="o-inputPassword__filedError"
+                   *ngIf="form.get('password_confirmation').valid && form.errors?.equivalent">
+          {{'Паролі не збігаються. Будь ласка, повторно введіть свій пароль' | translate}}
+        </mat-error>
+      </div>
+
+      <mat-form-field>
+        <mat-label>{{'Вкажіть заклад для працівника' | translate}}</mat-label>
+        <mat-select
+          disableOptionCentering
+          formControlName="shop"
+          role="listbox"
+          required>
+          <mat-option>
+            <ngx-mat-select-search
+              [(ngModel)]="searchEstablishmentValue"
+              formControlName="establishmentSearch"
+              [placeholderLabel]="'Знайти місто' | translate"
+              noEntriesFoundLabel="{{'Такого міста немає' | translate}} 😞"
+              [ariaLabel]="'Знайти місто' | translate"></ngx-mat-select-search>
+          </mat-option>
+          <span *ngFor="let area of establishments">
+            <mat-optgroup *ngFor="let region of area.regions | searchEstablishments:searchEstablishmentValue;"
+                          [label]="region.name_en | getLocalizationCityKey | translate">
+              <mat-option *ngFor="let coffeeShop of region.coffee_shops" [value]="coffeeShop.id" role="listitem">
+                {{coffeeShop.address}}
+              </mat-option>
+            </mat-optgroup>
+          </span>
+          <mat-option *ngIf="error">{{error}}</mat-option>
+          <mat-option
+            *ngIf="!establishments?.length && !error">{{'Спочатку потрібно додати заклад.' | translate}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('shop').hasError('required')">
+          {{'Заклад є обов\'язковим' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+    <ng-template #loading>
+      <spinner class="c-dialog__spinner"></spinner>
+    </ng-template>
+
+    <mat-error *ngIf="error" class="mat-error">{{error | translate}}</mat-error>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--secondary" type="submit" [disabled]="!addingSub.closed" matRipple>
+        <ng-container *ngIf="addingSub.closed; else addingLoading">
+          <span class="o-buttonText">{{'Додати працівника' | translate}}</span>
+        </ng-container>
+        <ng-template #addingLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

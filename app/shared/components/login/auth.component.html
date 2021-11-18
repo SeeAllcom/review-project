@@ -1,0 +1,57 @@
+<div class="c-dialog c-dialog--autoHeight"
+     [ngClass]="{'c-dialog--small': (authType$ | async) === authTabsType.PasswordRecovery}">
+  <div class="c-dialog__header">
+    <ng-container *ngIf="(authType$ | async) !== authTabsType.PasswordRecovery; else isBackBtn">
+      <ul class="c-authHeader__tabs">
+        <li class="c-authHeader__tabsItem"
+            [ngClass]="{'active': (authType$ | async) === authTabsType.SignUp}"
+            (click)="changeTab(authTabsType.SignUp)">
+          {{'Реєстрація' | translate}}
+        </li>
+        <li class="c-authHeader__tabsItem"
+            [ngClass]="{'active': (authType$ | async) === authTabsType.Login}"
+            (click)="changeTab(authTabsType.Login)">
+          {{'Увійти' | translate}}
+        </li>
+      </ul>
+    </ng-container>
+    <ng-template #isBackBtn>
+      <button *ngIf="!data?.hideBackBtn" class="c-dialog__headerBack" type="button" (click)="changeTab(authTabsType.Login)">
+        <mat-icon>arrow_back</mat-icon>
+        {{'Назад' | translate}}
+      </button>
+    </ng-template>
+    <button class="c-dialog__close" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body">
+    <div *ngIf="(authType$ | async) !== authTabsType.PasswordRecovery" class="c-auth__notice">
+      <p class="c-auth__text">
+        {{'CoffeePhone - це кава на виніс, кава по дорозі на роботу, кава після обіду. Як бути, якщо ви віддаєте перевагу пити каву в різних місцях? Відмінним рішенням для вас стане електронний абонемент на каву, його можна використати в будь-який момент, та з кожною купівлею абонементів ви отримуєте кешбек. ' | translate}}
+      </p>
+      <ul class="c-auth__list">
+        <li class="c-auth__listItem">
+          <mat-icon class="c-auth__listIcon bonuses">savings</mat-icon>
+          {{'Роби замовлення та отримуй бонуи' | translate}}
+        </li>
+        <li class="c-auth__listItem">
+          <mat-icon class="c-auth__listIcon locations">location_on</mat-icon>
+          {{'Переглядай розміщення закладів на карті' | translate}}
+        </li>
+        <li class="c-auth__listItem">
+          <mat-icon class="c-auth__listIcon gifts">card_giftcard</mat-icon>
+          {{'Даруй абонементи своїм друзям' | translate}}
+        </li>
+      </ul>
+    </div>
+
+    <user-register *ngIf="(authType$ | async) === authTabsType.SignUp"></user-register>
+
+    <user-login *ngIf="(authType$ | async) === authTabsType.Login"></user-login>
+
+    <password-recovery *ngIf="(authType$ | async) === authTabsType.PasswordRecovery"></password-recovery>
+
+  </div>
+</div>
+

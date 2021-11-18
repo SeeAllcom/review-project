@@ -1,0 +1,78 @@
+<form [formGroup]="form" class="c-dialog c-dialog--average c-dialog--autoHeight" (ngSubmit)="sendForm()">
+  <div class="c-dialog__body c-dialog__body--padding">
+    <p class="c-establishmentRegistr__title">
+      {{'Чекайте на дзвінок який змінить ваш бізнес в кращу сторону.' | translate}}
+    </p>
+
+    <br>
+
+    <mat-form-field class="o-formField" appearance="fill">
+      <mat-label>{{'Введіть ім\'я' | translate}}</mat-label>
+      <label>
+        <input type="text" formControlName="name" matInput required>
+      </label>
+      <mat-error *ngIf="form.get('name').hasError('required')">
+        {{'Ім\'я є обов\'язковим.' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="o-formField" appearance="fill">
+      <mat-label>{{'Введіть email' | translate}}</mat-label>
+      <label>
+        <input type="email" formControlName="email" matInput required>
+      </label>
+      <mat-error *ngIf="form.get('email').hasError('email') && !form.hasError('required')">
+        {{'Будь ласка, введіть правильний email.' | translate}}
+      </mat-error>
+      <mat-error *ngIf="form.get('email').hasError('required')">
+        {{'Email є обов\'язковим.' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="o-formField" appearance="fill">
+      <mat-label>{{'Введіть номер телефону' | translate}}</mat-label>
+      <label>
+        <input type="tel" formControlName="phone" prefix="+38" mask="(000) 000-0000" matInput required>
+      </label>
+      <mat-error *ngIf="form.get('phone').hasError('required')">
+        {{'Номер телефону є обов\'язковим.' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="o-formField" appearance="fill">
+      <mat-label>{{'Введіть назву мережі(закладу)' | translate}}</mat-label>
+      <label>
+        <input type="text" formControlName="coffeeshop_name" matInput required>
+      </label>
+      <mat-error *ngIf="form.get('coffeeshop_name').hasError('required')">
+        {{'Номер телефону є обов\'язковим.' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="checked" formControlName="privacy_policy">
+      {{'Я згідний з вашою ' | translate}}
+      <a href="/privacy-policy" target="_blank" rel="nofollow noreferrer noopener" class="o-link">{{'політикою конфіденційності' | translate}}</a>
+      {{'та' | translate}}
+      <a href="/terms-of-use" target="_blank" rel="nofollow noreferrer noopener" class="o-link">{{'правилами користування' | translate}}</a>
+    </mat-checkbox>
+    <mat-error class="o-error" *ngIf="isPurchaseFormInvalid && !checked">
+      {{'Тисніть на чекбокс для того щоб відправити.' | translate}}
+    </mat-error>
+    <mat-error class="o-error" *ngIf="error" style="margin-top: 10px;">{{error | translate}}</mat-error>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--gray" matDialogClose>
+        {{'Закрити' | translate}}
+      </button>
+      <button class="o-button o-button--secondary" type="submit">
+        <ng-container *ngIf="sendSub.closed; else sendLoading">
+          <span class="o-buttonText">{{'Зареєструватися' | translate}}</span>
+        </ng-container>
+        <ng-template #sendLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

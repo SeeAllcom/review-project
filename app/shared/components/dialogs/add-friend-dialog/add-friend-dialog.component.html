@@ -1,0 +1,94 @@
+<form class="c-dialog" [formGroup]="searchForm" (ngSubmit)="searchFriend()">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Додати друга' | translate}}</p>
+    <button class="c-dialog__close" type="button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--padding">
+    <div class="c-searchField__wrapper">
+      <mat-form-field appearance="fill" class="c-searchField">
+        <mat-label>{{'Введіть email друга для пошуку' | translate}}</mat-label>
+        <label>
+          <input type="email" matInput formControlName="email" required>
+        </label>
+        <mat-error *ngIf="searchForm.get('email').hasError('required')">
+          {{'Email є обов\'язковим' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <button class="c-searchField__btn" [disabled]="!searchSub.closed" type="submit">
+        <ng-container *ngIf="searchSub.closed else searchLoading">
+          <mat-icon class="c-searchField__btnIcon">search</mat-icon>
+          <span class="c-searchField__btnText">{{'Пошук' | translate}}</span>
+        </ng-container>
+        <ng-template #searchLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+
+    <mat-icon class="c-dialogFriend__icon" *ngIf="!possibleFriends.length && !searchFriends">group_add</mat-icon>
+
+    <ng-container *ngIf="searchFriends && searchFriends.users">
+      <p class="c-dialogFriend__title c-dialog__title c-dialog__title--small">
+        {{ '{ count, plural, one{Знайдено {count} людину} few{Знайдено {count} людини} other{Знайдено {count} людей} }' | translate: {count: searchFriends.users_count} }}
+      </p>
+      <ul class="c-dialogFriend__list">
+        <ng-container *ngIf="searchFriends.users_count > 0">
+          <li class="c-dialogFriend__listItem" *ngFor="let searchFriend of searchFriends.users">
+            <div class="c-dialogFriend__listContent" (click)="goToFriend(searchFriend.id)">
+              <img [lazyLoad]="searchFriend.avatar ? API_URL + searchFriend.avatar : '/assets/img/img-user-avatar.svg'"
+                   defaultImage="/assets/img/img-user-avatar.svg" alt="" class="c-dialogFriend__listAvatar">
+              <p class="c-dialogFriend__listName">{{searchFriend.name}}</p>
+            </div>
+            <button class="c-dialogFriend__listBtn"
+                    [ngClass]="{
+                  'c-dialogFriend__listBtn--added': searchFriend.mutual,
+                  'c-dialogFriend__listBtn--loading': !addOrDeleteFriendSub.closed && currentFriendId === searchFriend.id}"
+                    (click)="searchFriend.mutual ? deleteFriend(searchFriend) : addFriend(searchFriend)"
+                    type="button" matRipple>
+              <ng-container *ngIf="!searchFriend.mutual else isMyFriendIcon">
+                <mat-icon>add</mat-icon>
+                {{'Додати' | translate}}</ng-container>
+              <ng-template #isMyFriendIcon>
+                <mat-icon>delete</mat-icon>
+                {{'Видалити' | translate}}</ng-template>
+            </button>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="possibleFriends.length">
+      <p class="c-dialogFriend__title c-dialog__title c-dialog__title--small">{{'Можливі друзі' | translate}}</p>
+      <ul class="c-dialogFriend__list">
+        <li class="c-dialogFriend__listItem" *ngFor="let possibleFriend of possibleFriends">
+          <div class="c-dialogFriend__listContent" (click)="goToFriend(possibleFriend.id)">
+            <img
+              [lazyLoad]="possibleFriend.avatar ? API_URL + possibleFriend.avatar : '/assets/img/img-user-avatar.svg'"
+              defaultImage="/assets/img/img-user-avatar.svg" alt="" class="c-dialogFriend__listAvatar">
+            <p class="c-dialogFriend__listName">{{possibleFriend.name}}</p>
+          </div>
+          <button class="c-dialogFriend__listBtn"
+                  [ngClass]="{
+                  'c-dialogFriend__listBtn--added': possibleFriend.mutual,
+                  'c-dialogFriend__listBtn--loading': !addOrDeleteFriendSub.closed && currentFriendId === possibleFriend.id}"
+                  (click)="possibleFriend.mutual ? deleteFriend(possibleFriend) : addFriend(possibleFriend)"
+                  type="button" matRipple>
+            <ng-container *ngIf="!possibleFriend.mutual else isMyFriendIcon">
+              <mat-icon>add</mat-icon>
+              {{'Додати' | translate}}</ng-container>
+            <ng-template #isMyFriendIcon>
+              <mat-icon>delete</mat-icon>
+              {{'Видалити' | translate}}</ng-template>
+          </button>
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--gray" type="button" (click)="closeDialog()">{{'Закрити' | translate}}</button>
+    </div>
+  </div>
+</form>

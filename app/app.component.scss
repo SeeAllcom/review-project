@@ -1,0 +1,56 @@
+@import "src/assets/styles/helpers/_mixins.scss";
+
+.appComponent {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--screen-height);
+
+  &.isUserSide {
+    @include tablets {
+      padding-bottom: var(--ex-mobileMenu-height);
+    }
+  }
+}
+
+.reloadStatus {
+  --mat-icon-size: 30px;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ex-bg--700);
+  color: var(--ex-color-light-blue);
+  transition: var(--ex-transition-primary);
+  margin: 0 auto;
+  opacity: 0;
+  visibility: collapse;
+  box-shadow: 0 0 15px -5px rgba(0, 0, 0, 0.6);
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(100px);
+    z-index: 999;
+  }
+
+  &.reload {
+    color: var(--ex-color-white);
+    transform: translateY(100px) scale(1.4);
+
+    .mat-icon {
+      animation: rotate 700ms infinite;
+    }
+  }
+}
+
+.c-appHeader {
+  @include tablets {
+    display: none;
+  }
+}

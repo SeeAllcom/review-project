@@ -1,0 +1,188 @@
+<div class="c-shoppingCart c-shoppingCart--{{currentCartType}}"
+     [ngClass]="{'c-shoppingCartMobile': isMobile, 'is-visible': isMobile && geAllProductsCount()}">
+  <div class="c-shoppingCart__overlay"
+       [ngClass]="{'is-visible': isProductsListVisible || listPaymentMethodIsVisible}"
+       (click)="listPaymentMethodIsVisible ? togglePaymentMethodDialog() : toggleProductsList()"></div>
+
+  <div class="c-shoppingCart__inner"
+       [ngClass]="{'is-visible': isProductsListVisible, 'c-shoppingCart__inner--mobile': isMobile, 'c-shoppingCart__inner--scroll': !isMobile}">
+    <button *ngIf="isMobile" class="c-shoppingCart__show" [ngClass]="{'is-rotate': isProductsListVisible}"
+            (click)="toggleProductsList()">
+            <span class="c-shoppingCart__showIcon basket">
+              <mat-icon>shopping_cart</mat-icon>
+              {{getSelectedProductsCount()}}
+            </span>
+      <mat-icon class="c-shoppingCart__showIcon arrow">keyboard_arrow_up</mat-icon>
+    </button>
+
+    <div class="c-shoppingCart__header">
+      <ng-container *ngIf="geAllProductsCount(); else shoppingCartEmpty">
+        <p class="c-shoppingCart__title">{{'Ваше замовлення' | translate}}</p>
+        <button class="c-shoppingCart__delete" (click)="deleteSelectedProducts()">
+          {{'Очистити' | translate}}
+        </button>
+      </ng-container>
+      <ng-template #shoppingCartEmpty>
+        <p class="c-shoppingCart__title c-shoppingCart__title--empty">{{'Кошик порожній' | translate}}</p>
+      </ng-template>
+    </div>
+
+    <ul class="c-shoppingCart__list" *ngIf="geAllProductsCount()">
+
+      <ng-container *ngIf="currentCartType === cartType.ProductsTemplate">
+        <li class="c-shoppingCart__listItem" *ngFor="let selectedProduct of getSelectedProducts()">
+          <div class="c-shoppingCart__listRow">
+            <span class="c-shoppingCart__listName">{{selectedProduct.name}}
+              <ng-container
+                *ngIf="selectedProduct.capacity">({{selectedProduct.capacity.size}}{{selectedProduct.capacity.unit}}
+                )</ng-container>
+          </span>
+            <span class="c-shoppingCart__listPrice">
+            {{getFullPriceProduct(selectedProduct.cartId)}}{{'грн' | translate}}
+          </span>
+          </div>
+          <div class="c-shoppingCart__listRow">
+            <button class="c-shoppingCartCounter__action c-shoppingCartCounter__action--delete"
+                    (click)="deleteProduct(selectedProduct)">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+            <ul class="c-shoppingCart__listSupplements">
+              <li *ngFor="let supplement of selectedProduct.supplements">{{supplement.name}}
+                <ng-container *ngIf="supplement.quantity > 1">({{supplement.quantity}})</ng-container>
+                ,&#32;
+              </li>
+              <li class="c-shoppingCart__listEdit"
+                  (click)="openProductPreview(selectedProduct)">
+                {{'Редагувати' | translate}}
+              </li>
+            </ul>
+
+            <button class="c-shoppingCartCounter__action c-shoppingCartCounter__action--remove"
+                    [disabled]="getProductCount(selectedProduct.cartId) === 1"
+                    (click)="removeQuantityProduct(selectedProduct)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="c-shoppingCart__listCount">{{getProductCount(selectedProduct.cartId)}}x</span>
+            <button class="c-shoppingCartCounter__action c-shoppingCartCounter__action--add"
+                    [disabled]="!isCanAddAbonement(selectedProduct)"
+                    (click)="addProduct(selectedProduct)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ng-container>
+
+      <ng-container *ngIf="currentCartType === cartType.MyAbonements">
+        <li class="c-shoppingCart__listItem" *ngFor="let selectedAbonement of getSelectedAbonements()">
+          <div class="c-shoppingCart__listRow">
+            <span class="c-shoppingCart__listName">{{selectedAbonement.product.name}}
+              <ng-container
+                *ngIf="selectedAbonement.product.capacity">({{selectedAbonement.product.capacity.size}}{{selectedAbonement.product.capacity.unit}}
+                )</ng-container>
+          </span>
+          </div>
+          <div class="c-shoppingCart__listRow">
+            <button class="c-shoppingCartCounter__action c-shoppingCartCounter__action--delete"
+                    (click)="deleteSelectedAbonement(selectedAbonement)">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+            <ul class="c-shoppingCart__listSupplements">
+              <li *ngIf="!selectedAbonement.supplement.supplement_options?.length">{{'Класичний' | translate}}</li>
+              <li *ngFor="let option of selectedAbonement.supplement.supplement_options">
+                {{option.name}}
+                <ng-container *ngIf="option.quantity > 1">({{option.quantity}})</ng-container>
+                <ng-container *ngIf="selectedAbonement.supplement.supplement_options.length > 1">,&#32;</ng-container>
+              </li>
+            </ul>
+
+            <button class="c-shoppingCartCounter__action c-shoppingCartCounter__action--remove"
+                    [disabled]="selectedAbonement.quantityForOrder === 1"
+                    (click)="removeQuantitySelectedAbonement(selectedAbonement)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="c-shoppingCart__listCount">{{selectedAbonement.quantityForOrder}}x</span>
+            <button class="c-shoppingCartCounter__action c-shoppingCartCounter__action--add"
+                    [disabled]="!isCanAddAbonement(selectedAbonement)"
+                    (click)="addAbonementToCart(selectedAbonement)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <ng-container *ngIf="!isMobile ? geAllProductsCount() : true">
+    <div *ngIf="currentCartType === cartType.ProductsTemplate" class="c-shoppingCart__footer">
+      <div class="c-shoppingCart__footerInner">
+        <div class="c-shoppingCart__latestPrice" (click)="isMobile ? toggleProductsList() : false">
+          {{'Вартість замовлення:' | translate}}
+          <div class="c-shoppingCart__latestPriceInfo">
+            <div class="c-shoppingCart__latestPriceNumbers">
+              <span class="bonus" [ngClass]="{'bonus--notAvailable': !isLoggedIn}">+{{getBonus()}}{{'грн' | translate}}</span>
+              <span>{{getActualPrice()}}{{'грн' | translate}}</span>
+            </div>
+          </div>
+        </div>
+        <button class="o-button o-button--gradient" (click)="generateOrderQrCode()" matRipple>
+          <ng-container *ngIf="sendOrderSub.closed; else sendOrderLoading">
+            <span class="o-buttonText">{{'Згенерувати замовлення' | translate}}</span>
+          </ng-container>
+          <ng-template #sendOrderLoading>
+            <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+          </ng-template>
+        </button>
+      </div>
+    </div>
+
+    <form *ngIf="currentCartType === cartType.MyAbonements" class="c-shoppingCart__footer">
+      <friends-select [friendsData]="friendsData" [friendEmailForGift]="friendEmailForGift"
+                      class="c-shoppingCart__giftField" [ngClass]="{'visible': isGiftTemplate}"></friends-select>
+
+      <div class="c-shoppingCart__footerInner">
+        <div class="c-shoppingCart__latestPrice">
+          <span (click)="isMobile ? toggleProductsList() : false">{{ '{ count, plural, one{Вибраний {count}  абонемент} few{Вибрано {count} абонемента} other{Вибрано {count} абонементів} }' | translate: {count: getSelectedAbonementsCount()} }}</span>
+          <div class="c-shoppingCart__latestPriceInfo">
+            <span class="c-shoppingCart__giftIcon"
+                  [ngClass]="{'active': isGiftTemplate}"
+                  (click)="isGiftTemplate = !isGiftTemplate; clearEmailFromQueryParams()">
+              <mat-icon>card_giftcard</mat-icon>
+            </span>
+          </div>
+        </div>
+        <button *ngIf="isGiftTemplate" class="o-button o-button--gradient"
+                [disabled]="!sendOrderSub.closed" (click)="sengGiftToFriend()" matRipple>
+          <ng-container *ngIf="sendOrderSub.closed; else sending">
+            {{'Подарувати' | translate}}
+          </ng-container>
+          <ng-template #sending>
+            <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+          </ng-template>
+        </button>
+
+        <button *ngIf="!isGiftTemplate" class="o-button o-button--gradient"
+                (click)="generateMyAbonementsQrCode()"
+                [disabled]="!sendOrderSub.closed" matRipple>
+          <ng-container *ngIf="sendOrderSub.closed; else sending">
+            {{'Згенерувати QR-код' | translate}}
+          </ng-container>
+          <ng-template #sending>
+            <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+          </ng-template>
+        </button>
+      </div>
+    </form>
+  </ng-container>
+
+  <choose-payment
+    [isVisible]="listPaymentMethodIsVisible"
+    [isLoggedIn]="isLoggedIn"
+    [activeProductsTemplate]="activeProductsTemplate"
+    [bonuses]="network?.bonuses?.value"
+    (onlinePayment)="startOnlinePayment()"
+    (cashPayment)="startPayment(false)"
+    (bonusesPayment)="startPayment(true)"
+    (close)="togglePaymentMethodDialog()"></choose-payment>
+</div>

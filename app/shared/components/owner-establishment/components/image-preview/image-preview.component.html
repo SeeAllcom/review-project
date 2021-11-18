@@ -1,0 +1,15 @@
+<div class="c-imagePreview">
+  <img [src]="url" alt="" class="c-imagePreview__img">
+  <mat-form-field class="c-imagePreview__field">
+    <mat-label>{{title | translate}}</mat-label>
+    <ngx-mat-file-input [formControl]="formControlInput"
+                        [valuePlaceholder]="url ? ('Змінити зображення' | translate) : ('Додати зображення' | translate)"
+                        [value]="url"
+                        (change)="imagePreview($event)"></ngx-mat-file-input>
+    <mat-icon matSuffix>folder</mat-icon>
+
+    <mat-error *ngIf="formControlInput.hasError('required')">
+      {{'Зображення є обов\'язковим' | translate}}
+    </mat-error>
+  </mat-form-field>
+</div>

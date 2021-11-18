@@ -1,0 +1,81 @@
+<div class="c-productPreview__overlay" matDialogClose></div>
+<div class="c-productPreview">
+  <div class="c-productPreview__inner">
+    <span class="c-productPreview__close" matDialogClose><mat-icon>close</mat-icon></span>
+    <div class="c-productPreview__body">
+      <div class="c-productPreview__content">
+        <div class="c-productPreview__imgBlock">
+          <img [src]="API_URL + product.img" [alt]="product.name"
+               class="c-productPreview__img" [class.enlarged]="imgEnlarged" (click)="imgEnlarged = !imgEnlarged">
+        </div>
+
+        <div class="c-productPreview__info">
+          <div class="c-productPreview__infoHeader">
+            <div>
+              <p class="c-productPreview__title">{{product.name}}</p>
+              <p *ngIf="product.capacity"
+                 class="c-productPreview__capacity">{{'Ємність:'}} {{product.capacity.size}}{{product.capacity.unit}}</p>
+            </div>
+            <div class="c-productPreview__priceBlock">
+              <p class="c-productPreview__bonuses">+{{product.bonus}}{{'грн' | translate}}</p>
+              <p class="c-productPreview__price">{{product.price}}{{'грн' | translate}}</p>
+            </div>
+          </div>
+
+          <p *ngIf="product.description" class="c-productPreview__text">{{product.description}}</p>
+
+          <div *ngIf="productData.operationType === operationType.Edit" class="c-productPreview__btns">
+            <button class="o-button o-button--secondary"
+                    [disabled]="getProductCount(product.cartId) === 0"
+                    (click)="deleteProduct(product)" matRipple>
+              <mat-icon>remove</mat-icon>
+            </button>
+            <input class="o-button" numbersOnly [value]="getProductCount(product.cartId)"
+                   (change)="addProductByInput(product, $event)">
+            <button class="o-button o-button--secondary" (click)="addProduct(product)" matRipple>
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div *ngIf="productData.operationType === operationType.Add && !product.inaccessible" class="c-productPreview__btns">
+            <button class="o-button o-button--secondary"
+                    [disabled]="productQuantity <= 1"
+                    (click)="removeProductQuantity()" matRipple>
+              <mat-icon>remove</mat-icon>
+            </button>
+            <input class="o-button" numbersOnly [value]="productQuantity"
+                   (change)="addProductQuantityByInput($event)">
+            <button class="o-button o-button--secondary" (click)="addProductQuantity()" matRipple>
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <p *ngIf="product.inaccessible" class="c-productPreview__text c-productPreview__text--gray">{{'Даний товар тимчасово недоступний для купівлі' | translate}}</p>
+
+          <spinner *ngIf="!getSupplementsSub.closed" class="c-dialog__spinner"></spinner>
+
+          <button *ngIf="productData.operationType === operationType.Add"
+                  class="c-productPreview__btn o-button o-button--secondary"
+                  [disabled]="product.inaccessible"
+                  (click)="addProductIfNotExistInCart()" matDialogClose>{{'Додати до замовлення за'  | translate}} {{getAllProductPrice()}}{{'грн' | translate}}</button>
+
+          <button *ngIf="productData.operationType === operationType.Edit"
+                  class="c-productPreview__btn o-button o-button--secondary" matDialogClose>
+            {{'Зберегти зміни'  | translate}} <ng-container *ngIf="getFullPriceProduct()">{{'за' | translate}} {{getFullPriceProduct()}}{{'грн' | translate}}</ng-container>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="getSupplementsSub.closed" [class.c-productPreview__supplements]="supplements.length">
+        <user-product-supplements *ngIf="productData.operationType === operationType.Edit"
+                                  [product]="product"
+                                  [supplements]="supplements"></user-product-supplements>
+        <product-supplements-add *ngIf="productData.operationType === operationType.Add"
+                                 (supplementsPrice)="getSupplementsPrice($event)"
+                                 [needAddNewProductToCart$]="needAddNewProductToCart$"
+                                 [product]="product"
+                                 [productQuantity]="productQuantity"
+                                 [supplements]="supplements"></product-supplements-add>
+      </div>
+    </div>
+  </div>
+</div>

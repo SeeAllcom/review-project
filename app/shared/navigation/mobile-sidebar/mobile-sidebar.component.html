@@ -1,0 +1,90 @@
+<div class="c-mobileSidebar__overlay" (click)="closeSidebar()"></div>
+<div class="c-mobileSidebar">
+  <div class="c-mobileSidebar__content" (click)="closeSidebar()">
+    <ng-container *ngIf="!(isUserLogin$ | async) else avatar">
+      <img src="/assets/img/logo-beta.svg" alt="CoffeePhone" class="c-mobileSidebar__logo">
+    </ng-container>
+    <ng-template #avatar>
+      <a routerLink="/cabinet/user">
+        <img [src]="(userData$ | async)?.avatar ? API_URL + (userData$ | async).avatar : '/assets/img/img-user-avatar.svg'"
+             alt="CoffeePhone" class="c-mobileSidebar__logo c-mobileSidebar__logo--avatar">
+      </a>
+    </ng-template>
+    <p *ngIf="(userData$ | async)" class="c-mobileSidebar__email">{{(userData$ | async).email}}</p>
+    <ng-container *ngIf="!(isUserLogin$ | async)">
+      <button class="o-button o-button--secondary" (click)="openAuthDialog(authTabsTypeEnum.SignUp)">
+        <span class="o-buttonText">{{'Реєстрація' | translate}}</span>
+      </button>
+      <button class="o-button" (click)="openAuthDialog(authTabsTypeEnum.Login)">
+        <span class="o-buttonText">{{'Увійти' | translate}}</span>
+      </button>
+    </ng-container>
+  </div>
+  <ul class="c-mobileSidebar__list" (click)="closeSidebar()">
+    <li class="c-mobileSidebar__listItem">
+      <button *ngIf="isUserLogin$ | async" (click)="openUserHistory()" class="c-dropdownList__link" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">history</mat-icon>
+        {{'Історія' | translate}}
+      </button>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <a *ngIf="isUserLogin$ | async" routerLink="/cabinet/friends" class="c-dropdownList__link" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">people</mat-icon>
+        {{'Мої друзі' | translate}}
+      </a>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <a *ngIf="currentCity$ | async" [routerLink]="(currentCity$ | async).name_en + '/purchase-establishments'" class="c-dropdownList__link" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">local_cafe</mat-icon>
+        {{'Купити абонемент' | translate}}
+      </a>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <!--        TODO: hot order-->
+      <button *ngIf="false" class="c-dropdownList__link c-dropdownList__link--hotOrder" (click)="openHotOrder()" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">flash_on</mat-icon>
+        {{'Швидке замовлення' | translate}}
+      </button>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <button class="c-dropdownList__link" (click)="openCities()" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">apartment</mat-icon>
+        {{'Вибрати місто' | translate}}
+      </button>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <button (click)="openLanguagesDialog()" class="c-dropdownList__link" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">public</mat-icon>
+        {{'Змінити мову' | translate}}
+      </button>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <a *ngIf="(isUserLogin$ | async)" routerLink="/cabinet/user" class="c-dropdownList__link" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">manage_accounts</mat-icon>
+        {{'Налаштування акаунта' | translate}}
+      </a>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <a routerLink="/faq" class="c-dropdownList__link" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">help</mat-icon>
+        {{'Питання і відповіді' | translate}}
+      </a>
+    </li>
+    <li class="c-mobileSidebar__listItem">
+      <a routerLink="/what-is-coffeephone" class="c-dropdownList__link" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">perm_device_information</mat-icon>
+        {{'Про додаток' | translate}}
+      </a>
+    </li>
+    <li *ngIf="(isUserLogin$ | async)" class="c-mobileSidebar__listItem">
+      <button *ngIf="!(isCabinetPages$ | async)"  class="c-dropdownList__link" (click)="logout()" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">logout</mat-icon>
+        {{'Вийти' | translate}}
+      </button>
+      <button *ngIf="(isCabinetPages$ | async)" class="c-dropdownList__link" (click)="logoutFromCabinetPages()" mat-menu-item>
+        <mat-icon class="c-dropdownList__icon">logout</mat-icon>
+        {{'Вийти' | translate}}
+      </button>
+    </li>
+  </ul>
+</div>

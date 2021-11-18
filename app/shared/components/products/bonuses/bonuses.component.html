@@ -1,0 +1,17 @@
+<div class="c-networkBonus" [class.c-networkBonus--mobile]="isMobile">
+  <div class="c-networkBonus__percent">
+    <span>{{network?.percent_bonus}}%</span>
+    <span style="font-size: 12px">від замовлення</span>
+  </div>
+  <div class="c-networkBonus__info">
+    <p class="c-networkBonus__count">
+      <ng-container
+        *ngIf="loaded && network && network.bonuses else bonusesEmpty">{{network.bonuses.value}}</ng-container>
+      {{'грн'}}
+      <ng-template #bonusesEmpty>0</ng-template>
+    </p>
+    <p class="c-networkBonus__title">{{'Бонусних коштів' | translate}}</p>
+    <p *ngIf="!isLoggedIn"
+       class="c-networkBonus__text">{{'Авторизуйтеся, щоб отримувати бонуси' | translate}}</p>
+  </div>
+</div>

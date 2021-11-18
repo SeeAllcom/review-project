@@ -1,0 +1,227 @@
+<button *ngIf="!fromEstablishmentParams"
+        class="c-productsMobAction c-productsMobAction--left"
+        (click)="goBack()">
+  <mat-icon>arrow_back</mat-icon>
+</button>
+<button *ngIf="network"
+        class="c-productsMobAction c-productsMobAction--right"
+        ngxClipboard [cbContent]="shopLinkForShare()"
+        (cbOnSuccess)="copyEstablishmentLink()">
+  <mat-icon style="transform: scale(-1, 1);">reply</mat-icon>
+</button>
+<div *ngIf="network && isTabletsOrMobiles()" class="swiper-container c-productsSwiper"
+     [swiper]="networkEstablishmentsConfig">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" (click)="openCoffeeShopPreview(network, -1)">
+      <img [src]="API_URL + network.avatar" [alt]="network.name" class="c-productsSwiper__img">
+    </div>
+    <div class="swiper-slide" *ngFor="let coffeeShop of getCoffeeShopsFromCurrentCity(); let i = index"
+         (click)="openCoffeeShopPreview(coffeeShop, i)">
+      <div class="c-productsSwiper__info">
+        <p class="c-productsSwiper__infoTitle">{{coffeeShop.region.name_en | getLocalizationCityKey | translate}}</p>
+        <p class="c-productsSwiper__infoText">{{coffeeShop.address}}</p>
+        <p class="c-productsSwiper__infoCaption">{{'Тисніть, щоб розгорнути' | translate}}</p>
+      </div>
+      <img [lazyLoad]="API_URL + coffeeShop.img" defaultImage="/assets/img/img-not-loaded.svg"
+           alt="{{network.name}} - {{coffeeShop.region.name_en | getLocalizationCityKey | translate}} {{coffeeShop.address}}"
+           class="c-productsSwiper__img">
+    </div>
+    <div class="swiper-slide">
+      <div class="c-productsSwiper__content">
+        <p class="c-productsSwiper__title">{{'Ви можете переглянути більше закладів.' | translate}}</p>
+        <button class="o-button o-button--secondary"
+                (click)="openLocation()">{{'Переглянути всі заклади' | translate}}</button>
+      </div>
+    </div>
+  </div>
+  <div class="swiper-pagination c-productsSwiper__pagination"></div>
+</div>
+<div class="c-products">
+  <div class="c-cards__header c-cards__header--noMargin">
+    <div class="container">
+      <div class="c-cards__headerContent">
+        <span *ngIf="!fromEstablishmentParams" class="c-cards__back" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </span>
+        <div class="c-cards__headerPreview previewHover" (click)="network ? openCoffeeShopPreview(network, -1) : false">
+          <img *ngIf="network?.avatar" class="c-cards__headerAvatar" defaultImage="/assets/img/img-not-loaded.svg"
+               [lazyLoad]="API_URL + network.avatar" [alt]="network.name">
+        </div>
+        <div class="c-cards__description">
+          <h1 class="c-cards__title">
+            <ng-container *ngIf="!network else networkName">{{'Завантаження кав\'ярні' | translate}}</ng-container>
+            <ng-template #networkName>{{network.name}}</ng-template>
+          </h1>
+
+          <div class="c-btnToggle"
+               [ngClass]="{'c-btnToggle--secondActive': activeMenuTemplate === menuState.AbonementsTemplate}">
+            <button class="c-btnToggle__btn" (click)="changeProductsTemplate(menuState.ProductsTemplate)"
+                    matRipple>
+              {{'Меню' | translate}}
+            </button>
+            <button class="c-btnToggle__btn" (click)="changeProductsTemplate(menuState.AbonementsTemplate)"
+                    matRipple>
+              {{'Абонементи' | translate}}
+            </button>
+          </div>
+
+        </div>
+        <span *ngIf="network"
+              class="o-shareBtn"
+              ngxClipboard [cbContent]="shopLinkForShare()"
+              (cbOnSuccess)="copyEstablishmentLink()">
+            <mat-icon class="o-shareBtn__icon">reply</mat-icon>
+          </span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <ng-container *ngIf="!getError; else errorTemplate">
+      <bonuses [isMobile]="true"
+               [loaded]="networkLoaded"
+               [isLoggedIn]="isLoggedIn"
+               [network]="network"></bonuses>
+
+      <div class="c-categoriesList__wrapper">
+        <ul class="c-categoriesList">
+          <ng-container *ngIf="activeMenuTemplate === menuState.ProductsTemplate">
+            <li class="c-categoriesList__item"
+                *ngFor="let category of categories"
+                [ngClass]="{'active': isActiveCategory(category.id), 'disabled': !categoriesSub.closed}"
+                (click)="changeCategory(category.id)">
+              <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + category.img"
+                   [alt]="category.name"
+                   class="c-categoriesList__img">
+              <p class="c-categoriesList__title">{{getLocalizationCategoriesKey(category.name) | translate}}</p>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+
+      <div class="c-products__content">
+        <ng-container *ngTemplateOutlet="this[activeMenuTemplate]"></ng-container>
+
+        <network-info *ngIf="network"
+                      [network]="network"
+                      [isMobile]="true"
+                      [networkLoaded]="networkLoaded"></network-info>
+
+        <div class="c-productsBasket__wrapper">
+          <bonuses [loaded]="networkLoaded"
+                   [isLoggedIn]="isLoggedIn"
+                   [network]="network"></bonuses>
+
+          <shopping-cart [network]="network"
+                         [activeProductsTemplate]="activeMenuTemplate"
+                         [pageLoaded]="networkLoaded"
+                         [currentCartType]="cartType[activeMenuTemplate]"></shopping-cart>
+
+          <network-info *ngIf="network" [network]="network" [networkLoaded]="networkLoaded"></network-info>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #errorTemplate>
+      <div class="c-cards__empty">
+        <p class="c-cards__emptyText c-cards__emptyText--error">{{getError | translate}}</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<shopping-cart [isMobile]="true"
+               [network]="network"
+               [activeProductsTemplate]="activeMenuTemplate"
+               [pageLoaded]="networkLoaded"
+               [currentCartType]="cartType[activeMenuTemplate]"></shopping-cart>
+
+
+<ng-template #NetworkLoading>
+  <spinner class="c-cards__spinner"></spinner>
+</ng-template>
+
+
+<ng-template #ProductsTemplate>
+  <ng-container *ngIf="products.length; else productsEmpty">
+    <ul class="c-productsList">
+      <li class="c-productsList__item" *ngFor="let product of products; let i = index">
+        <div class="c-productsList__itemInfo">
+          <div class="c-productsList__itemPreview previewHover"
+               [ngClass]="{'c-productsList__itemPreview--hidden': product.inaccessible}"
+               (click)="openProductPreview(product)">
+            <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + product.img"
+                 [alt]="product.name"
+                 class="c-productsList__img">
+            <mat-icon *ngIf="product.inaccessible" class="c-productsList__itemPreviewIcon">
+              remove_shopping_cart
+            </mat-icon>
+            <span *ngIf="productChangesLabel(product)" class="c-productsList__badge c-productsList__badge--new">
+                  {{productChangesLabel(product) | translate}}
+                </span>
+          </div>
+          <div class="c-productsList__description">
+            <p class="c-productsList__title">{{product.name}}</p>
+            <p *ngIf="product.capacity" class="c-productsList__capacity">
+              {{'Ємність:' | translate}} {{product.capacity.size}}{{product.capacity.unit}}
+            </p>
+            <p *ngIf="product.inaccessible" class="c-productsList__text c-productsList__text--small c-productsList__text--gray">
+              {{'Даний товар тимчасово недоступний для купівлі' | translate}}
+            </p>
+          </div>
+        </div>
+        <div class="c-productsList__itemAction">
+          <div class="c-productsList__priceBlock">
+            <p class="c-productsList__price bonus">+{{+product.bonus}}{{'грн' | translate}}</p>
+            <p class="c-productsList__price">{{+product.price}}{{'грн' | translate}}</p>
+          </div>
+          <button *ngIf="!product.inaccessible" class="c-productsList__add"
+                  (click)="openProductPreview(product)">
+            <mat-icon class="c-productsList__addIcon">add</mat-icon>
+            <span class="c-productsList__addText">{{'Додати' | translate}}</span>
+          </button>
+        </div>
+      </li>
+    </ul>
+  </ng-container>
+  <ng-template #productsEmpty>
+    <div class="c-cards__empty">
+      <p class="c-cards__emptyTitle">{{'Ой, а тут пусто' | translate}}</p>
+      <p *ngIf="!categories.length" class="c-cards__emptyText">
+        {{'Товари скоро з\'являться на нашій вітрині, приходьте до нас трішки пізніше' | translate}}😌️
+      </p>
+      <p *ngIf="categories.length && !products.length" class="c-cards__emptyText">
+        {{'На даний момент в цій категорії товарів немає' | translate}}
+      </p>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #AbonementsTemplate>
+  <ng-container *ngIf="abonements.length; else abonementsEmpty">
+    <ul class="c-productsList">
+      <li class="c-productsList__item c-productsList__item--hover" *ngFor="let abonement of abonements; let i = index">
+        <div class="c-productsList__itemInfo">
+          <div class="c-productsList__itemPreview">
+            <img defaultImage="/assets/img/img-not-loaded.svg"
+                 [lazyLoad]="API_URL + abonement.product.img"
+                 [alt]="abonement.product.name" class="c-productsList__img">
+          </div>
+          <div class="flex flex-col flex-1">
+            <p class="c-productsList__price mb-2.5">{{getPercentageDiscountOrPrice((abonement.price_old), abonement.price)}}</p>
+            <p class="c-productsList__text c-productsList__text--small c-productsList__text--gray">
+              {{'На' | translate}} {{abonement.quantity}} {{abonement.product.name}} ({{'ціна зі знижкою' | translate}} {{abonement.price}}{{'грн' | translate}})
+            </p>
+            <p class="c-productsList__text mt-auto">{{'До'}} {{abonement.date_end | date: 'dd.MM.yyyy'}}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </ng-container>
+  <ng-template #abonementsEmpty>
+    <div class="c-cards__empty">
+      <p class="c-cards__emptyTitle">{{'Абонементів поки що немає' | translate}}</p>
+      <p class="c-cards__emptyText">
+        {{'Aбонементи скоро з\'являться. Загляніть сюди через деякий час.' | translate}} 😊
+      </p>
+    </div>
+  </ng-template>
+</ng-template>

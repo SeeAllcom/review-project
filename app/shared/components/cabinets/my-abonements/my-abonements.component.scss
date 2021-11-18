@@ -1,0 +1,297 @@
+@import "../../../../../../src/assets/styles/helpers/_mixins.scss";
+@import "../../../../../../src/assets/styles/helpers/_extends.scss";
+
+.c-myAbonements {
+  padding-bottom: 30px;
+  background: var(--ex-bg--900);
+  z-index: 2;
+  position: relative;
+
+  &--blur {
+    filter: blur(6px);
+  }
+
+  @include phones-l {
+    margin-top: 230px;
+    border-radius: 30px 30px 0 0;
+    overflow: hidden;
+  }
+
+  &__content {
+    display: flex;
+
+    @include tablets-xl {
+      flex-direction: column;
+      padding-bottom: 60px;
+    }
+
+    .c-cards__spinner {
+      margin-left: auto;
+
+      @include tablets-xl {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+
+  &List {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    align-self: baseline;
+
+    &__wrapper {
+      flex: 65%;
+      margin-right: 15px;
+
+      @include tablets-l {
+        margin-right: 0;
+        order: 2;
+      }
+    }
+
+    &__btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ex-color-white);
+      font-size: 14px;
+      font-weight: 600;
+      margin-left: auto;
+      min-width: 135px;
+      cursor: pointer;
+      padding: 10px 20px;
+      min-height: 40px;
+      background: var(--ex-color-secondary);
+      border-radius: var(--borderRadius-primary);
+      text-align: center;
+
+      @include phones-xl {
+        order: 2;
+      }
+
+      @include phones-l {
+        padding: 5px;
+        min-width: 40px;
+        font-size: 12px;
+      }
+
+      &Icon {
+        display: none;
+
+        @include phones-l {
+          display: block;
+        }
+      }
+
+      &Text {
+        @include phones-l {
+          display: none;
+        }
+      }
+
+      &:hover {
+        box-shadow: inset 0 -70px 0 0 var(--hoverButtoncolor);
+      }
+    }
+
+    &__badge {
+      background: var(--ex-bg--700);
+      border-radius: 0 var(--borderRadius-primary) 0 0;
+      color: var(--ex-color-white);
+      font-size: 10px;
+      font-weight: 600;
+      left: 0;
+      padding: 3px 10px;
+      position: absolute;
+      bottom: 0;
+
+      &--new {
+        bottom: unset;
+        top: 0;
+        right: 0;
+        left: unset;
+        border-radius: 0 0 0 var(--borderRadius-primary);
+        background: var(--ex-bg--gradientRed);
+      }
+    }
+
+    &__count {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--ex-color-main);
+    }
+
+    &__preview {
+      width: 100px;
+      min-width: 100px;
+      height: 100px;
+      min-height: 100px;
+      position: relative;
+      overflow: hidden;
+      margin-right: 15px;
+      border-radius: var(--borderRadius-primary);
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      transition: var(--ex-transition-secondary);
+
+      @include phones-xl {
+        margin-right: 0;
+        margin-bottom: 15px;
+        width: 100%;
+      }
+    }
+
+    &__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--borderRadius-primary);
+    }
+
+    &__title {
+      font-size: 16px;
+      margin-bottom: 5px;
+      font-weight: 600;
+
+      &Description {
+        --mat-icon-size: 20px;
+
+        margin-left: 10px;
+        margin-bottom: 3px;
+        color: var(--ex-color-light-blue);
+      }
+
+      @include tablets-l-more {
+        margin-right: 15px;
+      }
+
+      @include phones-m {
+        font-size: 14px;
+      }
+    }
+
+    &__capacity {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ex-color-light-blue);
+    }
+
+    &__text {
+      font-size: 12px;
+      margin-bottom: 10px;
+      color: var(--ex-color-white);
+    }
+
+    &__price {
+      font-size: 25px;
+      font-weight: 600;
+      text-align: right;
+      color: var(--ex-color-white);
+      margin-bottom: 0;
+
+      @include phones-xl {
+        text-align: left;
+      }
+
+      @include phones-l {
+        font-size: 18px;
+      }
+
+      &.old {
+        font-size: 18px;
+        text-decoration: line-through;
+        color: #646a82;
+
+        @include phones-l {
+          font-size: 14px;
+        }
+      }
+
+      &Block {
+        margin-right: 10px;
+
+        @include phones-xl {
+          margin-left: unset;
+        }
+      }
+    }
+
+    &__item {
+      display: flex;
+      padding: 20px;
+      background: var(--ex-bg--gradientDark);
+      border-radius: var(--borderRadius-primary);
+      width: calc(50% - 15px);
+      flex-direction: column;
+      margin-left: 15px;
+      margin-bottom: 15px;
+      transition: var(--ex-transition-secondary);
+
+      @include phones-xl {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      @include phones-l {
+        padding: 10px;
+      }
+
+      @include phones-m {
+        margin-bottom: 15px;
+      }
+
+      &:hover {
+        .c-myAbonementsList__badge {
+          transform: translateX(0);
+        }
+      }
+
+      &Info {
+        display: flex;
+        flex: 1;
+        margin-bottom: 10px;
+        width: 100%;
+
+        @include phones-xl {
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+        }
+      }
+
+      &Action {
+        display: flex;
+        align-items: center;
+
+        @include phones-xl {
+          flex: 1;
+          width: 100%;
+        }
+      }
+
+      &.deleted {
+        box-shadow: 0 0 0 2px var(--ex-color-violet) inset;
+
+        .c-myAbonementsList {
+          &__btn {
+            background: var(--ex-color-violet);
+          }
+        }
+      }
+    }
+  }
+
+  &Basket {
+    &__wrapper {
+      flex: 35%;
+      max-width: calc(35% - 30px);
+      margin-left: auto;
+
+      @include tablets-xl {
+        display: none;
+      }
+    }
+  }
+}

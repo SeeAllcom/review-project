@@ -1,0 +1,78 @@
+<form class="c-dialog c-dialog--small c-dialog--autoHeight" [formGroup]="form" (ngSubmit)="editWorker()">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title">{{'Редагування працівника' | translate}}</p>
+    <button class="c-dialog__close" type="button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="c-dialog__body c-dialog__body--center c-dialog__body--padding">
+    <mat-form-field>
+      <mat-label>{{'Введіть ім\'я Працівника' | translate}}</mat-label>
+      <label>
+        <input type="text" formControlName="name" [value]="worker.name" matInput required>
+      </label>
+      <mat-error *ngIf="form.get('name').hasError('required')">
+        {{'Ім\'я є обов\'язковим' | translate}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{'Введіть email Працівника' | translate}}</mat-label>
+      <label>
+        <input type="text" formControlName="email" [value]="worker.email" matInput required>
+      </label>
+      <mat-error *ngIf="form.get('email').hasError('required')">
+        {{'Email є обов\'язковим' | translate}}
+      </mat-error>
+      <mat-error *ngIf="form.get('email').hasError('email')">
+        {{'Введіть правильний email' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'Заклад працівника' | translate}}</mat-label>
+      <mat-select
+        disableOptionCentering
+        formControlName="shop"
+        role="listbox"
+        required>
+        <mat-option>
+          <ngx-mat-select-search
+            [(ngModel)]="searchEstablishmentValue"
+            formControlName="establishmentSearch"
+            [placeholderLabel]="'Знайти місто' | translate"
+            noEntriesFoundLabel="{{'Такого міста немає' | translate}} 😞"
+            [ariaLabel]="'Знайти місто' | translate"></ngx-mat-select-search>
+        </mat-option>
+        <span *ngFor="let area of establishments">
+            <mat-optgroup *ngFor="let region of area.regions | searchEstablishments:searchEstablishmentValue;"
+                          [label]="region.name_en | getLocalizationCityKey | translate">
+              <mat-option *ngFor="let coffeeShop of region.coffee_shops" [value]="coffeeShop.id" role="listitem">
+                {{coffeeShop.address}}
+              </mat-option>
+            </mat-optgroup>
+          </span>
+        <mat-option *ngIf="error">{{error | translate}}</mat-option>
+        <mat-option
+          *ngIf="!establishments?.length && !error">{{'Спочатку потрібно додати заклад.' | translate}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('shop').hasError('required')">
+        {{'Заклад є обов\'язковим' | translate}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-error *ngIf="error" class="mat-error">{{error | translate}}</mat-error>
+  </div>
+  <div class="c-dialog__footer">
+    <div class="c-dialog__footerBtns">
+      <button class="o-button o-button--secondary" type="submit"
+              [disabled]="!editingSub.closed || !form.dirty" matRipple>
+        <ng-container *ngIf="editingSub.closed; else addingLoading">
+          <span class="o-buttonText">{{'Зберегти зміни' | translate}}</span>
+        </ng-container>
+        <ng-template #addingLoading>
+          <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,245 @@
+<div class="c-report">
+  <div class="c-report__header">
+    <div class="c-report__titleWrapper">
+      <p class="c-report__title">{{'Звіт' | translate}}</p>
+      <p class="c-report__subTitle">{{'Ласкаво просимо до CoffeePhone | Business' | translate}}</p>
+    </div>
+    <button class="o-button o-button--secondary" [disabled]="reportLoading" (click)="getReport()">
+      <ng-container *ngIf="!reportLoading else btnReportLoading">
+        {{'Оновити' | translate}}
+      </ng-container>
+      <ng-template #btnReportLoading>
+        <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+      </ng-template>
+    </button>
+  </div>
+  <form class="c-reportMonth"
+        [class.c-reportMonth--startEndDate]="isStartEndDateHaveValue() && !isDateHaveSameValue()"
+        [formGroup]="dateForm">
+    <p class="c-reportMonth__name">
+      <ng-container *ngIf="isStartEndDateHaveValue() else month">
+        <ng-container
+          *ngIf="isDateHaveSameValue(); else startEndDate">
+          {{dateForm.controls.startDate.value | date: 'd MMM y'}}
+        </ng-container>
+        <ng-template #startEndDate>
+          {{dateForm.controls.startDate.value | date: 'd MMM y'}} - {{dateForm.controls.endDate.value | date: 'd MMM y'}}
+        </ng-template>
+      </ng-container>
+      <ng-template #month>
+        {{displayMonth | translate}}
+        <ng-container *ngIf="day.getFullYear() !== maxDate.getFullYear()"> - {{day.getFullYear()}}</ng-container>
+      </ng-template>
+    </p>
+    <div class="c-reportMonth__actions" *ngIf="isOwnerLoggedIn$ | async">
+      <div *ngIf="networkData$ | async" class="c-reportMonth__actions">
+        <mat-date-range-input [rangePicker]="picker" [min]="transformToDate((networkData$ | async).created_at)"
+                              [max]="maxDate" style="display: none;">
+          <input matStartDate [placeholder]="'Дата початку'" formControlName="startDate" readonly>
+          <input matEndDate [placeholder]="'Кінцева дата'" formControlName="endDate" readonly>
+        </mat-date-range-input>
+        <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker touchUi>
+          <mat-date-range-picker-actions>
+            <button mat-button matDateRangePickerCancel>{{'Відмінити' | translate}}</button>
+            <button mat-raised-button color="primary" matDateRangePickerApply
+                    (click)="setDateFromDatepicker()">{{'Застосувати' | translate}}</button>
+          </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+      </div>
+      <div class="c-reportMonth__actions">
+        <button class="c-reportMonth__btn" matRipple (click)="prevMonth()"
+                [disabled]="isCannotShowPrevMonth() || reportLoading">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button class="c-reportMonth__btn" matRipple (click)="setCurrentMonth()"
+                [disabled]="!!reportLoading">{{currentMonth | translate}}</button>
+        <button class="c-reportMonth__btn" matRipple (click)="nextMonth()"
+                [disabled]="isCannotShowNextMonth () || reportLoading">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="c-report__body">
+    <ng-container *ngIf="!getReportError; else someError">
+      <ng-container *ngIf="reportLoaded">
+        <ul class="c-reportList">
+          <li *ngIf="isOwnerLoggedIn$ | async" class="c-reportList__item">
+            <div class="c-reportList__content">
+              <span class="c-reportList__icon"><mat-icon>credit_card</mat-icon></span>
+              <div class="c-reportList__info">
+                <p class="c-reportList__title">
+                  <ng-container *ngIf="!reportLoading && report else loading">{{+report.count_money.toFixed(2)}}</ng-container>
+                  грн
+                </p>
+                <p class="c-reportList__subTitle">{{'Отримано коштів' | translate}}</p>
+              </div>
+            </div>
+          </li>
+          <li class="c-reportList__item" style="animation-delay: 200ms;">
+            <div class="c-reportList__content">
+              <span class="c-reportList__icon"><mat-icon>shopping_cart</mat-icon></span>
+              <div class="c-reportList__info">
+                <p class="c-reportList__title">
+                  <ng-container
+                    *ngIf="!reportLoading && report else loading">{{report.orders_count_products}}</ng-container>
+                </p>
+                <p class="c-reportList__subTitle">{{'Куплено товарів' | translate}}</p>
+              </div>
+            </div>
+          </li>
+          <li class="c-reportList__item" style="animation-delay: 600ms;">
+            <div class="c-reportList__content">
+              <span class="c-reportList__icon"><mat-icon>qr_code</mat-icon></span>
+              <div class="c-reportList__info">
+                <p class="c-reportList__title">
+                  <ng-container
+                    *ngIf="!reportLoading && report else loading">{{report.used_abonements_count_products}}</ng-container>
+                </p>
+                <p class="c-reportList__subTitle">{{'Видано товарів' | translate}}</p>
+              </div>
+            </div>
+          </li>
+          <li class="c-reportList__item" style="animation-delay: 800ms;">
+            <div class="c-reportList__content">
+              <span class="c-reportList__icon"><mat-icon>group_add</mat-icon></span>
+              <div class="c-reportList__info">
+                <p class="c-reportList__title">
+                  <ng-container
+                    *ngIf="!reportLoading && report else loading">{{report.count_users_orders}}</ng-container>
+                </p>
+                <p class="c-reportList__subTitle">{{'Клієнтів з оплатою' | translate}}</p>
+              </div>
+            </div>
+          </li>
+          <li class="c-reportList__item" style="animation-delay: 900ms;">
+            <div class="c-reportList__content">
+              <span class="c-reportList__icon"><mat-icon>supervised_user_circle</mat-icon></span>
+              <div class="c-reportList__info">
+                <p class="c-reportList__title">
+                  <ng-container
+                    *ngIf="!reportLoading && report else loading">{{report.count_users_visit}}</ng-container>
+                </p>
+                <p class="c-reportList__subTitle">{{'Відвідали кав\'ярню' | translate}}</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ul class="c-reportList">
+          <li class="c-reportList__item" style="animation-delay: 400ms;">
+            <div class="c-reportList__content">
+          <span class="c-reportList__icon">
+          <mat-icon>storefront</mat-icon>
+        </span>
+              <div class="c-reportList__info">
+                <p class="c-reportList__title">
+                  <ng-container
+                    *ngIf="!reportLoading && report && report.coffee_shops else loading">{{report.coffee_shops.count}}</ng-container>
+                </p>
+                <p class="c-reportList__subTitle">{{'Закладів' | translate}}</p>
+              </div>
+            </div>
+            <div class="c-reportList__moreInfo">
+              <p class="c-reportList__moreInfoText">
+                <mat-icon>area_chart</mat-icon>
+                {{'областей:' | translate}}
+                <ng-container
+                  *ngIf="!reportLoading && report else loading">{{report.coffee_shops.count_areas}}</ng-container>
+              </p>
+              <p class="c-reportList__moreInfoText">
+                <mat-icon>apartment</mat-icon>
+                {{'міст:' | translate}}
+                <ng-container
+                  *ngIf="!reportLoading && report else loading">{{report.coffee_shops.count_regions}}</ng-container>
+              </p>
+            </div>
+          </li>
+          <li class="c-reportList__item" style="animation-delay: 1000ms;">
+            <div class="c-reportList__content">
+              <span class="c-reportList__icon"><mat-icon>engineering</mat-icon></span>
+              <div class="c-reportList__info">
+                <p class="c-reportList__title">
+                  <ng-container
+                    *ngIf="!reportLoading && report else loading">{{report.workers.count}}</ng-container>
+                </p>
+                <p class="c-reportList__subTitle">{{'Працівників' | translate}}</p>
+              </div>
+            </div>
+            <div *ngIf="isOwnerLoggedIn$ | async" class="c-reportList__moreInfo">
+              <p class="c-reportList__moreInfoText c-reportList__moreInfoText--notConfirmed">
+                <mat-icon>highlight_off</mat-icon>
+                <ng-container
+                  *ngIf="!reportLoading && report else loading">{{report.workers.count_not_confirmed}}</ng-container>
+                {{'не підтверджених працівників' | translate}}
+              </p>
+            </div>
+          </li>
+        </ul>
+        <ul class="c-reportList">
+          <li class="c-reportList__item c-reportList__item--notPadding" style="animation-delay: 1200ms;">
+            <table class="c-reportList__table">
+              <tr class="c-reportList__tableRow c-reportList__tableRow--head">
+                <td class="c-reportList__tableCell" colspan="3">
+                  <p class="c-reportList__tableTitle">{{'Топ закладів' | translate}}</p>
+                </td>
+              </tr>
+              <ng-container *ngIf="report && report.top && report.top.coffee_shops.length else notTopCoffeeShops">
+                <tr class="c-reportList__tableRow c-reportList__tableRow--head"
+                    *ngFor="let coffeeShop of report.top.coffee_shops">
+                  <td class="c-reportList__tableCell">
+                    <img class="c-reportList__tableImg" [src]="API_URL + coffeeShop.img" alt=""></td>
+                  <td class="c-reportList__tableCell">
+                    <strong>{{'м.' | translate}} {{coffeeShop.region | getLocalizationCityKey | translate}}
+                      <br></strong>
+                    {{coffeeShop.address}}
+                  </td>
+                  <td class="c-reportList__tableCell">{{'Видано товарів:' | translate}} {{coffeeShop.count_products}}{{'шт' | translate}}.</td>
+                </tr>
+              </ng-container>
+              <ng-template #notTopCoffeeShops>
+                <tr class="c-reportList__tableRow">
+                  <td class="c-reportList__tableCell c-reportList__tableCell--empty" colspan="3">
+                    {{'Поки що немає виданих товарів' | translate}}
+                  </td>
+                </tr>
+              </ng-template>
+            </table>
+          </li>
+          <li class="c-reportList__item c-reportList__item--notPadding" style="animation-delay: 1400ms;">
+            <table class="c-reportList__table">
+              <tr class="c-reportList__tableRow c-reportList__tableRow--head">
+                <td class="c-reportList__tableCell" colspan="3">
+                  <p class="c-reportList__tableTitle">{{'Топ товарів' | translate}}</p>
+                </td>
+              </tr>
+              <ng-container *ngIf="report && report.top && report.top.products.length else notTopProducts">
+                <tr class="c-reportList__tableRow c-reportList__tableRow--head"
+                    *ngFor="let product of report.top.products">
+                  <td class="c-reportList__tableCell">
+                    <strong>{{product.name}}</strong>
+                  </td>
+                  <td class="c-reportList__tableCell">{{'Видано:' | translate}} {{product.quantity}}{{'шт' | translate}}.</td>
+                </tr>
+              </ng-container>
+              <ng-template #notTopProducts>
+                <tr class="c-reportList__tableRow">
+                  <td class="c-reportList__tableCell c-reportList__tableCell--empty" colspan="2">
+                    {{'Поки що немає виданих товарів' | translate}}
+                  </td>
+                </tr>
+              </ng-template>
+            </table>
+          </li>
+        </ul>
+      </ng-container>
+    </ng-container>
+    <ng-template #someError>
+      <div class="c-owner__error">
+        <p class="c-owner__errorText">{{getReportError | translate}}</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #loading>-</ng-template>

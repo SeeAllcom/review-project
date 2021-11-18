@@ -1,0 +1,116 @@
+<div class="c-cards__header">
+  <div class="container">
+    <div class="c-cards__headerContent">
+      <div class="c-cards__description">
+        <h1
+          class="c-cards__title">{{'Заклади в' | translate}} {{(currentCityNameEn ? currentCityNameEn : cityNameEn) | getLocalizationCityKey | translate}}
+        </h1>
+        <h2
+          class="c-cards__subTitle">{{'Оберіть заклад, щоб придбати абонементи на будь-який товар.' | translate}}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="c-cards">
+  <div class="container">
+    <div class="c-cardsTabs__wrapper">
+      <ul *ngIf="isUserLogin" class="c-cardsTabs">
+        <li class="c-cardsTabs__item">
+          <button class="c-cardsTabs__btn" [class.c-cardsTabs__btn--active]="currentEstablishmentsType === establishmentsType.All"
+                  (click)="getCoffeeNetworks(establishmentsType.All)">
+            {{'Всі заклади' | translate}}
+            <spinner *ngIf="spinnerShown && currentEstablishmentsType === establishmentsType.All && networksLoaded"
+                     class="c-cardsTabs__btnSpinner"></spinner>
+          </button>
+        </li>
+        <li class="c-cardsTabs__item">
+          <button class="c-cardsTabs__btn" [class.c-cardsTabs__btn--active]="currentEstablishmentsType === establishmentsType.Bonuses"
+                  (click)="getCoffeeNetworks(establishmentsType.Bonuses)">
+            {{'Заклади з бонусами' | translate}}
+            <spinner *ngIf="spinnerShown && currentEstablishmentsType === establishmentsType.Bonuses && networksLoaded"
+                     class="c-cardsTabs__btnSpinner"></spinner>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <ng-container *ngIf="networksLoaded; else networksLoading">
+      <ng-container *ngIf="!(notFoundRegion || serverError) && establishments.length; else citiesEmpty">
+        <ul class="c-cardsList">
+          <li class="c-cardsList__item"
+              *ngFor="let establishment of establishments | search:(searchEstablishmentValue$ | async)"
+              [ngClass]="{'c-cardsList__item--inaccessible': establishment.inaccessible}"
+              (click)="!establishment.inaccessible ? openEstablishment(establishment.slug) : false" addVisitedClass>
+            <span *ngIf="establishment.inaccessible" class="c-cardsList__itemType">{{'Незабаром' | translate}}</span>
+            <span class="c-cardsList__itemDisclose">
+              <span class="c-cardsList__itemDiscloseBtn">
+                <img src="/assets/img/icons/icon-more-disclose.svg" alt="">
+              </span>
+            </span>
+            <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + establishment.avatar"
+                 [alt]="establishment.name" class="c-cardsList__img">
+            <div class="c-cardsList__info">
+              <h3 class="c-cardsList__title">{{establishment.name}}</h3>
+              <div class="c-cardsList__infoMore">
+                <span *ngIf="establishment.percent_bonus > minBonusesPercentage || establishment.bonuses" class="c-cardsList__infoBadge c-cardsList__infoBadge--bonus">
+                  <mat-icon>savings</mat-icon>
+                  <ng-container *ngIf="establishment.percent_bonus > minBonusesPercentage"> {{establishment.percent_bonus}}%</ng-container>
+                  <ng-container *ngIf="establishment.percent_bonus > minBonusesPercentage && establishment.bonuses"> - </ng-container>
+                  <ng-container *ngIf="establishment.bonuses && establishment.bonuses.value">{{establishment.bonuses.value}}{{'грн' | translate}}</ng-container>
+                </span>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div *ngIf="!(establishments | search:(searchEstablishmentValue$ | async)).length" class="c-cards__empty">
+          <p class="c-cards__emptyText">
+            {{'За запитом' | translate}} <b>"{{searchEstablishmentValue$ | async}}"</b> {{'нічого не знайдено' | translate}}
+          </p>
+        </div>
+      </ng-container>
+      <ng-template #citiesEmpty>
+        <div class="c-cards__empty">
+          <ng-container *ngIf="serverError">
+            <p class="c-cards__emptyTitle">{{'Упс' | translate}}</p>
+            <p class="c-cards__emptyText c-cards__emptyText--error">{{serverError | translate}}</p>
+          </ng-container>
+          <ng-template *ngIf="!spinnerShown; else networksLoading" [ngTemplateOutlet]="this[currentEstablishmentsType]"></ng-template>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>
+<search-input *ngIf="networksLoaded" [isFixed]="true" [placeholder]="'Знайти заклад'"></search-input>
+<scroll-top [nearSearch]="true"></scroll-top>
+
+<ng-template #networksLoading>
+  <spinner class="c-cards__spinner"></spinner>
+</ng-template>
+
+<ng-template #all>
+  <p class="c-cards__emptyTitle">{{'Закладів немає' | translate}}</p>
+  <ng-container *ngIf="!notFoundRegion; else regionDoesntExist">
+    <p class="c-cards__emptyText">{{'Закладів в такому місті ще немає.' | translate}} 😞</p>
+  </ng-container>
+  <ng-template #regionDoesntExist>
+    <p class="c-cards__emptyText">{{'Такого міста не знайдено, або щось пішло не так.' | translate}} 😞</p>
+  </ng-template>
+  <button class="o-button o-button--secondary" (click)="openCitiesDialog()">
+    {{'Вибрати інше місто' | translate}}
+  </button>
+</ng-template>
+<ng-template #bonuses>
+  <p class="c-cards__emptyTitle">
+    {{'Ви не маєте закладів з бонусами в місті' | translate}} {{currentCityNameEn | getLocalizationCityKey | translate}}
+  </p>
+  <p class="c-cards__emptyText">
+    {{'Шоб отримувати бонуси, авторизуйтеся і зробіть замовлення в закладі, який реалізує бонусну систему.' | translate}}
+  </p>
+</ng-template>
+<ng-template #selected>
+  <p class="c-cards__emptyTitle">
+    {{'Ви не маєете збережених закладів в місті' | translate}} {{currentCityNameEn | getLocalizationCityKey | translate}}
+  </p>
+  <p class="c-cards__emptyText">
+    {{'Натисніть на сердечко в карточці закладу, щоб додати його до збережених.' | translate}}
+  </p>
+</ng-template>

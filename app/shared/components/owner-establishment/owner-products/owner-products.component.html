@@ -1,0 +1,162 @@
+<div class="c-ownerProducts">
+  <div class="c-ownerContent__header">
+    <p class="c-ownerContent__headerTitle">
+      <ng-container
+        *ngIf="getCategory(); else noCategories">{{getCategoryName(getCategory().name) | translate}}</ng-container>
+      <ng-template #noCategories>{{'Всі товари' | translate}}</ng-template>
+    </p>
+    <button *ngIf="isOwnerLoggedIn$ | async" class="o-button" (click)="openAddProductDialog()" matRipple>
+      <span class="o-buttonText">{{'Добавити товар' | translate}}</span>
+    </button>
+  </div>
+
+  <ng-container *ngIf="categoriesSub.closed; else categoriesLoading">
+    <ng-container *ngIf="!getCategoriesError; else getCategoriesErrorTemplate">
+      <ng-container *ngIf="categories.length; else categoriesEmpty">
+        <div class="c-ownerProducts__category">
+          <ul class="c-ownerProducts__categoryList">
+            <ng-container *ngIf="isTabletsOrMobiles(); else isDesktop">
+              <li class="c-ownerProducts__categoryItem"
+                  *ngFor="let category of categories"
+                  [class.active]="categoryId === category.id"
+                  (click)="changeCategory(category.id)"
+                  [id]="category.id.toString()" matRipple>
+                <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + category.img"
+                     [alt]="category.name"
+                     class="c-ownerProducts__categoryImg">
+                <p class="c-ownerProducts__categoryTitle">{{getCategoryName(category.name) | translate}}</p>
+              </li>
+            </ng-container>
+            <ng-template #isDesktop>
+              <li class="c-ownerProducts__categoryItem"
+                  *ngFor="let category of categories"
+                  [class.active]="categoryId === category.id"
+                  (click)="changeCategory(category.id)"
+                  [matTooltip]="getCategoryName(category.name) | translate"
+                  [id]="category.id.toString()" matRipple>
+                <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + category.img"
+                     [alt]="category.name"
+                     class="c-ownerProducts__categoryImg">
+                <p class="c-ownerProducts__categoryTitle">{{getCategoryName(category.name) | translate}}</p>
+              </li>
+            </ng-template>
+          </ul>
+        </div>
+        <ng-container *ngIf="productsSub.closed; else productsLoading">
+          <ng-container *ngIf="products.length; else productsEmpty">
+            <ul class="c-ownerProductsList">
+              <li class="c-ownerProductsList__item" *ngFor="let product of products">
+                <div class="c-ownerProductsList__preview"
+                     [ngClass]="{
+                     'c-ownerProductsList__preview--hidden': product.hide || product.inaccessible,
+                     'previewHover': isOwnerLoggedIn$ | async}"
+                     (click)="openEditProductDialog(product)">
+                  <img defaultImage="/assets/img/img-not-loaded.svg" [lazyLoad]="API_URL + product.img"
+                       [alt]="product.name"
+                       class="c-ownerProductsList__img">
+                  <tooltip *ngIf="product.hide"
+                           [title]="'Покупці не бачать даний товар на вітрині, але можуть використовувати куплені абонементи' | translate">
+                    <mat-icon class="c-ownerProductsList__previewIcon">visibility_off</mat-icon>
+                  </tooltip>
+                  <tooltip *ngIf="product.inaccessible"
+                           [title]="'Покупці бачать даний товар на вітрині, але не можуть його придбати' | translate">
+                    <mat-icon class="c-ownerProductsList__previewIcon">remove_shopping_cart</mat-icon>
+                  </tooltip>
+                </div>
+                <div class="c-ownerProductsList__itemInfo">
+                  <p *ngIf="product.inaccessible" class="c-ownerProductsList__itemBadge bg-orange-500">
+                    {{'Недоступний для продажу' | translate}}
+                  </p>
+                  <p *ngIf="product.hide" class="c-ownerProductsList__itemBadge bg-orange-500">
+                    {{'Знятий з вітрини' | translate}}
+                  </p>
+
+                  <p class="c-ownerProductsList__title">
+                    {{product.name}} <ng-container *ngIf="product.capacity">({{product.capacity.size}}{{product.capacity.unit}})</ng-container>
+                  </p>
+                  <p class="c-ownerProductsList__text">{{trimLongText(product.description)}}</p>
+
+                  <div class="mt-auto">
+                    <p class="c-ownerProductsList__price">{{'Ціна: ' | translate}}<strong>{{product.price}}грн</strong></p>
+                    <p class="c-ownerProductsList__price c-ownerProductsList__price--violet">{{'Бонуси: ' | translate}}
+                      <strong>{{product.bonus}}{{'грн' | translate}}</strong>
+                    </p>
+                  </div>
+                </div>
+                <button *ngIf="isOwnerLoggedIn$ | async"
+                        class="c-ownerProductsList__actions"
+                        [matMenuTriggerFor]="userNav"
+                        #openMenuTrigger="matMenuTrigger"
+                        [class.active]="openMenuTrigger.menuOpen"
+                        mat-icon-button aria-label="product actions">
+                  <mat-icon>more_vert</mat-icon>
+
+                  <mat-menu #userNav="matMenu"
+                            yPosition="below"
+                            xPosition="before"
+                            [overlapTrigger]="false"
+                            class="c-dropdownList">
+
+                    <button class="c-dropdownList__link" mat-menu-item (click)="openEditProductDialog(product)">
+                      <mat-icon class="c-dropdownList__icon">edit</mat-icon>
+                      {{'Редагувати' | translate}}
+                    </button>
+                    <button class="c-dropdownList__link" mat-menu-item (click)="hideProductToggle(product)">
+                      <ng-container *ngIf="!product.hide; else productHidden">
+                        <tooltip [cursorHelp]="false"
+                                 [title]="'Покупці не будуть бачити даний товар на вітрині, але зможуть використовувати куплені абонементи' | translate">
+                          <mat-icon class="c-dropdownList__icon">visibility_off</mat-icon>
+                          {{'Приховати' | translate}}
+                        </tooltip>
+                      </ng-container>
+                      <ng-template #productHidden>
+                        <mat-icon class="c-dropdownList__icon">visibility</mat-icon>
+                        {{'Зробити видимим' | translate}}
+                      </ng-template>
+                    </button>
+                    <button class="c-dropdownList__link" mat-menu-item (click)="productNotAvailableToggle(product)">
+                      <ng-container *ngIf="!product.inaccessible; else productNotAvailable">
+                        <tooltip [cursorHelp]="false"
+                                 [title]="'Покупці бачать даний товар на вітрині, але не можуть його придбати' | translate">
+                          <mat-icon class="c-dropdownList__icon">remove_shopping_cart</mat-icon>
+                          {{'Недоступний' | translate}}
+                        </tooltip>
+                      </ng-container>
+                      <ng-template #productNotAvailable>
+                        <mat-icon class="c-dropdownList__icon">shopping_cart</mat-icon>
+                        {{'Зробити доступним' | translate}}
+                      </ng-template>
+                    </button>
+                    <button class="c-dropdownList__link" mat-menu-item (click)="openDeleteProductDialog(product)">
+                      <mat-icon class="c-dropdownList__icon c-dropdownList__icon--delete">delete</mat-icon>
+                      {{'Видалити' | translate}}
+                    </button>
+                  </mat-menu>
+                </button>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #productsEmpty>
+            <p class="c-owner__empty">{{'На даний момент немає ніяких товарів' | translate}} 😞</p>
+          </ng-template>
+        </ng-container>
+        <ng-template #productsLoading>
+          <spinner class="c-owner__spinner"></spinner>
+        </ng-template>
+
+      </ng-container>
+
+      <ng-template #categoriesEmpty>
+        <p class="c-owner__empty">{{'На даний момент немає ніяких категорій з товарами' | translate}} 😞</p>
+      </ng-template>
+    </ng-container>
+    <ng-template #getCategoriesErrorTemplate>
+      <p class="c-owner__error">{{getCategoriesError | translate}}</p>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #categoriesLoading>
+    <spinner class="c-owner__spinner"></spinner>
+  </ng-template>
+
+</div>

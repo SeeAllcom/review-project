@@ -1,0 +1,190 @@
+@import "/src/assets/styles/helpers/_mixins.scss";
+
+.c-report {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &Month {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    position: sticky;
+    top: -30px;
+    z-index: 9;
+    background: var(--ex-bg--900);
+
+    &__btn {
+      min-height: 35px;
+      min-width: 35px;
+      background: var(--ex-bg--700);
+      color: var(--ex-color-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-align: center;
+      padding: 5px 10px;
+      font-weight: 600;
+
+      &:first-child {
+        border-radius: var(--borderRadius-primary) 0 0 var(--borderRadius-primary);
+      }
+
+      &:last-child {
+        border-radius: 0 var(--borderRadius-primary) var(--borderRadius-primary) 0;
+      }
+    }
+
+    &__name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+
+    &__actions {
+      display: flex;
+      align-items: center;
+    }
+
+    &--startEndDate {
+      @include tablets {
+        flex-direction: column;
+        justify-content: center;
+
+        .c-reportMonth__name {
+          margin-top: 10px;
+          order: 1;
+        }
+      }
+    }
+  }
+
+  &__title {
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--ex-color-white);
+    margin-bottom: 10px;
+  }
+
+  &__subTitle {
+    font-size: 15px;
+    color: var(--ex-color-light-blue);
+  }
+
+  &List {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -20px;
+
+    &__item {
+      min-width: 250px;
+      background: var(--ex-bg--700);
+      padding: 30px 20px;
+      border-radius: var(--borderRadius-primary);
+      margin-left: 20px;
+      margin-bottom: 20px;
+      flex: 1;
+      animation-name: bubbleFadeIn;
+      animation-duration: 400ms;
+      animation-fill-mode: both;
+
+      &--notPadding {
+        padding: 0;
+      }
+    }
+
+    &__content {
+      display: flex;
+      align-items: center;
+    }
+
+    &__icon {
+      --mat-icon-size: 35px;
+
+      width: 90px;
+      min-width: 90px;
+      height: 90px;
+      background: var(--ex-bg--gradientMain);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+    }
+
+    &__title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    &__subTitle {
+      margin-bottom: 0;
+      color: var(--ex-color-light-blue);
+    }
+
+    &__table {
+      border-radius: var(--borderRadius-primary);
+      border-collapse: collapse;
+      width: 100%;
+      overflow: hidden;
+
+      &Title {
+        font-size: 22px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 0;
+        padding-top: 10px;
+      }
+
+      &Row {
+        &:nth-child(even) {
+          background: #303540;
+        }
+      }
+
+      &Cell {
+        padding: 10px 15px;
+
+        &--empty {
+          color: var(--ex-color-light-blue);
+          text-align: center;
+        }
+      }
+
+      &Img {
+        width: 60px;
+        min-width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: var(--borderRadius-primary);
+      }
+    }
+
+    &__moreInfo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 30px;
+
+      &Text {
+        display: flex;
+        align-items: center;
+
+        .mat-icon {
+          margin-right: 10px;
+          color: var(--ex-color-green);
+        }
+
+        &--notConfirmed {
+          .mat-icon {
+            color: var(--ex-color-red);
+          }
+        }
+      }
+    }
+  }
+}

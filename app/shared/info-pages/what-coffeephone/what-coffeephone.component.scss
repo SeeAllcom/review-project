@@ -1,0 +1,247 @@
+@import "../../../../../src/assets/styles/helpers/_mixins.scss";
+
+.whatCoffeePhone {
+  padding: 60px 0;
+
+  &__title {
+    font-weight: bold;
+    font-size: 60px;
+    color: var(--ex-color-white);
+    margin-bottom: 20px;
+    line-height: 50px;
+
+    @include phones-m {
+      font-size: 40px;
+      line-height: 40px;
+    }
+  }
+
+  &__subTitle {
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    color: var(--ex-color-light-blue);
+    margin-bottom: 30px;
+  }
+
+  &__text {
+    font-size: 16px;
+    color: var(--ex-color-white);
+    margin-bottom: 20px;
+    line-height: 28px;
+
+    @include phones-m {
+      font-size: 14px;
+    }
+  }
+}
+
+@import "/src/assets/styles/helpers/_mixins.scss";
+
+.с-whatCoffeePhone {
+  color: var(--ex-color-white);
+
+  &__markdown {
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    h2 {
+      font-size: 18px;
+      color: var(--ex-color-light-blue);
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ul,
+    ol {
+      margin-bottom: 30px;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 15px;
+      }
+    }
+  }
+
+  .o-button {
+    --buttonMinWidth: 250px;
+    --buttonMinHeight: 55px;
+    --buttonFontSize: 16px;
+  }
+
+  &__main {
+    padding: 80px 0;
+    overflow: hidden;
+
+    &Content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      @include tablets {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+
+    &Img {
+      max-width: 100%;
+
+      @include tablets {
+        width: 100%;
+        max-width: 400px;
+        order: -2;
+        margin: 0 auto 50px;
+      }
+    }
+
+    &Title {
+      font-size: 42px;
+      margin-bottom: 30px;
+      line-height: normal;
+
+      @include phones-m {
+        font-size: 25px;
+      }
+    }
+
+    .o-button {
+      @include tablets {
+        margin: 0 auto;
+      }
+    }
+  }
+
+  &__arguments {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -30px;
+    margin-bottom: -30px;
+    padding-bottom: 60px;
+
+    &Icon {
+      width: 100%;
+      height: 130px;
+      object-fit: contain;
+      margin: 0 auto 20px;
+    }
+
+    &Item {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 30px;
+      border-radius: 10px;
+      background: var(--ex-bg--800);
+      margin-left: 30px;
+      margin-bottom: 30px;
+      min-width: 220px;
+    }
+
+    &Title {
+      font-weight: 600;
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--ex-color-main);
+    }
+  }
+
+  &__registr {
+    margin-bottom: 60px;
+
+    &Content {
+      padding: 30px;
+      border: 1px solid var(--ex-bg--800);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      @include tablets {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    &Title {
+      margin-right: 30px;
+      margin-bottom: 0 !important;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: normal;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      background-image: var(--ex-bg--gradientMain);
+
+      @include tablets {
+        margin-right: 0;
+        margin-bottom: 20px !important;
+      }
+
+      @include phones-l {
+        font-size: 20px;
+      }
+    }
+  }
+
+  &__connection {
+    padding: 60px 0;
+    margin-bottom: 60px;
+    background: var(--ex-bg--gradientMain);
+
+    &Content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    background: var(--ex-bg--800);
+    border-radius: 10px;
+    padding: 30px;
+
+    &Title {
+      color: var(--ex-color-white);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px !important;
+    }
+
+    &Text {
+      margin-bottom: 30px;
+      font-size: 16px;
+      color: var(--ex-color-light-blue);
+    }
+
+    &Error {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .o-button {
+      margin-left: auto;
+
+      @include phones-m {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+:host {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.c-tooltip {
+  vertical-align: middle;
+  width: max-content;
+  height: max-content;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &--help {
+    cursor: help;
+  }
+}

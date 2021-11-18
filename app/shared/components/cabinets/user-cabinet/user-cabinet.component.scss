@@ -1,0 +1,209 @@
+@import "../../../../../../src/assets/styles/helpers/_mixins.scss";
+
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.c-userCabinet {
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  margin: 30px auto 0;
+  border: 1px solid var(--ex-bg--700);
+  border-radius: 10px;
+
+  @include phones-m {
+    padding: 20px;
+  }
+
+  @include phones-s {
+    padding: 20px 0;
+    border: none;
+  }
+
+  &__spinner {
+    --mat-spinner-color: var(--ex-color-light-blue);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+
+    &Title {
+      line-height: normal;
+      font-size: 16px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--ex-color-white);
+      margin-bottom: 0;
+    }
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    color: var(--ex-color-white);
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-right: 30px;
+    cursor: pointer;
+
+    &:hover {
+      .c-userCabinet__backText {
+        text-decoration: underline;
+      }
+    }
+
+    .mat-icon {
+      margin-right: 10px;
+    }
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ex-color-white);
+    margin-bottom: 20px;
+  }
+
+  &__avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+
+    &Wrapper {
+      position: relative;
+      width: 120px;
+      min-width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+
+    &Spinner {
+      --mat-spinner-size: 100%;
+
+      display: contents;
+
+      .spinner {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+
+  &__change {
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &Input {
+      display: none !important;
+    }
+  }
+
+  &__data {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+
+    &Label {
+      font-size: 15px;
+      color: var(--ex-color-light-blue);
+      margin-bottom: 0;
+    }
+
+    &Text {
+      display: flex;
+      align-items: center;
+      font-size: 17px;
+      color: var(--ex-color-white);
+    }
+
+    &Btn {
+      --mat-icon-size: 18px;
+
+      background: var(--ex-bg--700);
+      color: var(--ex-color-green);
+      border-radius: 500%;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 25px;
+      height: 25px;
+      margin-left: 5px;
+      cursor: pointer;
+
+      &Spinner {
+        --mat-spinner-color: var(--ex-color-green);
+        --mat-spinner-size: 15px;
+        --mat-spinner-stroke: 2px;
+      }
+    }
+
+    &Input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--ex-color-white);
+      padding: 7px 0;
+      color: var(--ex-color-white);
+      width: 200px;
+      font-size: 14px;
+    }
+
+    &Form {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__link {
+    color: var(--ex-color-main);
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 20px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+
+    .o-button {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      margin-left: auto;
+    }
+  }
+
+  &__error {
+    color: var(--ex-color-red);
+  }
+
+  &__field {
+    display: block;
+    width: 400px;
+    max-width: 100%;
+
+    &Error {
+      font-size: 75%;
+      line-height: normal;
+      margin-top: -10px;
+
+      @include phones-s {
+        margin-top: -5px;
+      }
+    }
+  }
+}

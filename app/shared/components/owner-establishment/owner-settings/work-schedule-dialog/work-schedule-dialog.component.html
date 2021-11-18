@@ -1,0 +1,13 @@
+<div class="c-dialog c-dialog--autoHeight c-dialog--small">
+  <div class="c-dialog__header">
+    <p class="c-dialog__title c-dialog__title--small">{{'Графік роботи' | translate}}</p>
+    <span class="c-dialog__close" (click)="closeDialog()"><mat-icon>close</mat-icon></span>
+  </div>
+  <div class="c-dialog__body c-dialog__body--padding" style="max-width: 100%;">
+    <work-schedule (formValue)="form = $event"></work-schedule>
+  </div>
+  <div class="p-5 flex items-center justify-end">
+    <button class="o-button o-button--transparent mr-1" (click)="closeDialog()">{{'Відмінити' | translate}}</button>
+    <button class="o-button o-button--secondary ml-1" (click)="setWorkSchedule()">{{'Застосувати' | translate}}</button>
+  </div>
+</div>

@@ -1,0 +1,83 @@
+@import "/src/assets/styles/helpers/_mixins.scss";
+
+.c-search {
+  min-height: 50px;
+  width: 100%;
+  padding: 0 50px 0 30px;
+  color: var(--ex-color-black);
+  background: var(--ex-color-white);
+  border: 1px solid var(--ex-bg--800);
+  font-size: 15px;
+  border-radius: var(--borderRadius-primary);
+
+  &Wrapper {
+    position: relative;
+    width: 100%;
+
+    &--fixed {
+      position: fixed;
+      z-index: 10;
+      right: 20px;
+      bottom: 20px;
+      display: flex;
+      width: fit-content;
+      max-width: calc(100% - 40px);
+
+      @include tablets {
+        bottom: calc(var(--ex-mobileMenu-height) + 10px);
+      }
+
+      @include phones-l {
+        width: fit-content;
+      }
+
+      .c-search {
+        border-radius: 50%;
+        overflow: hidden;
+        width: 50px;
+        margin-left: auto;
+        transition: var(--ex-transition-primary);
+        padding: 0 20px;
+        border: none;
+        box-shadow: 0 0 10px 0 rgb(0 0 0 / 60%);
+      }
+
+      &.c-searchWrapper--show {
+        @include phones-l {
+          width: 100%;
+        }
+
+        .c-search {
+          border-radius: var(--borderRadius-primary);
+          width: 100%;
+          padding: 0 50px 0 30px;
+        }
+      }
+    }
+
+    &--noTablets {
+      @include tablets-l {
+        display: none;
+      }
+
+      &More {
+        @include tablets-l-more {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &Icon {
+    --mat-icon-size: 30px;
+
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    color: var(--ex-color-black);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}

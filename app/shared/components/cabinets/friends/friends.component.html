@@ -1,0 +1,114 @@
+<div class="c-friends">
+  <div class="c-friendsUser">
+    <div class="container">
+      <div class="c-friendsUser__header">
+        <div class="c-friendsUser__preview">
+          <ng-container *ngIf="activeState === state.FriendsMyFriend">
+            <button class="c-friendsUser__back" (click)="getFriends()">
+              <mat-icon>arrow_back</mat-icon>
+              <span class="c-friendsUser__backText">{{'Назад' | translate}}</span>
+            </button>
+          </ng-container>
+          <div class="c-friendsUser__avatarWrapper">
+            <img *ngIf="friendsDataLoaded"
+                 [src]="friendsData.user.avatar ? API_URL + friendsData.user.avatar : '/assets/img/img-user-avatar.svg'"
+                 class="c-friendsUser__avatar">
+            <spinner class="c-friends__previewSpinner"
+                     [class.visible]="!getFriendsDataSub.closed && !currentFriendId"></spinner>
+          </div>
+        </div>
+        <div class="c-friendsUser__content">
+          <p *ngIf="friendsData" class="c-friendsUser__name">{{friendsData.user.name}}</p>
+          <div class="c-friendsUser__contentRow">
+            <div class="c-friendsUser__contentCol" (click)="changeFriendsType(friendsType.Friends)">
+              <p class="c-friendsUser__number">
+                {{friendsDataLoaded ? friendsData.friends_count : 0}}
+              </p>
+              <p class="c-friendsUser__title"
+                 [ngClass]="{'active': activeFriendsType === friendsType.Friends}">{{'Друзі' | translate}}</p>
+            </div>
+            <div class="c-friendsUser__contentCol" (click)="changeFriendsType(friendsType.Subscribers)">
+              <p class="c-friendsUser__number">
+                {{friendsDataLoaded ? friendsData.subscribers_count : 0}}
+              </p>
+              <p class="c-friendsUser__title"
+                 [ngClass]="{'active': activeFriendsType === friendsType.Subscribers}">{{'Підписники' | translate}}</p>
+            </div>
+          </div>
+          <div *ngIf="activeState === state.FriendsMyFriend" class="c-friendsUser__contentRow">
+            <ng-container *ngIf="friendsData.user.mutual; else notMyFriend">
+              <div class="c-friendsUser__contentCol">
+                <button class="o-button" (click)="sendGiftToFriend(friendsData.user.email)">
+                  <mat-icon class="o-buttonIcon">card_giftcard</mat-icon>
+                  <span class="o-buttonText">{{'Подарувати' | translate}}</span>
+                </button>
+              </div>
+              <div class="c-friendsUser__contentCol">
+                <button class="o-button" (click)="deleteFriend(friendsData.user)">
+                  <mat-icon class="o-buttonIcon">delete</mat-icon>
+                  <span class="o-buttonText">{{'Видалити' | translate}}</span>
+                </button>
+              </div>
+            </ng-container>
+            <ng-template #notMyFriend>
+              <div class="c-friendsUser__contentCol">
+                <button class="o-button" (click)="addFriend(friendsData.user)">
+                  <mat-icon class="o-buttonIcon">add</mat-icon>
+                  <span class="o-buttonText">{{'Додати' | translate}}</span>
+                </button>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <ul class="c-friendsList">
+      <li *ngIf="activeState === state.MyFriends" class="c-friendsList__item"
+          [class.c-friendsList__item--disabled]="!getFriendsDataSub.closed" (click)="openFriendDialog()">
+        <div class="c-friendsList__itemContent">
+          <span class="c-friendsList__itemContentAdd">
+            <mat-icon>add</mat-icon>
+          </span>
+          <p class="c-friendsList__name">{{'Додати друга' | translate}}</p>
+        </div>
+      </li>
+      <ng-container *ngIf="friendsDataLoaded">
+        <li class="c-friendsList__item" *ngFor="let friend of getPeoples(); let i = index"
+            [class.onboarding]="isShowActionsOnboarding && i === 0">
+          <div class="c-friendsList__itemContent">
+            <div class="c-friendsList__preview" (click)="!friend.my_account ? getFriends(friend.id) : false">
+              <div class="c-friendsList__previewHeader">
+                <span class="c-friendsList__badge" *ngIf="friend.friends_count"><mat-icon>people</mat-icon> <span
+                  class="c-friendsList__badgeText">{{friend.friends_count}}</span></span>
+              </div>
+              <img [lazyLoad]="friend.avatar ? (API_URL + friend.avatar) : '/assets/img/img-user-avatar.svg'"
+                   defaultImage="/assets/img/img-not-loaded.svg" alt="" class="c-friendsList__avatar">
+              <spinner class="c-friends__previewSpinner"
+                       [class.visible]="!getFriendsDataSub.closed && currentFriendId === friend.id"></spinner>
+            </div>
+            <p class="c-friendsList__name">{{friend.name}}</p>
+            <button *ngIf="!friend.my_account && !friend.mutual"
+                    class="c-friendsList__btn" (click)="addFriend(friend)" matRipple>
+              <mat-icon>add</mat-icon>
+              {{'Додати' | translate}}
+            </button>
+            <p *ngIf="friend.mutual && activeState === state.FriendsMyFriend"
+               class="c-friendsList__text">{{'Спільний друг' | translate}}</p>
+          </div>
+          <div *ngIf="!friend.my_account && friend.mutual"
+               class="c-friendsList__itemActions">
+            <button class="c-friendsList__itemAction" (click)="sendGiftToFriend(friend.email)" matRipple>
+              <mat-icon>card_giftcard</mat-icon>
+            </button>
+            <button class="c-friendsList__itemAction c-friendsList__itemAction--delete"
+                    (click)="deleteFriend(friend)" matRipple>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

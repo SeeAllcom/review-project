@@ -1,0 +1,119 @@
+<div class="container">
+  <div class="c-userCabinet">
+    <p *ngIf="getUserDataSub.closed" class="c-userCabinet__title">{{'Кабінет' | translate}}</p>
+    <ng-container *ngIf="getUserDataSub.closed; else loading">
+      <ng-container *ngIf="!error; else errorTemplate">
+        <ng-container *ngIf="getActiveState(userCabinetStateType.userData)">
+          <div class="c-userCabinet__avatarWrapper">
+            <img [src]="user.avatar ? API_URL + user.avatar : '/assets/img/img-user-avatar.svg'" [alt]="user.name" class="c-userCabinet__avatar">
+            <spinner *ngIf="!changingAvatarSub.closed" class="c-userCabinet__avatarSpinner"></spinner>
+          </div>
+          <label class="c-userCabinet__change">
+            <span>{{'Змінити аватарку' | translate}}</span>
+              <mat-form-field class="c-userCabinet__changeInput">
+                <ngx-mat-file-input (change)="changeAvatar()" [formControl]="avatar"></ngx-mat-file-input>
+              </mat-form-field>
+          </label>
+          <div class="c-userCabinet__data">
+            <p class="c-userCabinet__dataLabel">{{'Ваше ім\'я' | translate}}:</p>
+            <p class="c-userCabinet__dataText">
+              <ng-container *ngIf="!isInputNameShown; else changingName">
+                {{user.name}} <button class="c-userCabinet__dataBtn" (click)="showInputName()"><mat-icon>edit</mat-icon></button>
+              </ng-container>
+              <ng-template #changingName>
+                <form class="c-userCabinet__dataForm" [formGroup]="nameForm" (ngSubmit)="changeName()">
+                  <input type="text" class="c-userCabinet__dataInput" formControlName="name" [value]="user.name" [placeholder]="'Ведіть нове ім\'я' | translate">
+                  <button class="c-userCabinet__dataBtn" type="submit">
+                    <ng-container *ngIf="sendChangeNameSub.closed; else sendingChangeName">
+                      <mat-icon>check</mat-icon>
+                    </ng-container>
+                    <ng-template #sendingChangeName>
+                      <spinner class="c-userCabinet__dataBtnSpinner"></spinner>
+                    </ng-template>
+                  </button>
+                </form>
+              </ng-template>
+            </p>
+          </div>
+          <div class="c-userCabinet__data">
+            <p class="c-userCabinet__dataLabel">{{'Ваш email'}}:</p>
+            <p class="c-userCabinet__dataText">{{user.email}}</p>
+          </div>
+          <div class="c-userCabinet__data">
+            <p class="c-userCabinet__dataLabel">{{'Дата реєстрації' | translate}}:</p>
+            <p class="c-userCabinet__dataText">{{user.created_at | date: 'dd MMMM yyyy'}} {{'року' | translate}}</p>
+          </div>
+          <button class="c-userCabinet__link" (click)="changeState(userCabinetStateType.passwordRecovery)">
+            <ng-container *ngIf="sendChangePasswordSub.closed; else changingPassword">
+              {{'Змінити пароль' | translate}}
+            </ng-container>
+            <ng-template #changingPassword>
+              <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+            </ng-template>
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="getActiveState(userCabinetStateType.passwordRecovery)">
+          <div class="c-userCabinet__header">
+            <button class="c-userCabinet__back" (click)="changeState(userCabinetStateType.userData)">
+              <mat-icon>arrow_back</mat-icon>
+              <span class="c-userCabinet__backText">{{'Назад' | translate}}</span>
+            </button>
+            <p class="c-userCabinet__headerTitle">
+              {{'Зміна паролю' | translate}}
+            </p>
+          </div>
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="c-userCabinet__form">
+            <div class="c-userCabinet__field">
+              <input-password [placeholder]="'Введіть старий пароль' | translate"
+                              [formControl]="passwordForm.get('old_password')"
+                              (paste)="false"
+                              ngDefaultControl></input-password>
+
+              <mat-error class="o-inputPassword__filedError" *ngIf="serverError === 'NotTrueOldPassword'">
+                {{'Неправильний пароль. Будь ласка спробуйте ще раз.' | translate}}
+              </mat-error>
+            </div>
+
+            <div class="c-userCabinet__field">
+              <input-password [placeholder]="'Введіть новий пароль' | translate"
+                              [formControl]="passwordForm.get('password')"
+                              (paste)="false"
+                              ngDefaultControl></input-password>
+            </div>
+
+            <div class="c-userCabinet__field">
+              <input-password [placeholder]="'Повторіть пароль' | translate"
+                              [formControl]="passwordForm.get('password_confirmation')"
+                              (paste)="false"
+                              ngDefaultControl></input-password>
+
+              <mat-error class="c-userCabinet__fieldError"
+                         *ngIf="passwordForm.get('password_confirmation').valid && passwordForm.errors?.equivalent">
+                {{'Паролі не збігаються. Будь ласка, повторно введіть свій пароль' | translate}}
+              </mat-error>
+            </div>
+
+            <button class="o-button o-button--secondary" type="submit" [disabled]="!sendChangePasswordSub.closed">
+              <ng-container *ngIf="sendChangePasswordSub.closed; else sendLoading">
+                {{'Змінити пароль' | translate}}
+              </ng-container>
+              <ng-template #sendLoading>
+                <spinner class="o-buttonSpinner o-buttonSpinner--white"></spinner>
+              </ng-template>
+            </button>
+
+            <p *ngIf="changePasswordError" class="c-userCabinet__error">{{changePasswordError | translate}}</p>
+          </form>
+        </ng-container>
+      </ng-container>
+      <ng-template #errorTemplate>
+        <p class="c-userCabinet__error">{{error | translate}}</p>
+      </ng-template>
+    </ng-container>
+    <ng-template #loading>
+      <spinner [settingLoader]="true" class="c-userCabinet__spinner"></spinner>
+    </ng-template>
+  </div>
+</div>
+<app-footer *ngIf="isPwaApp()"></app-footer>

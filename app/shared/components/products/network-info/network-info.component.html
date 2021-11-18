@@ -1,0 +1,35 @@
+<div class="c-networkInfo" [class.c-networkInfo--mobile]="isMobile">
+  <div *ngIf="network.coffee_shops.length" class="c-networkInfo__item c-networkInfo__item--hover"
+       (click)="openLocation()" [class.disabled]="!networkLoaded">
+    <span class="c-networkInfo__icon">
+      <mat-icon>place</mat-icon>
+    </span>
+    <div>
+      <p class="c-networkInfo__title">{{'Де кав\'ярні?' | translate}}</p>
+      <p class="c-networkInfo__text">{{'Переглянути всі місцезнаходження закладів' | translate}}</p>
+    </div>
+  </div>
+  <div *ngIf="network.work_schedule" class="c-networkInfo__item">
+    <span class="c-networkInfo__icon"><mat-icon>schedule</mat-icon></span>
+    <div>
+      <p class="c-networkInfo__title">{{'Графік роботи' | translate}}</p>
+      <p class="c-networkInfo__text">{{network.work_schedule}}</p>
+    </div>
+  </div>
+  <a *ngIf="network.instagram" [href]="network.instagram"
+     target="_blank" rel="nofollow noopener noreferrer" class="c-networkInfo__item c-networkInfo__item--hover">
+    <span class="c-networkInfo__icon c-networkInfo__icon--instagram"><img src="/assets/img/icons/instagram.svg"
+                                                                          alt="Instagram"></span>
+    <div>
+      <p class="c-networkInfo__text">{{'Посилання на' | translate}} Instagram</p>
+    </div>
+  </a>
+  <a *ngIf="network.facebook" [href]="network.facebook"
+     target="_blank" rel="nofollow noopener noreferrer" class="c-networkInfo__item c-networkInfo__item--hover">
+    <span class="c-networkInfo__icon c-networkInfo__icon--facebook"><img src="/assets/img/icons/facebook.svg"
+                                                                         alt="Facebook"></span>
+    <div>
+      <p class="c-networkInfo__text">{{'Посилання на' | translate}} Facebook</p>
+    </div>
+  </a>
+</div>

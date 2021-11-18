@@ -1,0 +1,58 @@
+<div class="c-appBanner" [class.visible]="isShowPwaBanner">
+  <div class="c-appBanner__content">
+    <ng-template *ngTemplateOutlet="this[activeState]"></ng-template>
+  </div>
+</div>
+
+<ng-template #downloadTemplate>
+  <div class="c-appBanner__contentHeader">
+    <img src="/assets/img/logo-beta.svg" [alt]="'CoffeePhone застосунок' | translate" class="c-appBanner__contentLogo">
+    <span class="c-appBanner__contentHeaderClose" (click)="closePwaBanner()">
+        <mat-icon>close</mat-icon>
+      </span>
+  </div>
+  <div class="c-appBanner__info">
+    <mat-icon class="c-appBanner__download">file_download</mat-icon>
+    <div>
+      <p *ngIf="isIos" class="c-appBanner__text">
+        {{'Завантажте цей додаток на ваш iPhone: натисніть ' | translate}}
+        <mat-icon>ios_share</mat-icon>
+        {{' і потім натисніть на "На початковий екран"' | translate}}
+      </p>
+      <p *ngIf="!isIos" class="c-appBanner__text">
+        {{'Завантажте цей додаток на ваш телефон: натисніть ' | translate}}
+        <mat-icon>more_vert</mat-icon>
+        {{' і потім натисніть на "Додати на головний екран"' | translate}}
+      </p>
+    </div>
+  </div>
+  <div class="c-appBanner__footer">
+    <button *ngIf="isIos" class="o-button o-button--gray"
+            (click)="changeTemplate(bannerTemplate.HowToDownload)">
+      <span class="o-buttonText">{{'Як завантажити?' | translate}}</span>
+    </button>
+    <button class="o-button o-button--secondary" (click)="closePwaBanner()" [class.o-buttonOne]="!isIos">
+      <span class="o-buttonText">{{'Уже встановлено' | translate}}</span>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #howToDownloadTemplate>
+  <div class="c-appBannerHowDownload">
+    <div class="c-appBannerHowDownload__header">
+      <span class="c-appBannerHowDownload__headerBack" (click)="changeTemplate(bannerTemplate.Download)">
+        <mat-icon>arrow_back</mat-icon>
+        {{'Назад' | translate}}
+      </span>
+      <span class="c-appBanner__contentHeaderClose" (click)="closePwaBanner()">
+        <mat-icon>close</mat-icon>
+      </span>
+    </div>
+    <video class="c-appBannerHowDownload__video" autoplay preload="auto" controls muted playsinline>
+      <source src="/assets/img/how-to-download-application.webm" type="video/webm">
+      <source src="/assets/img/how-to-download-application.mp4" type="video/mp4">
+      {{'Відео не підтримує вашим браузером.' | translate}}
+      <a href="/assets/img/how-to-download-application.mp4">{{'Скачайте відео' | translate}}</a>.
+    </video>
+  </div>
+</ng-template>

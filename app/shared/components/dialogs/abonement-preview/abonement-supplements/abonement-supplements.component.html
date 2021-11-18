@@ -1,0 +1,44 @@
+<div class="c-userProductSupplements__wrapper">
+  <p class="c-userProductSupplements__title">{{'Оберіть ваші можливі варіанти' | translate}}</p>
+  <ul class="c-userProductSupplements__badges">
+    <li class="c-userProductSupplements__badge">{{'Оберіть варіанти' | translate}} {{abonement.product.name}}
+      , {{'які ви придбали раніше' | translate}}</li>
+  </ul>
+  <ul class="c-userProductSupplementsList">
+    <li class="c-userProductSupplementsList__item"
+        *ngFor="let supplement of abonement.supplements"
+        [ngClass]="{'selected': isSupplementSelected(supplement.id), 'deleted': isSupplementDeleted(supplement)}"
+        (click)="!isSupplementDeleted(supplement) ? toggleAbonementSupplement(supplement) : false">
+      <div class="c-userProductSupplementsList__name">
+        <ul class="c-userProductSupplementsList__nameList" [class.small]="supplement.supplement_options?.length > 2">
+          <li *ngIf="!supplement.supplement_options?.length">{{'Класичний' | translate}}</li>
+          <li *ngFor="let option of supplement.supplement_options">
+            {{option.name}}<ng-container *ngIf="option.quantity > 1">({{option.quantity}})</ng-container><ng-container *ngIf="supplement.supplement_options.length > 1">,&#32;</ng-container>
+          </li>
+        </ul>
+      </div>
+      <ng-container *ngIf="!isSupplementDeleted(supplement); else supplementDeletedPrice">
+        <span class="c-userProductSupplementsList__price">{{supplement.quantity}}{{'шт' | translate}}.</span>
+      </ng-container>
+      <ng-template #supplementDeletedPrice>
+        <span class="c-userProductSupplementsList__price c-userProductSupplementsList__price--bonuses">
+          {{'Бонусних' | translate}} +{{supplement.product_price}}{{'грн' | translate}}
+        </span>
+      </ng-template>
+      <div class="c-userProductSupplementsList__actions">
+        <button *ngIf="getSelectedSupplement(supplement.id).quantityForOrder >= 1"
+                (click)="removeSupplementQuantity(supplement, $event)"
+                class="c-userProductSupplementsList__action">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <span *ngIf="getSelectedSupplement(supplement.id).quantityForOrder >= 1"
+              class="c-userProductSupplementsList__quantity">{{getSelectedSupplement(supplement.id).quantityForOrder}}</span>
+        <button *ngIf="!isSupplementDeleted(supplement)" class="c-userProductSupplementsList__action"
+                [class.disabled]="isSupplementDisabled(supplement.id)"
+                (click)="addSupplementQuantity(supplement, $event)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </li>
+  </ul>
+</div>
